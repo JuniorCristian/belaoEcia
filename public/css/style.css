@@ -1,0 +1,11 @@
+.btn-success:hover{
+    background-color: transparent!important;
+    color: #45D24A!important;
+}
+.btn-danger:hover{
+    background-color: transparent!important;
+    color: #F36971!important;
+}
+.deleta{
+    cursor: pointer;
+}
