@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Obra;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +13,10 @@ class AuthController extends Controller
     public function dashboard()
     {
         if (Auth::check() === true) {
-            return view('home');
+            $obras = Obra::all()->where('status_db', 1)->where('data_final', '=', null)->where('data_inicio', '!=', null);
+            return view('home', [
+                'obras'=>$obras
+            ]);
         }
         return redirect()->route('dashboard.login');
     }

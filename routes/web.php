@@ -43,9 +43,11 @@ Route::get('/funcionarios/{funcionario}/edit', [FuncionarioController::class, 'e
 Route::get('/funcionarios/salario/{funcionario}', [FuncionarioController::class, 'salario'])->name('funcionarios.salario');
 Route::post('/funcionarios/store', [FuncionarioController::class, 'store'])->name('funcionarios.store');
 Route::put('/funcionarios/update/{funcionario}', [FuncionarioController::class, 'update'])->name('funcionarios.update');
+Route::delete('/funcionarios/delete/{funcionario}', [FuncionarioController::class, 'destroy'])->name('funcionarios.delete');
 
 Route::get('/clientes/criar', [ClienteController::class, 'create'])->name('clientes.criar');
 Route::get('/clientes/', [ClienteController::class, 'show'])->name('clientes.show');
 Route::get('/clientes/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
 Route::post('/clientes/store', [ClienteController::class, 'store'])->name('clientes.store');
-Route::delete('/clientes/delete/{cliente}', [ObraController::class, 'destroy'])->name('clientes.delete');
+Route::put('/clientes/update/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
+Route::delete('/clientes/delete/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.delete');

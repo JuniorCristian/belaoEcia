@@ -167,41 +167,43 @@ $seo['title'] = "Obras | Belão&CIA Manegement System";
                                                        name="data_final_prevista">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="cep">CEP</label>
-                                                <input type="text" class="form-control" id="cep" name="cep">
+                                                <input type="text" class="form-control" id="cep" name="cep" placeholder="Insira o CEP">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="rua">Rua</label>
-                                                <input type="text" class="form-control" id="rua" name="rua">
+                                                <input type="text" class="form-control" id="rua" name="rua" placeholder="Insira a rua">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="numero">Número</label>
-                                                <input type="text" class="form-control" id="numero" name="numero">
+                                                <input type="text" class="form-control" id="numero" name="numero" placeholder="Insira o número">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="complemento">Complemento</label>
                                                 <input type="text" class="form-control" id="complemento"
-                                                       name="complemento">
+                                                       name="complemento" placeholder="Insira o complemento">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="bairro">Bairro</label>
-                                                <input type="text" class="form-control" id="bairro" name="bairro">
+                                                <input type="text" class="form-control" id="bairro" name="bairro" placeholder="Insira o bairro">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="cep">Cidade</label>
-                                                <input type="text" class="form-control" id="cidade" name="cidade">
+                                                <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Insira a cidade">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
@@ -252,10 +254,8 @@ $seo['title'] = "Obras | Belão&CIA Manegement System";
                                                 </label>
                                                 @endforeach
                                             </div>
-                                            <a href="{{route('home')}}">Criar novo funcionário</a>
+                                            <a href="{{route('funcionarios.criar')}}">Criar novo funcionário</a>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="cliente">Cliente</label>
@@ -266,7 +266,7 @@ $seo['title'] = "Obras | Belão&CIA Manegement System";
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            <a href="{{route('home')}}">Criar novo cliente</a>
+                                            <a href="{{route('clientes.criar')}}">Criar novo cliente</a>
                                         </div>
                                     </div>
                                     <div class="card-action">

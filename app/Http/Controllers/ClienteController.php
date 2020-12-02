@@ -53,6 +53,7 @@ class ClienteController extends Controller
             $cliente->bairro=$request->bairro;
             $cliente->cidade=$request->cidade;
             $cliente->uf=$request->uf;
+            $cliente->status_db=1;
             if($cliente->save()){
                 return redirect()->route('clientes.show');
             }
@@ -69,7 +70,7 @@ class ClienteController extends Controller
     public function show()
     {
         if (Auth::check() === true) {
-            $clientes = Cliente::all();
+            $clientes = Cliente::all()->where('status_db', 1);
             return view('ver_clientes', ['clientes'=>$clientes]);
         }
         return redirect()->route('dashboard.login');
@@ -84,6 +85,9 @@ class ClienteController extends Controller
     public function edit(Cliente $cliente)
     {
         if (Auth::check() === true) {
+            return view('editar_clientes', [
+                "cliente"=>$cliente
+            ]);
         }
         return redirect()->route('dashboard.login');
     }
@@ -98,6 +102,19 @@ class ClienteController extends Controller
     public function update(Request $request, Cliente $cliente)
     {
         if (Auth::check() === true) {
+            $cliente->nome=$request->nome;
+            $cliente->telefone=$request->telefone;
+            $cliente->doc_identificacao=$request->doc_identificacao;
+            $cliente->cep=$request->cep;
+            $cliente->rua=$request->rua;
+            $cliente->numero=$request->numero;
+            $cliente->complemento=$request->complemento;
+            $cliente->bairro=$request->bairro;
+            $cliente->cidade=$request->cidade;
+            $cliente->uf=$request->uf;
+            if($cliente->save()){
+                return redirect()->route('clientes.show');
+            }
         }
         return redirect()->route('dashboard.login');
     }
@@ -111,7 +128,13 @@ class ClienteController extends Controller
     public function destroy(Cliente $cliente)
     {
         if (Auth::check() === true) {
+            $cliente->status_db=0;
+            if($cliente->save()){
+                return redirect()->route('clientes.show');
+            }
         }
+
+
         return redirect()->route('dashboard.login');
     }
 }

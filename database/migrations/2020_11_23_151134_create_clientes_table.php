@@ -25,6 +25,7 @@ class CreateClientesTable extends Migration
             $table->string('bairro')->nullable();
             $table->string('cidade')->nullable();
             $table->string('uf')->nullable();
+            $table->boolean('status_db');
             $table->timestamps();
         });
     }

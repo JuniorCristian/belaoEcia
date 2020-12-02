@@ -11,6 +11,6 @@ class Cliente extends Model
 
     public function obras()
     {
-        return $this->hasMany(Obra::class, 'cliente', 'id');
+        return $this->hasMany(Obra::class, 'cliente', 'id')->where('status_db', 1);
     }
 }

@@ -13,4 +13,9 @@ class Faltas_Obra extends Model
     {
         return $this->belongsTo(Obra::class, 'obra', 'id');
     }
+
+    public function funcionario()
+    {
+        return $this->belongsTo(Funcionario::class, 'funcionario', 'id');
+    }
 }

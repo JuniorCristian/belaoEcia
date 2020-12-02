@@ -49,9 +49,9 @@ class FuncionarioController extends Controller
             $funcionario->telefone = $request->telefone;
             $funcionario->salario_dia = $request->salario_dia;
             $funcionario->funcao = $request->funcao;
-
+            $funcionario->status_db = 1;
             if ($funcionario->save()) {
-                return redirect()->route('funcionarios.criar');
+                return redirect()->route('funcionarios.show');
             }
         }
         return redirect()->route('dashboard.login');
@@ -66,7 +66,7 @@ class FuncionarioController extends Controller
     public function show()
     {
         if (Auth::check() === true) {
-            $funcionarios = Funcionario::all();
+            $funcionarios = Funcionario::all()->where('status_db', 1);
             return view('ver_funcionarios', [
                 'funcionarios' => $funcionarios
             ]);
@@ -111,6 +111,10 @@ class FuncionarioController extends Controller
     public function destroy(Funcionario $funcionario)
     {
         if (Auth::check() === true) {
+            $funcionario->status_db=0;
+            if($funcionario->save()){
+                return redirect()->route('funcionarios.show');
+            }
         }
         return redirect()->route('dashboard.login');
     }

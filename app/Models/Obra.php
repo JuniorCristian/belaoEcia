@@ -11,12 +11,12 @@ class Obra extends Model
 
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'cliente', 'id');
+        return $this->belongsTo(Cliente::class, 'cliente', 'id')->where('status_db', 1);
     }
 
     public function funcionario()
     {
-        return $this->belongsToMany(Funcionario::class, 'funcionarios_obras', 'obra', 'funcionario');
+        return $this->belongsToMany(Funcionario::class, 'funcionarios_obras', 'obra', 'funcionario')->where('status_db', 1);
     }
 
     public function faltas()

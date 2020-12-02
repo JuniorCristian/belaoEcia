@@ -282,7 +282,7 @@ $seo['title'] = "Funcionarios | Belão&CIA Manegement System";
         <!-- Atlantis DEMO methods, don't include it in your project! -->
         <script src="{{route('home')}}/js/setting-demo.js"></script>
         <script src="{{route('home')}}/js/demo.js"></script>
-        <script src="{{route('home')}}/js/obras.js"></script>
+        <script src="{{route('home')}}/js/funcionarios.js"></script>
         <script src="{{route('home')}}/js/script.js"></script>
         <script src="{{route('home')}}/dataTables/datatables.min.js"></script>
         <script>

@@ -34,8 +34,8 @@ class ObraController extends Controller
     public function create()
     {
         if (Auth::check() === true) {
-            $clientes = Cliente::all();
-            $funcionarios = Funcionario::all();
+            $clientes = Cliente::all()->where('status_db', 1);
+            $funcionarios = Funcionario::all()->where('status_db', 1);
             return view('criar_obras', [
                 'clientes'=>$clientes,
                 'funcionarios'=>$funcionarios
@@ -121,8 +121,8 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $obra->funcionario = $obra->funcionario()->get();
-            $funcionarios = Funcionario::all();
-            $clientes = Cliente::all();
+            $funcionarios = Funcionario::all()->where('status_db', 1);
+            $clientes = Cliente::all()->where('status_db', 1);
             return view('editar_obras', [
                 'obra'=>$obra,
                 'funcionarios'=>$funcionarios,
@@ -142,7 +142,7 @@ class ObraController extends Controller
     public function update(Request $request, Obra $obra)
     {
         if (Auth::check() === true) {
-            $funcionarios = $obra->funcionario()->get();
+            $funcionarios = Funcionario::all()->where('obra', $obra->id);
             foreach ($funcionarios as $funcionario){
                 $funcionario->delete();
             }
@@ -162,6 +162,8 @@ class ObraController extends Controller
             }
             $obra->data_inicio_prevista = $request->data_inicio_prevista;
             $obra->data_final_prevista = $request->data_final_prevista;
+            $obra->data_inicio = $request->data_inicio;
+            $obra->data_final = $request->data_final;
             $obra->cep = $request->cep;
             $obra->rua = $request->rua;
             $obra->numero = $request->numero;

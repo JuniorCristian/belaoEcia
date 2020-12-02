@@ -123,12 +123,12 @@ $seo['title'] = "Obras | Belão&CIA Manegement System";
                                             <th>Cliente</th>
                                             <th>Orçamento</th>
                                             <th>Endereço</th>
-                                            <th>Data de Inicio</th>
-                                            <th>Data de Fim</th>
+                                            <th>Data Inicial</th>
+                                            <th>Data Final</th>
                                             <th>Status</th>
                                             <th>Editar</th>
                                             <th>Excluir</th>
-                                            <th>Relatórios</th>
+                                            <th>Gastos</th>
                                         </tr>
                                         </thead>
                                         <tbody>

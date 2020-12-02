@@ -78,7 +78,7 @@ $seo['title'] = "Clientes | Belão&CIA Manegement System";
 
     <?php
     $MODULO = 'clientes';
-    $func = 'listar';
+    $func = 'criar';
     include("includes/sidebar.blade.php")?>
 
     <div class="main-panel">
@@ -137,37 +137,37 @@ $seo['title'] = "Clientes | Belão&CIA Manegement System";
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="cep">CEP</label>
-                                                <input type="text" class="form-control" id="cep" name="cep">
+                                                <input type="text" class="form-control" id="cep" name="cep" placeholder="Insira o CEP">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="rua">Rua</label>
-                                                <input type="text" class="form-control" id="rua" name="rua">
+                                                <input type="text" class="form-control" id="rua" name="rua" placeholder="Insira a rua">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="numero">Número</label>
-                                                <input type="text" class="form-control" id="numero" name="numero">
+                                                <input type="text" class="form-control" id="numero" name="numero" placeholder="Insira o número">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="complemento">Complemento</label>
-                                                <input type="text" class="form-control" id="complemento" name="complemento">
+                                                <input type="text" class="form-control" id="complemento" name="complemento" placeholder="Insira a complemento">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="bairro">Bairro</label>
-                                                <input type="text" class="form-control" id="bairro" name="bairro">
+                                                <input type="text" class="form-control" id="bairro" name="bairro" placeholder="Insira o bairro">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">
                                             <div class="form-group">
                                                 <label for="cep">Cidade</label>
-                                                <input type="text" class="form-control" id="cidade" name="cidade">
+                                                <input type="text" class="form-control" id="cidade" name="cidade" placeholder="Insira a cidade">
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-lg-4">

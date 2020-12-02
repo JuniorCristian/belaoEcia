@@ -9,16 +9,10 @@ class Funcionario extends Model
 {
     protected $table = 'funcionarios';
 
-    public function validaCpf($cpf)
-    {
-        $this->validate($cpf, [
-            'cpf' => 'required|cpf',
-        ]);
-    }
 
     public function obras()
     {
-        return $this->belongsToMany(Obra::class, 'funcionarios_obras', 'funcionario', 'obra');
+        return $this->belongsToMany(Obra::class, 'funcionarios_obras', 'funcionario', 'obra')->where('status_db', 1);
     }
 
     public function faltas()
