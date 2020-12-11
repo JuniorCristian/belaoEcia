@@ -10,18 +10,17 @@ $seo['url'] = "";
 
 $head['author'] = 'Cristian Robert Belão de Meira Junior';
 $head['copyright'] = '';
-include('seo/login_seo.php');
 ?>
     <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title><?php print $seo['title']; ?></title>
+    <title>Login | {{env('APP_NAME')}}</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport'/>
     <link rel="icon" href="{{route('home')}}/img/icon.ico" type="image/x-icon"/>
 
     <!-- Fonts and icons -->
-    <script src="{{route('home')}}resources/js/plugin/webfont/webfont.min.js"></script>
+    <script src="{{env("APP_URL")}}/js/plugin/webfont/webfont.min.js"></script>
     <script>
         WebFont.load({
             google: {"families": ["Lato:300,400,700,900"]},
@@ -36,15 +35,11 @@ include('seo/login_seo.php');
     </script>
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="{{route('home')}}/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{route('home')}}/css/atlantis.min.css">
+    <link rel="stylesheet" href="{{asset("/css/bootstrap.min.css")}}">
+    <link rel="stylesheet" href="{{asset("/css/all.css")}}">
+    <link rel="stylesheet" href="{{asset("/fonts/flaticon/flaticon.min.css")}}">
 
-    <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="{{route('home')}}/css/demo.css">
-    <link rel="stylesheet" href="{{route('home')}}/css/all.css">
-    <link rel="stylesheet" href="{{route('home')}}/css/style.css">
-    <link rel="stylesheet" type="text/css" href="{{route('home')}}/datatables/datatables.min.css"/>
-    <?php include 'seo/analytics.php'; ?>
+    <link rel="stylesheet" href="{{asset("/css/style.min.css")}}">
 </head>
 <body>
 <div class="container">
@@ -111,48 +106,37 @@ include('seo/login_seo.php');
 </div>
 
 <!--   Core JS Files   -->
-<script src="{{route('home')}}/js/core/jquery.3.2.1.min.js"></script>
-<script src="{{route('home')}}/js/all.js"></script>
-<script src="{{route('home')}}/js/core/popper.min.js"></script>
-<script src="{{route('home')}}/js/core/bootstrap.min.js"></script>
+<script src="{{asset("/js/core/jquery.3.2.1.min.js")}}"></script>
+<script src="{{asset("/js/all.js")}}"></script>
+<script src="{{asset("/js/core/popper.min.js")}}"></script>
+<script src="{{asset("/js/core/bootstrap.min.js")}}"></script>
 <!-- jQuery UI -->
-<script src="{{route('home')}}/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-<script src="{{route('home')}}/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+<script src="{{asset("/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js")}}"></script>
+<script src="{{asset("/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js")}}"></script>
 
 <!-- jQuery Scrollbar -->
-<script src="{{route('home')}}/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-
+<script src="{{asset("/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js")}}"></script>
 
 <!-- Chart JS -->
-<script src="{{route('home')}}/js/plugin/chart.js/chart.min.js"></script>
+<script src="{{asset("/js/plugin/chart.js/chart.min.js")}}"></script>
 
 <!-- jQuery Sparkline -->
-<script src="{{route('home')}}/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+<script src="{{asset("/js/plugin/jquery.sparkline/jquery.sparkline.min.js")}}"></script>
 
 <!-- Chart Circle -->
-<script src="{{route('home')}}/js/plugin/chart-circle/circles.min.js"></script>
-
-<!-- Datatables -->
-<script src="{{route('home')}}/js/plugin/datatables/datatables.min.js"></script>
+<script src="{{asset("/js/plugin/chart-circle/circles.min.js")}}"></script>
 
 <!-- Bootstrap Notify -->
-<script src="{{route('home')}}/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
-
-<!-- jQuery Vector Maps -->
-<script src="{{route('home')}}/js/plugin/jqvmap/jquery.vmap.min.js"></script>
-<script src="{{route('home')}}/js/plugin/jqvmap/maps/jquery.vmap.world.js"></script>
+<script src="{{asset("/js/plugin/bootstrap-notify/bootstrap-notify.min.js")}}"></script>
 
 <!-- Sweet Alert -->
-<script src="{{route('home')}}/js/plugin/sweetalert/sweetalert.min.js"></script>
+<script src="{{asset("/js/plugin/sweetalert/sweetalert.min.js")}}"></script>
 
 <!-- Atlantis JS -->
-<script src="{{route('home')}}/js/atlantis.min.js"></script>
+<script src="{{asset("/js/atlantis.min.js")}}"></script>
 
-<!-- Atlantis DEMO methods, don't include it in your project! -->
-<script src="{{route('home')}}/js/setting-demo.js"></script>
-<script src="{{route('home')}}/js/demo.js"></script>
-<script src="{{route('home')}}/js/login.js"></script>
-<script src="{{route('home')}}/js/script.js"></script>
+<script src="{{asset("/js/login.min.js")}}"></script>
+<script src="{{asset("/js/script.min.js")}}"></script>
 
 </body>
 
