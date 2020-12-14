@@ -14,7 +14,7 @@ $head['copyright'] = '';
     <link rel="icon" href="{{env('APP_URL')}}/storage/icon.ico" type="image/x-icon"/>
 
     <!-- Fonts and icons -->
-    <script src="{{env("APP_URL")}}/js/plugin/webfont/webfont.min.js"></script>
+    <script src="{{url(mix("/js/plugin/webfont/webfont.min.js"))}}"></script>
     <script>
         WebFont.load({
             google: {"families": ["Lato:300,400,700,900"]},
@@ -29,14 +29,13 @@ $head['copyright'] = '';
     </script>
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="{{asset("/css/bootstrap.min.css")}}">
+    <link rel="stylesheet" href="{{url(mix("/css/bootstrap.min.css"))}}">
     <link rel="stylesheet" href="{{asset("/css/all.min.css")}}">
-    <link rel="stylesheet" href="{{asset("/css/atlantis.min.css")}}">
-    <link rel="stylesheet" href="{{asset("/fonts/flaticon/flaticon.min.css")}}">
+    <link rel="stylesheet" href="{{url(mix("/css/atlantis.min.css"))}}">
+    <link rel="stylesheet" href="{{url(mix("/fonts/flaticon/flaticon.min.css"))}}">
 
-    <link rel="stylesheet" href="{{asset("/css/style.min.css")}}">
-    <link rel="stylesheet" href="{{asset("/datatables/datatables.min.css")}}">
-    <link rel="stylesheet" href="{{asset("/datatables/responsive.datatables.css")}}">
+    <link rel="stylesheet" href="{{url(mix("/css/style.min.css"))}}">
+    <link rel="stylesheet" href="{{url(mix("/datatables/datatables.min.css"))}}">
 </head>
 <body data-background-color="{{Auth::user()->cor_background}}">
 <div class="wrapper">
@@ -45,7 +44,7 @@ $head['copyright'] = '';
         <div class="logo-header" data-background-color="{{Auth::user()->cor_header}}">
 
             <a href="{{route('home')}}" class="logo">
-                <img src="{{env('APP_URL')}}/storage/logo.svg" alt="navbar brand" class="navbar-brand">
+                <img src="{{url('/storage/logo.svg')}}" alt="navbar brand" class="navbar-brand">
             </a>
             <button class="navbar-toggler sidenav-toggler ml-auto" type="button" data-toggle="collapse"
                     data-target="collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -77,7 +76,7 @@ $head['copyright'] = '';
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false">
                             <div class="avatar-sm">
                                 <img
-                                    src="{{env('APP_URL')}}/storage/{{Auth::user()->profile_photo_path}}"
+                                    src="{{url('/storage/'.Auth::user()->profile_photo_path)}}"
                                     alt="..." class="avatar-img rounded-circle">
                             </div>
                         </a>
@@ -86,7 +85,7 @@ $head['copyright'] = '';
                                 <li>
                                     <div class="user-box">
                                         <div class="avatar-lg"><img
-                                                src="{{env('APP_URL')}}/storage/{{Auth::user()->profile_photo_path}}"
+                                                src="{{url('/storage/'.Auth::user()->profile_photo_path)}}"
                                                 alt="image profile" class="avatar-img rounded"></div>
                                         <div class="u-text">
                                             <h4>{{Auth::user()->name}}</h4>
@@ -239,41 +238,43 @@ $head['copyright'] = '';
 
 
 <!--   Core JS Files   -->
-<script src="{{asset("/js/core/jquery.3.2.1.min.js")}}"></script>
+<script src="{{url(mix("/js/core/jquery.3.2.1.min.js"))}}"></script>
 <script src="{{asset("/js/all.js")}}"></script>
-<script src="{{asset("/js/core/popper.min.js")}}"></script>
-<script src="{{asset("/js/core/bootstrap.min.js")}}"></script>
+<script src="{{url(mix("/js/core/popper.min.js"))}}"></script>
+<script src="{{url(mix("/js/core/bootstrap.min.js"))}}"></script>
 <!-- jQuery UI -->
-<script src="{{asset("/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js")}}"></script>
-<script src="{{asset("/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js")}}"></script>
+<script src="{{url(mix("/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js"))}}"></script>
+<script src="{{url(mix("/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"))}}"></script>
 
 <!-- jQuery Scrollbar -->
-<script src="{{asset("/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js")}}"></script>
+<script src="{{url(mix("/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"))}}"></script>
 
 <!-- Chart JS -->
-<script src="{{asset("/js/plugin/chart.js/chart.min.js")}}"></script>
+<script src="{{url(mix("/js/plugin/chart.js/chart.min.js"))}}"></script>
 
 <!-- jQuery Sparkline -->
-<script src="{{asset("/js/plugin/jquery.sparkline/jquery.sparkline.min.js")}}"></script>
+<script src="{{url(mix("/js/plugin/jquery.sparkline/jquery.sparkline.min.js"))}}"></script>
 
 <!-- Chart Circle -->
-<script src="{{asset("/js/plugin/chart-circle/circles.min.js")}}"></script>
+<script src="{{url(mix("/js/plugin/chart-circle/circles.min.js"))}}"></script>
 
 <!-- Bootstrap Notify -->
-<script src="{{asset("/js/plugin/bootstrap-notify/bootstrap-notify.min.js")}}"></script>
+<script src="{{url(mix("/js/plugin/bootstrap-notify/bootstrap-notify.min.js"))}}"></script>
 
 <!-- DataTables -->
-<script src="{{asset("/datatables/datatables.min.js")}}"></script>
-<script src="{{asset("/datatables/datatables.responsive.js")}}"></script>
+<script src="{{url(mix("/datatables/datatables.min.js"))}}"></script>
 
 <!-- Sweet Alert -->
-<script src="{{asset("/js/plugin/sweetalert/sweetalert.min.js")}}"></script>
+<script src="{{url(mix("/js/plugin/sweetalert/sweetalert.min.js"))}}"></script>
 
 <!-- Atlantis JS -->
-<script src="{{asset("/js/atlantis.min.js")}}"></script>
+<script src="{{url(mix("/js/atlantis.min.js"))}}"></script>
 
-<script src="{{asset("/js/$MODULO.min.js")}}"></script>
-<script src="{{asset("/js/script.min.js")}}"></script>
+<!-- JQuery Mask -->
+<script src="{{url(mix("/js/plugin/jquery-mask/jquery.mask.min.js"))}}"></script>
+
+<script src="{{url(mix("/js/$MODULO.min.js"))}}"></script>
+<script src="{{url(mix("/js/script.min.js"))}}"></script>
 
 </body>
 </html>

@@ -46,8 +46,8 @@ $func = 'criar';
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text">R$</span>
                                                 </div>
-                                                <input type="number" num id="orcamento" name="orcamento"
-                                                       class="form-control"
+                                                <input type="text" num id="orcamento" name="orcamento"
+                                                       class="form-control money"
                                                        aria-label="Amount (to the nearest dollar)">
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">,00</span>
@@ -69,7 +69,7 @@ $func = 'criar';
                                                     </div>
                                                     <input type="number" num id="orcamento_materias"
                                                            name="orcamento_materias"
-                                                           class="form-control"
+                                                           class="form-control money"
                                                            aria-label="Amount (to the nearest dollar)">
                                                     <div class="input-group-append">
                                                         <span class="input-group-text">,00</span>

@@ -592,6 +592,7 @@ class ComposerStaticInitfbddea05004778952298cbc6b6854194
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\ClienteController' => __DIR__ . '/../..' . '/app/Http/Controllers/ClienteController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\FaltasObraController' => __DIR__ . '/../..' . '/app/Http/Controllers/FaltasObraController.php',
         'App\\Http\\Controllers\\FuncionarioController' => __DIR__ . '/../..' . '/app/Http/Controllers/FuncionarioController.php',
         'App\\Http\\Controllers\\ObraController' => __DIR__ . '/../..' . '/app/Http/Controllers/ObraController.php',
         'App\\Http\\Controllers\\UsuarioController' => __DIR__ . '/../..' . '/app/Http/Controllers/UsuarioController.php',

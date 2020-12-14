@@ -121,6 +121,7 @@
       <path value="$PROJECT_DIR$/vendor/laravel/sanctum" />
       <path value="$PROJECT_DIR$/vendor/geekcom/validator-docs" />
       <path value="$PROJECT_DIR$/vendor/thiagocfn/inscricaoestadual" />
+      <path value="$PROJECT_DIR$/vendor/igorescobar/jquery-mask-plugin" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.3" />

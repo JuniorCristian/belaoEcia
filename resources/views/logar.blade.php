@@ -17,16 +17,16 @@ $head['copyright'] = '';
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Login | {{env('APP_NAME')}}</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport'/>
-    <link rel="icon" href="{{route('home')}}/img/icon.ico" type="image/x-icon"/>
+    <link rel="icon" href="{{asset('storage/icon.ico')}}" type="image/x-icon"/>
 
     <!-- Fonts and icons -->
-    <script src="{{env("APP_URL")}}/js/plugin/webfont/webfont.min.js"></script>
+    <script src="{{url(mix("/js/plugin/webfont/webfont.min.js"))}}"></script>
     <script>
         WebFont.load({
             google: {"families": ["Lato:300,400,700,900"]},
             custom: {
                 "families": ["Flaticon", "Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-                urls: ['assets/css/fonts.min.css']
+                urls: ['css/fonts.min.css']
             },
             active: function () {
                 sessionStorage.fonts = true;
@@ -36,7 +36,7 @@ $head['copyright'] = '';
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{asset("/css/bootstrap.min.css")}}">
-    <link rel="stylesheet" href="{{asset("/css/all.css")}}">
+    <link rel="stylesheet" href="{{asset("/css/all.min.css")}}">
     <link rel="stylesheet" href="{{asset("/fonts/flaticon/flaticon.min.css")}}">
 
     <link rel="stylesheet" href="{{asset("/css/style.min.css")}}">
@@ -107,7 +107,6 @@ $head['copyright'] = '';
 
 <!--   Core JS Files   -->
 <script src="{{asset("/js/core/jquery.3.2.1.min.js")}}"></script>
-<script src="{{asset("/js/all.js")}}"></script>
 <script src="{{asset("/js/core/popper.min.js")}}"></script>
 <script src="{{asset("/js/core/bootstrap.min.js")}}"></script>
 <!-- jQuery UI -->
@@ -136,7 +135,6 @@ $head['copyright'] = '';
 <script src="{{asset("/js/atlantis.min.js")}}"></script>
 
 <script src="{{asset("/js/login.min.js")}}"></script>
-<script src="{{asset("/js/script.min.js")}}"></script>
 
 </body>
 

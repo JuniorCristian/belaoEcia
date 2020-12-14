@@ -51,7 +51,7 @@ $func = 'listar';
                                         <div class="form-group">
                                             <label for="telefone">Telefone</label>
                                             <input value="{{$cliente->telefone}}" type="text" id="telefone"
-                                                   name="telefone" class="form-control"
+                                                   name="telefone" class="form-control telefone"
                                                    placeholder="Insira o telefone do cliente">
                                         </div>
                                     </div>
@@ -59,14 +59,14 @@ $func = 'listar';
                                         <div class="form-group">
                                             <label for="documento">CPF/CNPJ</label>
                                             <input value="{{$cliente->doc_identificacao}}" type="text" id="documento"
-                                                   name="doc_identificacao" class="form-control"
+                                                   name="doc_identificacao" class="form-control doc_identificacao"
                                                    placeholder="Insira o CPF/CNPF do cliente">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group">
                                             <label for="cep">CEP</label>
-                                            <input value="{{$cliente->cep}}" type="text" class="form-control" id="cep"
+                                            <input value="{{$cliente->cep}}" type="text" class="form-control cep" id="cep"
                                                    name="cep" placeholder="Insira o CEP">
                                         </div>
                                     </div>

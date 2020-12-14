@@ -19,6 +19,7 @@ class CreateFaltasObrasTable extends Migration
             $table->foreignId('funcionario');
             $table->boolean('falta');
             $table->boolean('meio_dia');
+            $table->float('valor');
             $table->timestamps();
 
             $table->foreign('obra')->references('id')->on('obras')->onUpdate('cascade');

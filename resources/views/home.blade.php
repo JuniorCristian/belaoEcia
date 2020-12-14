@@ -1,6 +1,6 @@
 <?php
 $seo['title'] = 'Home';
-$MODULO = '';
+$MODULO = 'home';
 $func = '';
 ?>
 @extends('layouts.app')
@@ -10,7 +10,7 @@ $func = '';
             <div class="page-inner py-5">
                 <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
                     <div>
-                        <h2 class="text-white pb-2 fw-bold">Belão&CIA Manegement System</h2>
+                        <h2 class="text-white pb-2 fw-bold">{{env('APP_NAME')}}</h2>
                         <h5 class="text-white op-7 mb-2">O sistema de gerenciamento de obra da empresa
                             Belão&CIA</h5>
                     </div>
@@ -35,6 +35,7 @@ $func = '';
                                 <th>Editar</th>
                                 <th>Concluir</th>
                                 <th>Faltas</th>
+                                <th>Materiais</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -75,6 +76,8 @@ $func = '';
                                                     class="fa fa-check"></i></a></td>
                                         <td><a href="{{route('obras.faltas', ['obra'=>$obra->id])}}"><i
                                                     class="fas fa-hard-hat"></i></a></td>
+                                        <td><a href="{{route('obras.faltas', ['obra'=>$obra->id])}}"><i
+                                                    class="fas fa-toolbox"></i></a></td>
                                     </tr>
                                 @endif
                             @endforeach

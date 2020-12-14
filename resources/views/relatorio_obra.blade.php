@@ -27,6 +27,34 @@ $func = 'listar';
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
+                            <div class="card-title">Filtrar</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="data_inicio">Data de início</label>
+                                    <input type="date" class="form-control" id="data_inicio"
+                                           name="data_inicio">
+                                </div>
+                                <div class="form-group">
+                                    <label for="data_inicio">Data final</label>
+                                    <input type="date" class="form-control" id="data_final"
+                                           name="data_final">
+                                </div>
+                                <div class="align-items-xl-end">
+                                    <div class="card-body">
+                                        <button class="btn btn-primary">Filtrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
                             <h4 class="card-title">Obra de {{$obra->cliente()->first()->nome}}</h4>
                         </div>
                         <div class="card-body">
@@ -36,7 +64,7 @@ $func = 'listar';
                                     <thead>
                                     <tr>
                                         <th>Nome funcionário</th>
-                                        <th>Numero de Faltas</th>
+                                        <th>Número de Faltas</th>
                                         <th>Meios dias</th>
                                         <th>Salário do mês</th>
                                     </tr>
@@ -52,12 +80,11 @@ $func = 'listar';
                                                     $funcionario->num_faltas += 1;
                                                 } elseif ($salario->meio_dia) {
                                                     $funcionario->meio_dia += 1;
-                                                    $funcionario->salario += $funcionario->salario_dia / 2;
                                                     $obra->salario_total += $funcionario->salario_dia / 2;
                                                 } else {
-                                                    $funcionario->salario += $funcionario->salario_dia;
                                                     $obra->salario_total += $funcionario->salario_dia;
                                                 }
+                                                $funcionario->salario += $salario->valor;
                                                 ?>
                                             @endif
                                         @endforeach
@@ -69,15 +96,13 @@ $func = 'listar';
                                         </tr>
 
                                     @endforeach
+                                    </tbody>
                                     <thead>
                                     <tr>
                                         <th>Total do mês</th>
-                                        <td></td>
-                                        <td></td>
                                         <td>R$ {{number_format($obra->salario_total, 2, ',', '.')}}</td>
                                     </tr>
                                     </thead>
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -110,32 +135,27 @@ $func = 'listar';
                                                 $salario->data = date('d/m/Y', strtotime($salario->created_at));
                                                 if ($salario->falta) {
                                                     $salario->status_salario_dia = 'Faltou';
-                                                    $salario->salario_dia = 0.00;
                                                 } elseif ($salario->meio_dia) {
                                                     $salario->status_salario_dia = 'Meio Dia';
-                                                    $salario->salario_dia = $funcionario->salario_dia / 2;
-                                                    $funcionario->salario += $funcionario->salario_dia / 2;
                                                 } else {
                                                     $salario->status_salario_dia = 'Dia completo';
-                                                    $salario->salario_dia = $funcionario->salario_dia;
-                                                    $funcionario->salario += $funcionario->salario_dia;
                                                 }
+                                                $funcionario->salario += $salario->valor;
                                                 ?>
                                                 <tr>
                                                     <td>{{$salario->data}}</td>
                                                     <td>{{$salario->status_salario_dia}}</td>
-                                                    <td>R${{number_format($salario->salario_dia, 2, ',', '.')}}</td>
+                                                    <td>R${{number_format($salario->valor, 2, ',', '.')}}</td>
                                                 </tr>
-                                            @endif
+                                        @endif
                                         @endforeach
+                                        </tbody>
                                         <thead>
                                         <tr>
                                             <th>Total Obra</th>
-                                            <td></td>
                                             <td>R$ {{number_format($funcionario->salario, 2, ',', '.')}}</td>
                                         </tr>
                                         </thead>
-                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -148,9 +168,10 @@ $func = 'listar';
     <input type="hidden" value="{{$key}}" id="valorDatatable">
     <script>
         import Input from "@/../../public/js/Jetstream/Input";
+        import Button from "../../public/js/Jetstream/Button";
 
         export default {
-            components: {Input}
+            components: {Button, Input}
         }
     </script>
 @endsection

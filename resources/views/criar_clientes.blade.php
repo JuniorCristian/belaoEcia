@@ -49,7 +49,7 @@ $func = 'criar';
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group">
                                             <label for="telefone">Telefone</label>
-                                            <input type="text" id="telefone" name="telefone" class="form-control"
+                                            <input type="text" id="telefone" name="telefone" class="telefone form-control"
                                                    placeholder="Insira o telefone do cliente">
                                         </div>
                                     </div>
@@ -57,13 +57,13 @@ $func = 'criar';
                                         <div class="form-group">
                                             <label for="documento">CPF/CNPJ</label>
                                             <input type="text" id="documento" name="doc_identificacao"
-                                                   class="form-control" placeholder="Insira o CPF/CNPF do cliente">
+                                                   class="form-control doc_identificacao" placeholder="Insira o CPF/CNPF do cliente">
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group">
                                             <label for="cep">CEP</label>
-                                            <input type="text" class="form-control" id="cep" name="cep"
+                                            <input type="text" class="form-control cep" id="cep" name="cep"
                                                    placeholder="Insira o CEP">
                                         </div>
                                     </div>
