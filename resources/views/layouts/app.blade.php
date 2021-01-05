@@ -35,6 +35,7 @@ $head['copyright'] = '';
     <link rel="stylesheet" href="{{url(mix("/fonts/flaticon/flaticon.min.css"))}}">
 
     <link rel="stylesheet" href="{{url(mix("/css/style.min.css"))}}">
+    <link rel="stylesheet" href="{{url(mix("/css/$MODULO.min.css"))}}">
     <link rel="stylesheet" href="{{url(mix("/datatables/datatables.min.css"))}}">
 </head>
 <body data-background-color="{{Auth::user()->cor_background}}">
@@ -275,6 +276,7 @@ $head['copyright'] = '';
 
 <script src="{{url(mix("/js/$MODULO.min.js"))}}"></script>
 <script src="{{url(mix("/js/script.min.js"))}}"></script>
+@stack('scripts')
 
 </body>
 </html>

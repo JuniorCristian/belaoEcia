@@ -47,41 +47,10 @@ $func = 'gerenciar';
                                         <th>Gastos</th>
                                         <th>Endereço</th>
                                         <th>Data de Inicio</th>
-                                        <th>Editar</th>
-                                        <th>Concluir</th>
-                                        <th>Faltas</th>
+                                        <th>Ações</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($obras as $obra)
-                                        @if($obra->data_inicio != null && $obra->data_final == null)
-                                            <?php
-                                            if ($obra->data_inicio == null) {
-                                                $obra->data_start = date('d/m/Y', strtotime($obra->data_inicio_prevista));
-                                            } else {
-                                                $obra->data_start = date('d/m/Y', strtotime($obra->data_inicio));
-                                            }
-                                            $obra->gastos = 20;
-                                            ?>
-                                            <tr>
-                                                <td>{{$obra->cliente()->first()->nome}}</td>
-                                                <td>R$ {{$obra->orcamento}},00</td>
-                                                <td>R$ {{$obra->gastos}},00</td>
-                                                <td>Rua {{$obra->rua}}, {{$obra->numero}} {{$obra->cidade}}
-                                                    -{{$obra->uf}}</td>
-                                                <td>{{$obra->data_start}}</td>
-                                                <td><a class=""
-                                                       href="{{route('obras.edit', ['obra'=>$obra->id])}}"><i
-                                                            class="fa fa-edit"></i></a></td>
-                                                <td><a data-id="{{$obra->id}}" class="conclui"
-                                                       data-csrf="{{csrf_token()}}"
-                                                       data-rota="{{route('obras.concluir', ['obra'=>$obra->id])}}"><i
-                                                            class="fa fa-check"></i></a></td>
-                                                <td><a href="{{route('obras.faltas', ['obra'=>$obra->id])}}"><i
-                                                            class="fas fa-hard-hat"></i></a></td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -92,3 +61,45 @@ $func = 'gerenciar';
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        function reload() {
+            dataTables.draw();
+        }
+
+        var dataTables = $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json'
+            },
+
+            "pageLength": 100,
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+
+            "ajax": {
+                url: '{{route('obras.datatableAtivas')}}',
+                dataType: 'JSON',
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization');
+                },
+                data: function (d) {
+                    d._token = "{{csrf_token()}}"
+                },
+            },
+            columns: [
+                {data: 'cliente', name: 'cliente'},
+                {data: 'orcamento', name: 'orcamento'},
+                {data: 'gastos', name: 'gastos'},
+                {data: 'endereco', name: 'endereco'},
+                {data: 'data_start', name: 'data_start'},
+                {data: 'acoes', name: 'acoes'},
+            ],
+        });
+    </script>
+@endpush

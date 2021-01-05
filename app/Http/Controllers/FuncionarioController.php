@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Faltas_Obra;
 use App\Models\Funcionario;
+use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -127,5 +128,32 @@ class FuncionarioController extends Controller
             return view('salario_funcionario', ['obras'=>$obras, 'salarios'=>$salarios, 'funcionario'=>$funcionario]);
         }
         return redirect()->route('dashboard.login');
+    }
+
+    public function pagar(Request $request, Obra $obra)
+    {
+        if(isset($request->data_inicio)){
+            $data_inicio = date('Y-m-d', strtotime($request->data_inicio));
+        }else{
+            $data_inicio = date('Y-m-1');
+        }
+        if(isset($request->data_final)){
+            $data_final = date('Y-m-d 23:59:59.998', strtotime($request->data_final));
+        }else{
+            $data_final = date('Y-m-d 23:59:59.998');
+        }
+        if(isset($request->funcionario)){
+            $funcionario = $request->funcionario;
+        }else{
+            $funcionario = "";
+        }
+        $datatables = $obra->faltas()->whereBetween('created_at', [$data_inicio, $data_final])->where('funcionario', "LIKE",  "%".$funcionario."%")->orderBy("created_at", "asc")->get();;
+
+        foreach ($datatables as $key=>$datatable){
+            $datatable->dia_pago = 1;
+            $datatable->save();
+        }
+
+        return json_encode(['status'=>true]);
     }
 }

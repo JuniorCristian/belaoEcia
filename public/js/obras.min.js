@@ -1,10 +1,4 @@
 $(document).ready( function () {
-    for($i = 0; $i <= $('#valorDatatable').val(); $i++){
-        $('#datatable'+$i).DataTable({
-            responsive: true
-        });
-    }
-    $('#valorDatatable').remove();
     $("#mostra_orc_material").ready(function (){
         if(this.checked){
             $(".orc_material").show();

@@ -32,6 +32,9 @@ Route::get('/obras/{obra}/edit', [ObraController::class, 'edit'])->name('obras.e
 Route::get('/obras/{obra}/faltas', [ObraController::class, 'faltas'])->name('obras.faltas');
 Route::get('/obras/relatorio/{obra}', [ObraController::class, 'relatorio'])->name('obras.relatorio');
 Route::post('/obras/store', [ObraController::class, 'store'])->name('obras.store');
+Route::post('/obras/datatable', [ObraController::class, 'datatableAtivas'])->name('obras.datatableAtivas');
+Route::post('/obras/datarelatorio/{obra}', [ObraController::class, 'datatableRelatorio'])->name('obras.dataRelatorio');
+Route::post('/obras/datarelatoriofuncionario/{obra}', [ObraController::class, 'datatableRelatorioFuncionario'])->name('obras.dataRelatorioFuncionario');
 Route::put('/obras/update/{obra}', [ObraController::class, 'update'])->name('obras.update');
 Route::put('/obras/{obra}/faltas/registar', [ObraController::class, 'registrarFaltas'])->name('obras.registrarFaltas');
 Route::put('/obras/concluir/{obra}', [ObraController::class, 'concluir'])->name('obras.concluir');
@@ -43,6 +46,7 @@ Route::get('/funcionarios/{funcionario}/edit', [FuncionarioController::class, 'e
 Route::get('/funcionarios/salario/{funcionario}', [FuncionarioController::class, 'salario'])->name('funcionarios.salario');
 Route::post('/funcionarios/store', [FuncionarioController::class, 'store'])->name('funcionarios.store');
 Route::put('/funcionarios/update/{funcionario}', [FuncionarioController::class, 'update'])->name('funcionarios.update');
+Route::post('/funcionarios/pagar/{obra}', [FuncionarioController::class, 'pagar'])->name('funcionarios.pagar');
 Route::delete('/funcionarios/delete/{funcionario}', [FuncionarioController::class, 'destroy'])->name('funcionarios.delete');
 
 Route::get('/clientes/criar', [ClienteController::class, 'create'])->name('clientes.criar');

@@ -10,6 +10,7 @@ use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use phpDocumentor\Reflection\Types\String_;
+use function GuzzleHttp\Promise\all;
 use function PHPUnit\Framework\countOf;
 
 class ObraController extends Controller
@@ -37,8 +38,8 @@ class ObraController extends Controller
             $clientes = Cliente::all()->where('status_db', 1);
             $funcionarios = Funcionario::all()->where('status_db', 1);
             return view('criar_obras', [
-                'clientes'=>$clientes,
-                'funcionarios'=>$funcionarios
+                'clientes' => $clientes,
+                'funcionarios' => $funcionarios
             ]);
         }
         return redirect()->route('dashboard.login');
@@ -55,8 +56,8 @@ class ObraController extends Controller
 
         if (Auth::check() === true) {
             $funcionarios = Funcionario::all();
-            foreach ($funcionarios as $key=>$func){
-                if(isset($request['funcionario'.$func->id]) && $request['funcionario'.$func->id]){
+            foreach ($funcionarios as $key => $func) {
+                if (isset($request['funcionario' . $func->id]) && $request['funcionario' . $func->id]) {
                     $funcionario[$key] = $func->id;
                 }
             }
@@ -81,11 +82,11 @@ class ObraController extends Controller
             $obra->uf = $request->uf;
             $obra->cliente = $request->cliente;
             $obra->status_db = 1;
-            if($obra->save()){
-                foreach ($funcionario as $id){
+            if ($obra->save()) {
+                foreach ($funcionario as $id) {
                     $funcionarios_obra = new Funcionarios_Obra();
-                    $funcionarios_obra->funcionario=$id;
-                    $funcionarios_obra->obra=$obra->id;
+                    $funcionarios_obra->funcionario = $id;
+                    $funcionarios_obra->obra = $obra->id;
                     $funcionarios_obra->save();
                 }
                 return redirect()->route('obras.show');
@@ -124,9 +125,9 @@ class ObraController extends Controller
             $funcionarios = Funcionario::all()->where('status_db', 1);
             $clientes = Cliente::all()->where('status_db', 1);
             return view('editar_obras', [
-                'obra'=>$obra,
-                'funcionarios'=>$funcionarios,
-                'clientes'=>$clientes
+                'obra' => $obra,
+                'funcionarios' => $funcionarios,
+                'clientes' => $clientes
             ]);
         }
         return redirect()->route('dashboard.login');
@@ -143,12 +144,12 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $funcionarios = Funcionario::all()->where('obra', $obra->id);
-            foreach ($funcionarios as $funcionario){
+            foreach ($funcionarios as $funcionario) {
                 $funcionario->delete();
             }
             $funcionarios = Funcionario::all();
-            foreach ($funcionarios as $key=>$func){
-                if(isset($request['funcionario'.$func->id]) && $request['funcionario'.$func->id]){
+            foreach ($funcionarios as $key => $func) {
+                if (isset($request['funcionario' . $func->id]) && $request['funcionario' . $func->id]) {
                     $funcionario[$key] = $func->id;
                 }
             }
@@ -173,11 +174,11 @@ class ObraController extends Controller
             $obra->cidade = $request->cidade;
             $obra->uf = $request->uf;
             $obra->cliente = $request->cliente;
-            if($obra->save()){
-                foreach ($funcionario as $id){
+            if ($obra->save()) {
+                foreach ($funcionario as $id) {
                     $funcionarios_obra = new Funcionarios_Obra();
-                    $funcionarios_obra->funcionario=$id;
-                    $funcionarios_obra->obra=$obra->id;
+                    $funcionarios_obra->funcionario = $id;
+                    $funcionarios_obra->obra = $obra->id;
                     $funcionarios_obra->save();
                 }
                 return redirect()->route('obras.show');
@@ -206,8 +207,8 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $obras = Obra::all()->where('status_db', 1)->where('data_final', '=', null)->where('data_inicio', '!=', null);
-            if(count($obras) == 1){
-                return redirect()->route('obras.faltas', ['obra'=>$obras->first()]);
+            if (count($obras) == 1) {
+                return redirect()->route('obras.faltas', ['obra' => $obras->first()]);
             }
             return view('obras_ativas', [
                 'obras' => $obras
@@ -220,7 +221,7 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $obra->data_final = date('Y-m-d H:i:s');
-            if($obra->save()){
+            if ($obra->save()) {
                 return redirect()->route('obras.ativas');
             }
         }
@@ -231,11 +232,11 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $faltas_obra = Faltas_Obra::all()->where('obra', $obra->id)->whereBetween('created_at', [date('Y-m-d'), date('Y-m-d 23:59:59.998')]);
-            if(count($faltas_obra) > 0){
+            if (count($faltas_obra) > 0) {
                 return redirect()->route('obras.show')->withErrors(['Registro de falta dessa obra já foi feito hoje']);
             }
             $funcionarios = $obra->funcionario()->get();
-            return view('faltas_obras', ['obra'=>$obra, 'funcionarios'=>$funcionarios]);
+            return view('faltas_obras', ['obra' => $obra, 'funcionarios' => $funcionarios]);
         }
         return redirect()->route('dashboard.login');
     }
@@ -244,20 +245,21 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $funcionarios = $obra->funcionario()->get();
-            foreach ($funcionarios as $id){
+            foreach ($funcionarios as $id) {
                 $faltas_obras = new Faltas_Obra();
                 $faltas_obras->funcionario = $id->id;
                 $faltas_obras->obra = $obra->id;
-                if(isset($request['falta'.$id->id])){
+                if (isset($request['falta' . $id->id])) {
                     $faltas_obras->falta = 1;
                     $faltas_obras->meio_dia = 0;
-                }elseif(isset($request['meio_dia'.$id->id])){
+                } elseif (isset($request['meio_dia' . $id->id])) {
                     $faltas_obras->falta = 0;
                     $faltas_obras->meio_dia = 1;
-                }else{
+                } else {
                     $faltas_obras->falta = 0;
                     $faltas_obras->meio_dia = 0;
                 }
+                $faltas_obras->dia_pago = 0;
                 $faltas_obras->save();
             }
             return redirect()->route('obras.show');
@@ -270,8 +272,298 @@ class ObraController extends Controller
         if (Auth::check() === true) {
             $salarios = $obra->faltas()->whereBetween('created_at', [date('Y-m-1'), date('Y-m-d 23:59:59.998')])->get();
             $funcionarios = $obra->funcionario()->get();
-            return view('relatorio_obra', ['obra'=>$obra, 'salarios'=>$salarios, 'funcionarios'=>$funcionarios]);
+            return view('relatorio_obra', ['obra' => $obra, 'salarios' => $salarios, 'funcionarios' => $funcionarios]);
         }
         return redirect()->route('dashboard.login');
+    }
+
+    public function datatable(Request $request)
+    {
+
+        $columns = array(
+            0 =>'cliente',
+            1 =>'orcamento',
+            2=> 'gastos',
+            3=> 'endereco',
+            4=> 'data_start',
+            5=> 'acoes',
+        );
+
+        $totalData = Obra::get()->where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")->count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        $datatables =  Obra::where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order,$dir)
+            ->get();
+
+        $data = array();
+        if(!empty($datatables)) {
+            foreach ($datatables as $key => $datatable) {
+                $gastos = $datatable->faltas()->get();
+
+                $newData['cliente'] = $datatable->cliente()->first()->nome;
+                $newData['orcamento'] = $datatable->orcamento + $datatable->orcamento_material;
+                $newData['endereco'] = "Rua $datatable->rua, $datatable->numero $datatable->cidade-$datatable->uf";
+                $newData['acoes'] = '<a class="" href="' . route('obras.edit', ['obra' => $datatable->id]) . '"><i class="fa fa-edit"></i></a><a data-id="' . $datatable->id . '" class="conclui" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.concluir', ['obra' => $datatable->id]) . '"><i class="fa fa-check"></i></a><a href="' . route('obras.faltas', ['obra' => $datatable->id]) . '"><i class="fas fa-hard-hat"></i></a>';
+                $newData['gastos'] = 0;
+                foreach ($gastos as $gasto) {
+                    $newData['gastos'] += $gasto->valor;
+                }
+                $newData['gastos'] = "R$" . number_format($newData['gastos'], "2", ",", ".");
+                $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
+                $newData['data_start'] = date('d/m/Y', strtotime($datatable->data_inicio));
+                $data[]=$newData;
+            }
+        }
+        $json_data = array(
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data,
+        );
+        return json_encode($json_data);
+    }
+
+    public function datatableAtivas(Request $request)
+    {
+
+        $columns = array(
+            0 =>'cliente',
+            1 =>'orcamento',
+            2=> 'gastos',
+            3=> 'endereco',
+            4=> 'data_start',
+            5=> 'acoes',
+        );
+
+        $totalData = Obra::get()->where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")->count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        $datatables =  Obra::where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")
+            ->offset($start)
+            ->limit($limit)
+            ->orderBy($order,$dir)
+            ->get();
+
+        $data = array();
+        if(!empty($datatables)) {
+            foreach ($datatables as $key => $datatable) {
+                $gastos = $datatable->faltas()->get();
+
+                $newData['cliente'] = $datatable->cliente()->first()->nome;
+                $newData['orcamento'] = $datatable->orcamento + $datatable->orcamento_material;
+                $newData['endereco'] = "Rua $datatable->rua, $datatable->numero $datatable->cidade-$datatable->uf";
+                $newData['acoes'] = '<a class="" href="' . route('obras.edit', ['obra' => $datatable->id]) . '"><i class="fa fa-edit"></i></a><a data-id="' . $datatable->id . '" class="conclui" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.concluir', ['obra' => $datatable->id]) . '"><i class="fa fa-check"></i></a><a href="' . route('obras.faltas', ['obra' => $datatable->id]) . '"><i class="fas fa-hard-hat"></i></a>';
+                $newData['gastos'] = 0;
+                foreach ($gastos as $gasto) {
+                    $newData['gastos'] += $gasto->valor;
+                }
+                $newData['gastos'] = "R$" . number_format($newData['gastos'], "2", ",", ".");
+                $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
+                $newData['data_start'] = date('d/m/Y', strtotime($datatable->data_inicio));
+                $data[]=$newData;
+            }
+        }
+        $json_data = array(
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data,
+        );
+        return json_encode($json_data);
+    }
+
+    public function datatableRelatorio(Request $request, Obra $obra)
+    {
+
+        if (isset($request->data_inicio)) {
+            $data_inicio = date('Y-m-d', strtotime($request->data_inicio));
+        } else {
+            $data_inicio = date('Y-m-1');
+        }
+        if (isset($request->data_final)) {
+            $data_final = date('Y-m-d 23:59:59.998', strtotime($request->data_final));
+        } else {
+            $data_final = date('Y-m-d 23:59:59.998');
+        }
+        if ($request->a_pagar == "true" && $request->pago == "false") {
+            $dia_pago = 0;
+        } elseif ($request->a_pagar == "false" && $request->pago == "true") {
+            $dia_pago = 1;
+        } else {
+            $dia_pago = "";
+        }
+
+        $columns = array(
+            0 =>'nome',
+            1 =>'num_faltas',
+            2=> 'num_meio_dia',
+            3=> 'salario_mes',
+            4=> 'tempo_pago',
+        );
+
+        $totalData = $obra->funcionario()->count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        $search = $request->input('search.value');
+
+        $datatables =  $obra->funcionario()->offset($start)
+            ->limit($limit)
+            ->orderBy($order,$dir)
+            ->get();
+
+        $data = array();
+        $salario_total = 0;
+        if(!empty($datatables)){
+            foreach ($datatables as $key => $datatable) {
+                $faltas = $datatable->faltas()->whereBetween('created_at', [$data_inicio, $data_final])->orderBy("created_at", "asc")->where('dia_pago', "LIKE", "%" . $dia_pago . "%")->get();
+                $newData['nome'] = $datatable->nome;
+                $newData['num_faltas'] = 0;
+                $newData['num_meio_dia'] = 0;
+                $newData['salario_mes'] = 0;
+                $newData['tempo_pago'] = "Sem pagamento";
+                $pago = 0;
+                $nao_pago = 0;
+                if(!empty($faltas)) {
+                    foreach ($faltas as $falta) {
+                        $newData['num_faltas'] += $falta->falta;
+                        $newData['num_meio_dia'] += $falta->meio_dia;
+                        $newData['salario_mes'] += $falta->valor;
+                        if ($falta->dia_pago) {
+                            $pago += 1;
+                        } else {
+                            $nao_pago += 1;
+                        }
+                    }
+                    $salario_total += $newData['salario_mes'];
+                    $newData['salario_mes'] = "R$" . number_format($newData['salario_mes'], "2", ",", ".");
+                    if ($pago > 0 && $nao_pago == 0) {
+                        $newData['tempo_pago'] = "Pago";
+                    } elseif ($pago == 0 && $nao_pago > 0) {
+                        $newData['tempo_pago'] = "A pagar";
+                    } elseif ($pago > 0 && $nao_pago > 0) {
+                        $newData['tempo_pago'] = "Pagamento parcial";
+                    }
+                }
+                $data[]=$newData;
+            }
+        }
+        $json_data = array(
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data,
+            "salario_total"   => "R$" . number_format($salario_total, "2", ",", ".")
+        );
+
+        return json_encode($json_data);
+    }
+
+    public function datatableRelatorioFuncionario(Request $request, Obra $obra)
+    {
+        if (isset($request->data_inicio)) {
+            $data_inicio = date('Y-m-d', strtotime($request->data_inicio));
+        } else {
+            $data_inicio = date('Y-m-1');
+        }
+        if (isset($request->data_final)) {
+            $data_final = date('Y-m-d 23:59:59.998', strtotime($request->data_final));
+        } else {
+            $data_final = date('Y-m-d 23:59:59.998');
+        }
+        if (isset($request->funcionario)) {
+            $funcionario = $request->funcionario;
+        } else {
+            $funcionario = "";
+        }
+        if ($request->a_pagar == "true" && $request->pago == "false") {
+            $dia_pago = 0;
+        } elseif ($request->a_pagar == "false" && $request->pago == "true") {
+            $dia_pago = 1;
+        } else {
+            $dia_pago = "";
+        }
+
+        $columns = array(
+            0 =>'created_at',
+            1 =>'falta',
+            2=> 'salario_dia',
+            3=> 'dia_pago',
+        );
+
+        $totalData = $obra->funcionario()->count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        $search = $request->input('search.value');
+
+        $datatables =  $obra->faltas()->whereBetween('created_at', [$data_inicio, $data_final])->where('funcionario', "LIKE", "%" . $funcionario . "%")->where('dia_pago', "LIKE", "%" . $dia_pago . "%")->offset($start)
+            ->limit($limit)
+            ->orderBy($order,$dir)
+            ->get();
+
+
+        $totalFiltered = $obra->faltas()->whereBetween('created_at', [$data_inicio, $data_final])->where('funcionario', "LIKE", "%" . $funcionario . "%")->where('dia_pago', "LIKE", "%" . $dia_pago . "%")->count();
+
+        $data = array();
+        $salario_total = 0;
+        if(!empty($datatables)) {
+            foreach ($datatables as $key => $datatable) {
+                $newData['data'] = date("d/m/Y", strtotime($datatable->created_at));
+                $newData['salario_dia'] = "R$" . number_format($datatable->valor, "2", ",", ".");
+                if ($datatable->dia_pago) {
+                    $newData['dia_pago'] = "Pago";
+                } else {
+                    if ($datatable->falta) {
+                        $newData['dia_pago'] = "Sem pagamento";
+                    } else {
+                        $newData['dia_pago'] = "A pagar";
+                    }
+                }
+                if ($datatable->falta) {
+                    $newData['falta'] = 'Faltou';
+                } elseif ($datatable->meio_dia) {
+                    $newData['falta'] = 'Meio Dia';
+                } else {
+                    $newData['falta'] = 'Dia completo';
+                }
+                $salario_total += $datatable->valor;
+                $data[] = $newData;
+            }
+        }
+        $json_data = array(
+            "draw"            => intval($request->input('draw')),
+            "recordsTotal"    => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data"            => $data,
+            "salario_total"   => "R$" . number_format($salario_total, "2", ",", ".")
+        );
+
+        return json_encode($json_data);
     }
 }

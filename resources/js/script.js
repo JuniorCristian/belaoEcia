@@ -1,7 +1,4 @@
 $(document).ready(function () {
-    $('#datatable').DataTable({
-        responsive: true
-    });
 });
 var options = {
     onKeyPress: function (cpf, ev, el, op) {

@@ -1,7 +1,10 @@
 $(document).ready( function () {
     for($i = 0; $i <= $('#valorDatatable').val(); $i++){
         $('#datatable'+$i).DataTable({
-            responsive: true
+            responsive: true,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json'
+            }
         });
     }
     $('#valorDatatable').remove();
