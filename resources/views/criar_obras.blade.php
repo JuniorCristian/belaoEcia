@@ -29,7 +29,7 @@ $func = 'criar';
                     </li>
                 </ul>
             </div>
-            <form method="post" action="{{route('obras.store')}}">
+            <form method="post" action="{{route('obras.store')}}" class="needs-validation" novalidate>
                 @csrf
                 <div class="row">
                     <div class="col-md-12">
@@ -48,10 +48,13 @@ $func = 'criar';
                                                 </div>
                                                 <input type="text" num id="orcamento" name="orcamento"
                                                        class="form-control money"
-                                                       aria-label="Amount (to the nearest dollar)">
+                                                       aria-label="Amount (to the nearest dollar)" required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text">,00</span>
                                                 </div>
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Por favor informe um orçamento para a obra
                                             </div>
                                         </div>
                                         <div class="form-check">
@@ -75,6 +78,9 @@ $func = 'criar';
                                                         <span class="input-group-text">,00</span>
                                                     </div>
                                                 </div>
+                                                <div class="invalid-feedback">
+                                                    Por favor informe um orçamento de material para a obra
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -82,12 +88,18 @@ $func = 'criar';
                                         <div class="form-group">
                                             <label for="data_inicio">Data de inicio prevista</label>
                                             <input type="date" class="form-control" id="data_inicio_prevista"
-                                                   name="data_inicio_prevista">
+                                                   name="data_inicio_prevista" required>
+                                            <div class="invalid-feedback">
+                                                Por favor informe uma data de inicio para a obra
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <label for="data_final">Data de final prevista</label>
                                             <input type="date" class="form-control" id="data_final_prevista"
-                                                   name="data_final_prevista">
+                                                   name="data_final_prevista" required>
+                                            <div class="invalid-feedback">
+                                                Por favor informe uma data de fim para a obra
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -96,14 +108,20 @@ $func = 'criar';
                                         <div class="form-group">
                                             <label for="cep">CEP</label>
                                             <input type="text" class="form-control" id="cep" name="cep"
-                                                   placeholder="Insira o CEP">
+                                                   placeholder="Insira o CEP" required>
+                                            <div class="invalid-feedback">
+                                                Por favor informe o CEP da a obra
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group">
                                             <label for="rua">Rua</label>
                                             <input type="text" class="form-control" id="rua" name="rua"
-                                                   placeholder="Insira a rua">
+                                                   placeholder="Insira a rua" required>
+                                            <div class="invalid-feedback">
+                                                Por favor informe a rua da a obra
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
@@ -124,21 +142,27 @@ $func = 'criar';
                                         <div class="form-group">
                                             <label for="bairro">Bairro</label>
                                             <input type="text" class="form-control" id="bairro" name="bairro"
-                                                   placeholder="Insira o bairro">
+                                                   placeholder="Insira o bairro" required>
+                                            <div class="invalid-feedback">
+                                                Por favor informe o bairro da a obra
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group">
                                             <label for="cep">Cidade</label>
                                             <input type="text" class="form-control" id="cidade" name="cidade"
-                                                   placeholder="Insira a cidade">
+                                                   placeholder="Insira a cidade" required>
+                                            <div class="invalid-feedback">
+                                                Por favor informe a cidade da a obra
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group">
                                             <label for="uf">Estado</label>
-                                            <select class="form-control" id="uf" name="uf">
-                                                <option>Selecione um estado</option>
+                                            <select class="form-control" id="uf" name="uf" required>
+                                                <option value="">Selecione um estado</option>
                                                 <option value="AC">Acre</option>
                                                 <option value="AL">Alagoas</option>
                                                 <option value="AP">Amapá</option>
@@ -167,6 +191,9 @@ $func = 'criar';
                                                 <option value="SE">Sergipe</option>
                                                 <option value="TO">Tocantins</option>
                                             </select>
+                                            <div class="invalid-feedback">
+                                                Por favor informe o estado da a obra
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -190,12 +217,15 @@ $func = 'criar';
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-group">
                                             <label for="cliente">Cliente</label>
-                                            <select class="form-control" id="cliente" name="cliente">
+                                            <select class="form-control" id="cliente" name="cliente" required>
                                                 <option>Selecione um cliente</option>
                                                 @foreach($clientes as $cliente)
                                                     <option value="{{$cliente->id}}">{{$cliente->nome}}</option>
                                                 @endforeach
                                             </select>
+                                            <div class="invalid-feedback">
+                                                Por favor informe o cliente da a obra
+                                            </div>
                                         </div>
                                         <a href="{{route('clientes.criar')}}">Criar novo cliente</a>
                                     </div>

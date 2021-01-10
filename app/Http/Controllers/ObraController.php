@@ -104,10 +104,7 @@ class ObraController extends Controller
     public function show()
     {
         if (Auth::check() === true) {
-            $obras = Obra::all()->where('status_db', 1);
-            return view('ver_obras', [
-                'obras' => $obras
-            ]);
+            return view('ver_obras');
         }
         return redirect()->route('dashboard.login');
     }
@@ -122,6 +119,8 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $obra->funcionario = $obra->funcionario()->get();
+            $obra->orcamento = number_format($obra->orcamento, "0", ",", ".");
+            $obra->orcamento_material = number_format($obra->orcamento_material, "0", ",", ".");
             $funcionarios = Funcionario::all()->where('status_db', 1);
             $clientes = Cliente::all()->where('status_db', 1);
             return view('editar_obras', [
@@ -281,15 +280,16 @@ class ObraController extends Controller
     {
 
         $columns = array(
-            0 =>'cliente',
-            1 =>'orcamento',
-            2=> 'gastos',
-            3=> 'endereco',
-            4=> 'data_start',
-            5=> 'acoes',
+            0 => 'cliente',
+            1 => 'orcamento',
+            2 => 'endereco',
+            3 => 'data_inicial',
+            4 => 'data_final',
+            5 => 'status',
+            6 => 'acoes',
         );
 
-        $totalData = Obra::get()->where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")->count();
+        $totalData = Obra::get()->where("status_db", "1")->count();
 
         $totalFiltered = $totalData;
 
@@ -298,36 +298,54 @@ class ObraController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
-        $datatables =  Obra::where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")
-            ->offset($start)
-            ->limit($limit)
-            ->orderBy($order,$dir)
-            ->get();
+        if(empty($request->input('search.value')))
+        {
+            $datatables = Obra::where("status_db", "1")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        }
+        else {
+            $search = $request->input('search.value');
+
+            $datatables =  Obra::where("status_db", "1")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order,$dir)
+                ->get();
+
+            $totalFiltered = Obra::where("status_db", "1")
+                ->count();
+        }
 
         $data = array();
-        if(!empty($datatables)) {
+        if (!empty($datatables)) {
             foreach ($datatables as $key => $datatable) {
-                $gastos = $datatable->faltas()->get();
-
+                if ($datatable->data_inicio == null && $datatable->data_final == null) {
+                    $newData['status'] = 'Inativa';
+                } elseif ($datatable->data_inicio != null && $datatable->data_final == null) {
+                    $newData['status'] = 'Em andamento';
+                } elseif ($datatable->data_inicio != null && $datatable->data_final != null) {
+                    $newData['status'] = 'Concluida';
+                } else{
+                    $newData['status'] = 'Indisponivel';
+                }
                 $newData['cliente'] = $datatable->cliente()->first()->nome;
                 $newData['orcamento'] = $datatable->orcamento + $datatable->orcamento_material;
                 $newData['endereco'] = "Rua $datatable->rua, $datatable->numero $datatable->cidade-$datatable->uf";
-                $newData['acoes'] = '<a class="" href="' . route('obras.edit', ['obra' => $datatable->id]) . '"><i class="fa fa-edit"></i></a><a data-id="' . $datatable->id . '" class="conclui" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.concluir', ['obra' => $datatable->id]) . '"><i class="fa fa-check"></i></a><a href="' . route('obras.faltas', ['obra' => $datatable->id]) . '"><i class="fas fa-hard-hat"></i></a>';
-                $newData['gastos'] = 0;
-                foreach ($gastos as $gasto) {
-                    $newData['gastos'] += $gasto->valor;
-                }
-                $newData['gastos'] = "R$" . number_format($newData['gastos'], "2", ",", ".");
+                $newData['acoes'] = '<a class="edit" href="'.route('obras.edit', ['obra'=>$datatable->id]).'"><i class="fa fa-edit"></i></a><a data-csrf="'.csrf_token().'" data-rota="'.route('obras.delete', ['obra'=>$datatable->id]).'" data-id="{{$obra->id}}" class="deleta"><i class="fa fa-trash"></i></a><a href="'.route('obras.relatorio', ['obra'=>$datatable->id]).'"><i class="fa fa-chart-bar"></i></a>';
                 $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
-                $newData['data_start'] = date('d/m/Y', strtotime($datatable->data_inicio));
-                $data[]=$newData;
+                $newData['data_inicial'] = date('d/m/Y', strtotime(($datatable->data_inicio != null) ? $datatable->data_inicio : $datatable->data_inicio_prevista));
+                $newData['data_final'] = date('d/m/Y', strtotime(($datatable->data_final != null) ? $datatable->data_final : $datatable->data_final_prevista));
+                $data[] = $newData;
             }
         }
         $json_data = array(
-            "draw"            => intval($request->input('draw')),
-            "recordsTotal"    => intval($totalData),
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
             "recordsFiltered" => intval($totalFiltered),
-            "data"            => $data,
+            "data" => $data,
         );
         return json_encode($json_data);
     }
@@ -336,12 +354,12 @@ class ObraController extends Controller
     {
 
         $columns = array(
-            0 =>'cliente',
-            1 =>'orcamento',
-            2=> 'gastos',
-            3=> 'endereco',
-            4=> 'data_start',
-            5=> 'acoes',
+            0 => 'cliente',
+            1 => 'orcamento',
+            2 => 'gastos',
+            3 => 'endereco',
+            4 => 'data_start',
+            5 => 'acoes',
         );
 
         $totalData = Obra::get()->where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")->count();
@@ -353,14 +371,14 @@ class ObraController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
-        $datatables =  Obra::where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")
+        $datatables = Obra::where("data_inicio", "!=", null)->where("data_final", "=", null)->where("status_db", "1")
             ->offset($start)
             ->limit($limit)
-            ->orderBy($order,$dir)
+            ->orderBy($order, $dir)
             ->get();
 
         $data = array();
-        if(!empty($datatables)) {
+        if (!empty($datatables)) {
             foreach ($datatables as $key => $datatable) {
                 $gastos = $datatable->faltas()->get();
 
@@ -375,14 +393,14 @@ class ObraController extends Controller
                 $newData['gastos'] = "R$" . number_format($newData['gastos'], "2", ",", ".");
                 $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
                 $newData['data_start'] = date('d/m/Y', strtotime($datatable->data_inicio));
-                $data[]=$newData;
+                $data[] = $newData;
             }
         }
         $json_data = array(
-            "draw"            => intval($request->input('draw')),
-            "recordsTotal"    => intval($totalData),
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
             "recordsFiltered" => intval($totalFiltered),
-            "data"            => $data,
+            "data" => $data,
         );
         return json_encode($json_data);
     }
@@ -409,11 +427,11 @@ class ObraController extends Controller
         }
 
         $columns = array(
-            0 =>'nome',
-            1 =>'num_faltas',
-            2=> 'num_meio_dia',
-            3=> 'salario_mes',
-            4=> 'tempo_pago',
+            0 => 'nome',
+            1 => 'num_faltas',
+            2 => 'num_meio_dia',
+            3 => 'salario_mes',
+            4 => 'tempo_pago',
         );
 
         $totalData = $obra->funcionario()->count();
@@ -427,14 +445,14 @@ class ObraController extends Controller
 
         $search = $request->input('search.value');
 
-        $datatables =  $obra->funcionario()->offset($start)
+        $datatables = $obra->funcionario()->offset($start)
             ->limit($limit)
-            ->orderBy($order,$dir)
+            ->orderBy($order, $dir)
             ->get();
 
         $data = array();
         $salario_total = 0;
-        if(!empty($datatables)){
+        if (!empty($datatables)) {
             foreach ($datatables as $key => $datatable) {
                 $faltas = $datatable->faltas()->whereBetween('created_at', [$data_inicio, $data_final])->orderBy("created_at", "asc")->where('dia_pago', "LIKE", "%" . $dia_pago . "%")->get();
                 $newData['nome'] = $datatable->nome;
@@ -444,7 +462,7 @@ class ObraController extends Controller
                 $newData['tempo_pago'] = "Sem pagamento";
                 $pago = 0;
                 $nao_pago = 0;
-                if(!empty($faltas)) {
+                if (!empty($faltas)) {
                     foreach ($faltas as $falta) {
                         $newData['num_faltas'] += $falta->falta;
                         $newData['num_meio_dia'] += $falta->meio_dia;
@@ -465,15 +483,15 @@ class ObraController extends Controller
                         $newData['tempo_pago'] = "Pagamento parcial";
                     }
                 }
-                $data[]=$newData;
+                $data[] = $newData;
             }
         }
         $json_data = array(
-            "draw"            => intval($request->input('draw')),
-            "recordsTotal"    => intval($totalData),
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
             "recordsFiltered" => intval($totalFiltered),
-            "data"            => $data,
-            "salario_total"   => "R$" . number_format($salario_total, "2", ",", ".")
+            "data" => $data,
+            "salario_total" => "R$" . number_format($salario_total, "2", ",", ".")
         );
 
         return json_encode($json_data);
@@ -505,10 +523,10 @@ class ObraController extends Controller
         }
 
         $columns = array(
-            0 =>'created_at',
-            1 =>'falta',
-            2=> 'salario_dia',
-            3=> 'dia_pago',
+            0 => 'created_at',
+            1 => 'falta',
+            2 => 'salario_dia',
+            3 => 'dia_pago',
         );
 
         $totalData = $obra->funcionario()->count();
@@ -522,9 +540,9 @@ class ObraController extends Controller
 
         $search = $request->input('search.value');
 
-        $datatables =  $obra->faltas()->whereBetween('created_at', [$data_inicio, $data_final])->where('funcionario', "LIKE", "%" . $funcionario . "%")->where('dia_pago', "LIKE", "%" . $dia_pago . "%")->offset($start)
+        $datatables = $obra->faltas()->whereBetween('created_at', [$data_inicio, $data_final])->where('funcionario', "LIKE", "%" . $funcionario . "%")->where('dia_pago', "LIKE", "%" . $dia_pago . "%")->offset($start)
             ->limit($limit)
-            ->orderBy($order,$dir)
+            ->orderBy($order, $dir)
             ->get();
 
 
@@ -532,7 +550,7 @@ class ObraController extends Controller
 
         $data = array();
         $salario_total = 0;
-        if(!empty($datatables)) {
+        if (!empty($datatables)) {
             foreach ($datatables as $key => $datatable) {
                 $newData['data'] = date("d/m/Y", strtotime($datatable->created_at));
                 $newData['salario_dia'] = "R$" . number_format($datatable->valor, "2", ",", ".");
@@ -557,11 +575,11 @@ class ObraController extends Controller
             }
         }
         $json_data = array(
-            "draw"            => intval($request->input('draw')),
-            "recordsTotal"    => intval($totalData),
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
             "recordsFiltered" => intval($totalFiltered),
-            "data"            => $data,
-            "salario_total"   => "R$" . number_format($salario_total, "2", ",", ".")
+            "data" => $data,
+            "salario_total" => "R$" . number_format($salario_total, "2", ",", ".")
         );
 
         return json_encode($json_data);

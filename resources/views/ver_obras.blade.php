@@ -49,46 +49,10 @@ $func = 'listar';
                                             <th>Data Inicial</th>
                                             <th>Data Final</th>
                                             <th>Status</th>
-                                            <th>Editar</th>
-                                            <th>Excluir</th>
-                                            <th>Gastos</th>
+                                            <th>Ações</th>
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($obras as $obra)
-                                            <?php
-                                            if ($obra->data_inicio == null) {
-                                                $obra->data_start = date('d/m/Y', strtotime($obra->data_inicio_prevista));
-                                            } else {
-                                                $obra->data_start = date('d/m/Y', strtotime($obra->data_inicio));
-                                            }
-                                            if ($obra->data_final == null) {
-                                                $obra->data_end = date('d/m/Y', strtotime($obra->data_final_prevista));
-                                            } else {
-                                                $obra->data_end = date('d/m/Y', strtotime($obra->data_final));
-                                            }
-                                            if($obra->data_inicio == null && $obra->data_final == null){
-                                                $obra->status_obra = 'Inativa';
-                                            }elseif($obra->data_inicio != null && $obra->data_final == null){
-                                                $obra->status_obra = 'Em andamento';
-                                            }elseif($obra->data_inicio != null && $obra->data_final != null){
-                                                $obra->status_obra = 'Concluida';
-                                            }
-                                            ?>
-                                            <tr>
-                                                <td>{{$obra->cliente()->first()->nome}}</td>
-                                                <td>R$ {{$obra->orcamento}},00</td>
-                                                <td>Rua {{$obra->rua}}, {{$obra->numero}} {{$obra->cidade}}
-                                                    -{{$obra->uf}}</td>
-                                                <td>{{$obra->data_start}}</td>
-                                                <td>{{$obra->data_end}}</td>
-                                                <td>{{$obra->status_obra}}</td>
-                                                <td><a class="edit" href="{{route('obras.edit', ['obra'=>$obra->id])}}"><i
-                                                            class="fa fa-edit"></i></a></td>
-                                                <td><a data-csrf="{{csrf_token()}}" data-rota="{{route('obras.delete', ['obra'=>$obra->id])}}" data-id="{{$obra->id}}" class="deleta"><i class="fa fa-trash"></i></a></td>
-                                                <td><a href="{{route('obras.relatorio', ['obra'=>$obra->id])}}"><i class="fa fa-chart-bar"></i></a></td>
-                                            </tr>
-                                        @endforeach
                                         </tbody>
                                     </table>
                                 </div>
@@ -99,3 +63,46 @@ $func = 'listar';
             </div>
         </div>
 @endsection
+@push('scripts')
+    <script>
+        function reload() {
+            dataTables.draw();
+        }
+
+        var dataTables = $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json'
+            },
+
+            "pageLength": 100,
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+
+            "ajax": {
+                url: '{{route('obras.datatable')}}',
+                dataType: 'JSON',
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization');
+                },
+                data: function (d) {
+                    d._token = "{{csrf_token()}}"
+                },
+            },
+            columns: [
+                {data: 'cliente', name: 'cliente'},
+                {data: 'orcamento', name: 'orcamento'},
+                {data: 'endereco', name: 'endereco'},
+                {data: 'data_inicial', name: 'data_inicial'},
+                {data: 'data_final', name: 'data_final'},
+                {data: 'status', name: 'status'},
+                {data: 'acoes', name: 'acoes'},
+            ],
+        });
+    </script>
+@endpush

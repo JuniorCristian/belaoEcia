@@ -156,4 +156,74 @@ class FuncionarioController extends Controller
 
         return json_encode(['status'=>true]);
     }
+
+    public function datatable(Request $request)
+    {
+        $columns = array(
+            0 => 'nome',
+            1 => 'função',
+            2 => 'cpf',
+            3 => 'salario',
+            4 => 'obras',
+            5 => 'editar',
+            6 => 'excluir',
+            6 => 'salarios',
+        );
+
+        $totalData = Funcionario::get()->where("status_db", "1")->count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        if(empty($request->input('search.value')))
+        {
+            $datatables = Funcionario::where("status_db", "1")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        }
+        else {
+            $search = $request->input('search.value');
+
+            $datatables =  Obra::where("status_db", "1")
+                ->where('nome', 'like', '%'.$search.'%')
+                ->orWhere('cpf', 'like', '%'.$search.'%')
+                ->orWhere('funcao', 'like', '%'.$search.'%')
+                ->orWhere('salario_dia', 'like', '%'.$search.'%')
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order,$dir)
+                ->get();
+
+            $totalFiltered = Obra::where("status_db", "1")
+                ->count();
+        }
+
+        $data = array();
+        if (!empty($datatables)) {
+            foreach ($datatables as $key => $datatable) {
+                $newData['nome'] = $datatable->nome;
+                $newData['cpf'] = $datatable->cpf;
+                $newData['funcao'] = $datatable->funcao;
+                $newData['salario'] = "R$" . number_format($datatable->salario_dia, "2", ",", ".");
+                $newData['obras'] = $datatable->obras()->get()->count();
+                $newData['editar'] = '<a href="'.route('funcionarios.edit', ['funcionario'=>$datatable->id]).'"><iclass="fa fa-edit"></i></a>';
+                $newData['excluir'] = '<a data-csrf="'.csrf_token().'" data-rota="'.route('funcionarios.delete', ['funcionario'=>$datatable->id]).'" data-id="'.$datatable->id.'" class="deleta"><i class="fa fa-trash"></i></a>';
+                $newData['salarios'] = '<a href="'.route('funcionarios.salario', ['funcionario'=>$datatable->id]).'"><i class="fa fa-money-bill-wave"></i></a>';
+                $data[] = $newData;
+            }
+        }
+        $json_data = array(
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $data,
+        );
+        return json_encode($json_data);
+    }
 }

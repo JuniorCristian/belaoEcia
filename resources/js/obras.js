@@ -2,8 +2,10 @@ $(document).ready( function () {
     $("#mostra_orc_material").ready(function (){
         if(this.checked){
             $(".orc_material").show();
+            $("#orcamento_materias").attr("required", "");
         }else{
             $(".orc_material").hide();
+            $("#orcamento_materias").removeAttr("required");
         }
     })
 } );
@@ -11,8 +13,10 @@ $("#mostra_orc_material").click(function (){
 
     if(this.checked){
         $(".orc_material").show();
+        $("#orcamento_materias").attr("required", "");
     }else{
         $(".orc_material").hide();
+        $("#orcamento_materias").removeAttr("required");
     }
 });
 $('.deleta').click(function (){

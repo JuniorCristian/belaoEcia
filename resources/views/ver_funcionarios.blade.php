@@ -77,3 +77,47 @@ $func = 'listar';
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script>
+        function reload() {
+            dataTables.draw();
+        }
+
+        var dataTables = $('#datatable').DataTable({
+            processing: true,
+            serverSide: true,
+            responsive: true,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.10.22/i18n/Portuguese-Brasil.json'
+            },
+
+            "pageLength": 100,
+            fixedHeader: {
+                header: true,
+                footer: true
+            },
+
+            "ajax": {
+                url: '{{route('funcionarios.datatable')}}',
+                dataType: 'JSON',
+                type: 'POST',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization');
+                },
+                data: function (d) {
+                    d._token = "{{csrf_token()}}"
+                },
+            },
+            columns: [
+                {data: 'nome', name: 'nome'},
+                {data: 'funcao', name: 'funcao'},
+                {data: 'cpf', name: 'cpf'},
+                {data: 'salario', name: 'salario'},
+                {data: 'obras', name: 'obras'},
+                {data: 'editar', name: 'editar'},
+                {data: 'excluir', name: 'excluir'},
+                {data: 'salarios', name: 'salarios'},
+            ],
+        });
+    </script>
+@endpush
