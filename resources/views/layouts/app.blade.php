@@ -240,7 +240,7 @@ $head['copyright'] = '';
 
 <!--   Core JS Files   -->
 <script src="{{url(mix("/js/core/jquery.3.2.1.min.js"))}}"></script>
-<script src="{{asset("/js/all.js")}}"></script>
+<script src="{{asset("/js/all.min.js")}}"></script>
 <script src="{{url(mix("/js/core/popper.min.js"))}}"></script>
 <script src="{{url(mix("/js/core/bootstrap.min.js"))}}"></script>
 <!-- jQuery UI -->

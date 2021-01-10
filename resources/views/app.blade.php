@@ -41,8 +41,8 @@ include('seo/login_seo.php');
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="{{env("APP_URL")}}/css/demo.css">
-    <link rel="stylesheet" href="{{env("APP_URL")}}/css/all.css">
-    <link rel="stylesheet" href="{{env("APP_URL")}}/css/style.css">
+    <link rel="stylesheet" href="{{env("APP_URL")}}/css/all.min.css">
+    <link rel="stylesheet" href="{{env("APP_URL")}}/css/style.min.css">
     <link rel="stylesheet" type="text/css" href="{{env("APP_URL")}}/datatables/datatables.min.css"/>
 </head>
 <body>

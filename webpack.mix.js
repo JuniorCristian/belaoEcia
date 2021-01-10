@@ -40,7 +40,7 @@ mix
     .scripts('resources/js/plugin/sweetalert/sweetalert.js', 'public/js/plugin/sweetalert/sweetalert.min.js').version()
     .scripts('resources/js/atlantis.js', 'public/js/atlantis.min.js').version()
     .scripts('resources/js/script.js', 'public/js/script.min.js').version()
-    .scripts('resources/js/all.js', 'public/js/all.min.js').version()
+    .scripts('resources/js/all.js', 'public/js/all.min.js')
     .scripts('resources/js/obras.js', 'public/js/obras.min.js').version()
     .scripts('resources/js/home.js', 'public/js/home.min.js').version()
     .scripts('resources/js/clientes.js', 'public/js/clientes.min.js').version()
