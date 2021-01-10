@@ -26,21 +26,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6075c6f1-7870-4eee-9ae4-12876c1252a2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/FuncionarioController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/FuncionarioController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/funcionarios.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/funcionarios.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/obras.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/obras.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/script.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/script.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/obras.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/obras.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/criar_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/criar_obras.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/editar_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/editar_obras.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/ver_funcionarios.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ver_funcionarios.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/ver_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/ver_obras.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -303,7 +292,7 @@
       <workItem from="1610106553173" duration="421000" />
       <workItem from="1610118714564" duration="3218000" />
       <workItem from="1610136615141" duration="595000" />
-      <workItem from="1610226033221" duration="1645000" />
+      <workItem from="1610226033221" duration="4613000" />
     </task>
     <task id="LOCAL-00001" summary="Criando Server Side Processing">
       <created>1609820765819</created>
@@ -312,7 +301,14 @@
       <option name="project" value="LOCAL" />
       <updated>1609820765819</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Validações e Datatable">
+      <created>1610237227259</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1610237227259</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -345,12 +341,14 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Criando Server Side Processing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Criando Server Side Processing" />
+    <MESSAGE value="Validações e Datatable" />
+    <option name="LAST_COMMIT_MESSAGE" value="Validações e Datatable" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="275" y="40" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606911365605">
-      <screen x="0" y="27" width="1360" height="741" />
+    <state x="275" y="150" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1610238131560">
+      <screen x="0" y="137" width="1360" height="741" />
     </state>
+    <state x="275" y="150" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.137.1360.741/1360.0.1280.1024@0.137.1360.741" timestamp="1610238131560" />
     <state x="275" y="40" width="800" height="684" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1360.741/1360.0.1280.1024@0.27.1360.741" timestamp="1606911365605" />
     <state x="423" y="148" width="494" height="475" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1606228284165">
       <screen x="0" y="27" width="1360" height="741" />
@@ -416,10 +414,10 @@
       <screen x="0" y="27" width="1360" height="741" />
     </state>
     <state x="524" y="293" width="301" height="178" key="VCS.ChangelistChooser/0.27.1360.741@0.27.1360.741" timestamp="1607386478046" />
-    <state x="275" y="225" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1609820891817">
+    <state x="275" y="225" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1610237251892">
       <screen x="0" y="137" width="1360" height="741" />
     </state>
-    <state x="275" y="225" width="800" height="535" key="Vcs.Push.Dialog.v2/0.137.1360.741/1360.0.1280.1024@0.137.1360.741" timestamp="1609820891817" />
+    <state x="275" y="225" width="800" height="535" key="Vcs.Push.Dialog.v2/0.137.1360.741/1360.0.1280.1024@0.137.1360.741" timestamp="1610237251892" />
     <state x="525" y="268" width="364" height="262" key="com.intellij.database.actions.DdlActions$DeleteProvider2$1" timestamp="1606581866884">
       <screen x="0" y="27" width="1360" height="741" />
     </state>
