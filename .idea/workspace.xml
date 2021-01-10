@@ -27,8 +27,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6075c6f1-7870-4eee-9ae4-12876c1252a2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -292,7 +290,7 @@
       <workItem from="1610106553173" duration="421000" />
       <workItem from="1610118714564" duration="3218000" />
       <workItem from="1610136615141" duration="595000" />
-      <workItem from="1610226033221" duration="4613000" />
+      <workItem from="1610226033221" duration="5754000" />
     </task>
     <task id="LOCAL-00001" summary="Criando Server Side Processing">
       <created>1609820765819</created>
