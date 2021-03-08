@@ -30,7 +30,7 @@ class FuncionarioController extends Controller
     public function create()
     {
         if (Auth::check() === true) {
-            return view('criar_funcionarios');
+            return view('funcionarios.create');
         }
         return redirect()->route('dashboard.login');
     }
@@ -68,7 +68,7 @@ class FuncionarioController extends Controller
     {
         if (Auth::check() === true) {
             $funcionarios = Funcionario::all()->where('status_db', 1);
-            return view('ver_funcionarios', [
+            return view('funcionarios.show', [
                 'funcionarios' => $funcionarios
             ]);
         }
@@ -84,7 +84,7 @@ class FuncionarioController extends Controller
     public function edit(Funcionario $funcionario)
     {
         if (Auth::check() === true) {
-            return view('editar_funcionarios', ['funcionario'=>$funcionario]);
+            return view('funcionarios.edit', ['funcionario'=>$funcionario]);
         }
         return redirect()->route('dashboard.login');
     }
@@ -125,7 +125,7 @@ class FuncionarioController extends Controller
         if (Auth::check() === true) {
             $salarios = $funcionario->faltas()->get();
             $obras = $funcionario->obras()->where('status_db', 1)->get();
-            return view('salario_funcionario', ['obras'=>$obras, 'salarios'=>$salarios, 'funcionario'=>$funcionario]);
+            return view('funcionarios.salario', ['obras'=>$obras, 'salarios'=>$salarios, 'funcionario'=>$funcionario]);
         }
         return redirect()->route('dashboard.login');
     }

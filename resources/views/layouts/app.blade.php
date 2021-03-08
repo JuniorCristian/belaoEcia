@@ -31,6 +31,7 @@ $head['copyright'] = '';
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{url(mix("/css/bootstrap.min.css"))}}">
     <link rel="stylesheet" href="{{asset("/css/all.min.css")}}">
+    <link rel="stylesheet" href="{{asset("/css/sweetalert2.min.css")}}">
     <link rel="stylesheet" href="{{url(mix("/css/atlantis.min.css"))}}">
     <link rel="stylesheet" href="{{url(mix("/fonts/flaticon/flaticon.min.css"))}}">
 
@@ -38,11 +39,11 @@ $head['copyright'] = '';
     <link rel="stylesheet" href="{{url(mix("/css/$MODULO.min.css"))}}">
     <link rel="stylesheet" href="{{url(mix("/datatables/datatables.min.css"))}}">
 </head>
-<body data-background-color="{{Auth::user()->cor_background}}">
+<body data-background-color="bg1">
 <div class="wrapper">
     <div class="main-header">
         <!-- Logo Header -->
-        <div class="logo-header" data-background-color="{{Auth::user()->cor_header}}">
+        <div class="logo-header" data-background-color="blue">
 
             <a href="{{route('home')}}" class="logo">
                 <img src="{{url('/storage/logo.svg')}}" alt="navbar brand" class="navbar-brand">
@@ -63,7 +64,7 @@ $head['copyright'] = '';
         <!-- End Logo Header -->
 
         <!-- Navbar Header -->
-        <nav class="navbar navbar-header navbar-expand-lg" data-background-color="{{Auth::user()->cor_navbar}}">
+        <nav class="navbar navbar-header navbar-expand-lg" data-background-color="blue">
 
             <div class="container-fluid">
                 <ul class="navbar-nav topbar-nav ml-md-auto align-items-center">
@@ -109,7 +110,7 @@ $head['copyright'] = '';
         <!-- End Navbar -->
     </div>
     <!-- Sidebar -->
-    <div class="sidebar sidebar-style-2" data-background-color="{{Auth::user()->cor_sidebar}}">
+    <div class="sidebar sidebar-style-2" data-background-color="white">
         <div class="sidebar-wrapper scrollbar scrollbar-inner">
             <div class="sidebar-content">
                 <div class="user">
@@ -267,6 +268,9 @@ $head['copyright'] = '';
 
 <!-- Sweet Alert -->
 <script src="{{url(mix("/js/plugin/sweetalert/sweetalert.min.js"))}}"></script>
+
+<!-- Sweet Alert 2 -->
+<script src="{{asset("/js/plugin/sweetalert2/sweetalert2.min.js")}}"></script>
 
 <!-- Atlantis JS -->
 <script src="{{url(mix("/js/atlantis.min.js"))}}"></script>

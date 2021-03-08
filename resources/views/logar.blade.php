@@ -91,7 +91,7 @@ $head['copyright'] = '';
                                     <a class="small" href="">Esqueci a senha</a>
                                 </div>
                                 <div class="text-center">
-                                    <a class="small" href="">Criar uma conta</a>
+                                    <a class="small" href="{{route('dashboard.cadastro')}}">Criar uma conta</a>
                                 </div>
                             </div>
                         </div>

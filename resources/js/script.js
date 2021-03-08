@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    mask();
     function limpa_formulário_cep() {
         // Limpa valores do formulário de cep.
         $("#rua").val("");
@@ -82,8 +83,11 @@ var SPMaskBehavior = function (val) {
             field.mask(SPMaskBehavior.apply({}, arguments), options);
         }
     };
-$('.date').mask('00/00/0000');
-$('#cep').mask('00.000-000');
-$('.money').mask('000.000.000.000.000,00', {reverse: true});
-$('.doc_identificacao').length > 11 ? $('.doc_identificacao').mask('00.000.000/0000-00', options) : $('.doc_identificacao').mask('000.000.000-00#', options);
-$('.telefone').mask(SPMaskBehavior, spOptions);
+function mask(){
+    $('.date').mask('00/00/0000');
+    $('.cep').mask('00.000-000');
+    $('.money').mask('000.000.000.000.000,00', {reverse: true});
+    $('.cpf').mask('000.000.000-00');
+    $('.doc_identificacao').length > 11 ? $('.doc_identificacao').mask('00.000.000/0000-00', options) : $('.doc_identificacao').mask('000.000.000-00#', options);
+    $('.telefone').mask(SPMaskBehavior, spOptions);
+}

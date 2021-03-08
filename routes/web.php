@@ -23,7 +23,8 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/',[AuthController::class,
 Route::get('/login',[AuthController::class, 'showLoginForm'])->name('dashboard.login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('dashboard.logout');
 Route::post('/login/do', [AuthController::class, 'login'])->name('dashboard.login.do');
-Route::post('/change-color', [AuthController::class, 'changeColor'])->name('dashboard.color');
+Route::get('/cadastrar',[AuthController::class, 'showCadastroForm'])->name('dashboard.cadastro');
+Route::post('/cadastrar/do',[AuthController::class, 'cadastro'])->name('dashboard.cadastro.do');
 
 Route::get('/obras/criar', [ObraController::class, 'create'])->name('obras.criar');
 Route::get('/obras/', [ObraController::class, 'show'])->name('obras.show');

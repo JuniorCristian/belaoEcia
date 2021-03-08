@@ -28,7 +28,7 @@ class ClienteController extends Controller
     public function create()
     {
         if (Auth::check() === true) {
-            return view('criar_clientes');
+            return view('clientes.create');
         }
         return redirect()->route('dashboard.login');
     }
@@ -71,7 +71,7 @@ class ClienteController extends Controller
     {
         if (Auth::check() === true) {
             $clientes = Cliente::all()->where('status_db', 1);
-            return view('ver_clientes', ['clientes'=>$clientes]);
+            return view('clientes.show', ['clientes'=>$clientes]);
         }
         return redirect()->route('dashboard.login');
     }
@@ -85,7 +85,7 @@ class ClienteController extends Controller
     public function edit(Cliente $cliente)
     {
         if (Auth::check() === true) {
-            return view('editar_clientes', [
+            return view('clientes.edit', [
                 "cliente"=>$cliente
             ]);
         }
