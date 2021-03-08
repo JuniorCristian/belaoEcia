@@ -31,6 +31,7 @@ $head['copyright'] = '';
     <!-- CSS Files -->
     <link rel="stylesheet" href="{{url(mix("/css/bootstrap.min.css"))}}">
     <link rel="stylesheet" href="{{asset("/css/all.min.css")}}">
+    <link rel="stylesheet" href="{{asset("/css/sweetalert2.min.css")}}">
     <link rel="stylesheet" href="{{url(mix("/css/atlantis.min.css"))}}">
     <link rel="stylesheet" href="{{url(mix("/fonts/flaticon/flaticon.min.css"))}}">
 
@@ -267,6 +268,9 @@ $head['copyright'] = '';
 
 <!-- Sweet Alert -->
 <script src="{{url(mix("/js/plugin/sweetalert/sweetalert.min.js"))}}"></script>
+
+<!-- Sweet Alert 2 -->
+<script src="{{asset("/js/plugin/sweetalert2/sweetalert2.min.js")}}"></script>
 
 <!-- Atlantis JS -->
 <script src="{{url(mix("/js/atlantis.min.js"))}}"></script>
