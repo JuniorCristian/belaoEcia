@@ -26,6 +26,11 @@ class AuthController extends Controller
         return view('logar');
     }
 
+    public function showCadastroForm()
+    {
+        return view('cadastro');
+    }
+
     public function login(Request $request)
     {
         if(!filter_var($request->email, FILTER_VALIDATE_EMAIL)){
@@ -40,6 +45,11 @@ class AuthController extends Controller
         }
 
         return redirect()->back()->withInput()->withErrors(['E-mail e/ou senha incorretos']);
+    }
+
+    public function cadastro(Request $request)
+    {
+
     }
 
     public function logout()

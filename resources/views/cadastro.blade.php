@@ -53,13 +53,12 @@ $head['copyright'] = '';
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
-                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 align-items-center">
                             <div class="p-5">
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">Bem vindo(a)</h1>
                                 </div>
-                                <form class="user" method="post" action="{{route('dashboard.login.do')}}">
+                                <form class="user" method="post" action="{{route('dashboard.cadastro.do')}}">
                                     @csrf
 
                                     @if($errors->all)
@@ -69,30 +68,40 @@ $head['copyright'] = '';
                                             </div>
                                         @endforeach
                                     @endif
-                                    <input type="hidden" name="opt" value="login">
+                                    <div class="form-group">
+                                        <input type="text" name="name"
+                                               class="form-control form-control-user"
+                                               id="name"
+                                               placeholder="Nome">
+                                    </div>
                                     <div class="form-group">
                                         <input type="text" name="email"
                                                class="form-control form-control-user"
-                                               id="exampleInputEmail" aria-describedby="emailHelp"
+                                               id="email"
+                                               placeholder="E-mail">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="email"
+                                               class="form-control form-control-user"
+                                               id="exampleInputEmail"
+                                               placeholder="E-mail">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="email"
+                                               class="form-control form-control-user"
+                                               id="exampleInputEmail"
                                                placeholder="E-mail">
                                     </div>
                                     <div class="form-group">
                                         <input type="password" name="senha"
                                                class="form-control form-control-user"
-                                               id="exampleInputPassword" placeholder="Senha">
+                                               id="senha" placeholder="Senha">
                                     </div>
                                     <button type="submit"
                                             class="btn btn-primary btn-user btn-block btn-login">
                                         Login
                                     </button>
                                 </form>
-
-                                <div class="text-center">
-                                    <a class="small" href="">Esqueci a senha</a>
-                                </div>
-                                <div class="text-center">
-                                    <a class="small" href="{{route('dashboard.cadastro')}}">Criar uma conta</a>
-                                </div>
                             </div>
                         </div>
                     </div>

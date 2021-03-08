@@ -20,6 +20,7 @@ class CreateFuncionariosTable extends Migration
             $table->string('telefone')->nullable();
             $table->float('salario_dia');
             $table->string('funcao')->nullable();
+            $table->boolean('status_db');
             $table->timestamps();
         });
     }
