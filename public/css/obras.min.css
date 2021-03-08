@@ -2,3 +2,11 @@
     max-height: 150px;
     overflow:auto;
 }
+.link_add_novo{
+    text-decoration: underline !important;
+    color: #1572E8 !important;
+    cursor: pointer !important;
+}
+.swal2-modal{
+    width: 80%!important;
+}

@@ -2,18 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4283d64d-e0e6-4131-9207-fa18e48a4e32" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/views/clientes/form.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/funcionarios/form.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/obras/form.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ClienteController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ClienteController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/FuncionarioController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/FuncionarioController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Obra.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Obra.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/obras.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/obras.min.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/obras.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/obras.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/script.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/script.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/criar_clientes.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/clientes/create.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/criar_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/criar_obras.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/editar_clientes.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/clientes/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/ver_clientes.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/clientes/show.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webpack.mix.js" beforeDir="false" afterPath="$PROJECT_DIR$/webpack.mix.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/css/obra.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/obra.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/obras.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/obras.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/criar_funcionarios.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/funcionarios/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/criar_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/editar_funcionarios.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/funcionarios/edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/editar_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/edit.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/faltas_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/faltas.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/obras_ativas.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/active.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/relatorio_obra.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/relatorio.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/salario_funcionario.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/funcionarios/salario.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/ver_funcionarios.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/funcionarios/show.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/ver_obras.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/show.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,12 +191,14 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../OAB" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/resources/views/obras" />
+      <recent name="$PROJECT_DIR$/resources/views/funcionarios" />
       <recent name="$PROJECT_DIR$/public/css" />
       <recent name="$PROJECT_DIR$/resources/views/clientes" />
     </key>
@@ -207,6 +220,8 @@
       <workItem from="1614773162735" duration="775000" />
       <workItem from="1615072198103" duration="2349000" />
       <workItem from="1615116136008" duration="4372000" />
+      <workItem from="1615205953924" duration="27000" />
+      <workItem from="1615233190511" duration="4043000" />
     </task>
     <servers />
   </component>

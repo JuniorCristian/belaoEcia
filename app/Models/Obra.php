@@ -8,6 +8,24 @@ use Illuminate\Database\Eloquent\Model;
 class Obra extends Model
 {
     protected $table = 'obras';
+    protected $fillable = [
+        'cliente',
+        'orcamento',
+        'orcamento_material',
+        'has_orcamento_material',
+        'data_inicio_prevista',
+        'data_final_prevista',
+        'data_inicio',
+        'data_final',
+        'cep',
+        'rua',
+        'numero',
+        'complemento',
+        'bairro',
+        'cidade',
+        'uf',
+        'status_db'
+    ];
 
     public function cliente()
     {

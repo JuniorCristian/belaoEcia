@@ -35,12 +35,12 @@ class ObraController extends Controller
     public function create()
     {
         if (Auth::check() === true) {
+            $obra = new Obra();
+            $obra->data_inicio_prevista = date('Y-m-d');
+            $obra->data_final_prevista = date('Y-m-'.(date('d')+1));
             $clientes = Cliente::all()->where('status_db', 1);
             $funcionarios = Funcionario::all()->where('status_db', 1);
-            return view('criar_obras', [
-                'clientes' => $clientes,
-                'funcionarios' => $funcionarios
-            ]);
+            return view('obras.create', compact('clientes', 'funcionarios', 'obra'));
         }
         return redirect()->route('dashboard.login');
     }
@@ -104,7 +104,7 @@ class ObraController extends Controller
     public function show()
     {
         if (Auth::check() === true) {
-            return view('ver_obras');
+            return view('obras.show');
         }
         return redirect()->route('dashboard.login');
     }
@@ -123,7 +123,7 @@ class ObraController extends Controller
             $obra->orcamento_material = number_format($obra->orcamento_material, "0", ",", ".");
             $funcionarios = Funcionario::all()->where('status_db', 1);
             $clientes = Cliente::all()->where('status_db', 1);
-            return view('editar_obras', [
+            return view('obras.edit', [
                 'obra' => $obra,
                 'funcionarios' => $funcionarios,
                 'clientes' => $clientes
@@ -209,7 +209,7 @@ class ObraController extends Controller
             if (count($obras) == 1) {
                 return redirect()->route('obras.faltas', ['obra' => $obras->first()]);
             }
-            return view('obras_ativas', [
+            return view('obras.active', [
                 'obras' => $obras
             ]);
         }
@@ -235,7 +235,7 @@ class ObraController extends Controller
                 return redirect()->route('obras.show')->withErrors(['Registro de falta dessa obra já foi feito hoje']);
             }
             $funcionarios = $obra->funcionario()->get();
-            return view('faltas_obras', ['obra' => $obra, 'funcionarios' => $funcionarios]);
+            return view('obras.faltas', ['obra' => $obra, 'funcionarios' => $funcionarios]);
         }
         return redirect()->route('dashboard.login');
     }
@@ -271,7 +271,7 @@ class ObraController extends Controller
         if (Auth::check() === true) {
             $salarios = $obra->faltas()->whereBetween('created_at', [date('Y-m-1'), date('Y-m-d 23:59:59.998')])->get();
             $funcionarios = $obra->funcionario()->get();
-            return view('relatorio_obra', ['obra' => $obra, 'salarios' => $salarios, 'funcionarios' => $funcionarios]);
+            return view('obras.relatorio', ['obra' => $obra, 'salarios' => $salarios, 'funcionarios' => $funcionarios]);
         }
         return redirect()->route('dashboard.login');
     }
