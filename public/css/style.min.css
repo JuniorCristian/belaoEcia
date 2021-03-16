@@ -1,11 +1,1 @@
-.btn-success:hover{
-    background-color: transparent!important;
-    color: #45D24A!important;
-}
-.btn-danger:hover{
-    background-color: transparent!important;
-    color: #F36971!important;
-}
-.deleta{
-    cursor: pointer;
-}
+.btn-success:hover{background-color:transparent!important;color:#45d24a!important}.btn-danger:hover{background-color:transparent!important;color:#f36971!important}.deleta{cursor:pointer}.botoes-datatable a{margin-right:7%;padding:6px}.visualizar-datatable{background-color:#2ecc71}.editar-datatable{background-color:#f1c40f}.excluir-datatable{padding:6px 10px;background-color:#e74c3c}

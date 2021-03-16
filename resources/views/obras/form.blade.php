@@ -95,7 +95,7 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="form-group">
                             <label for="cep">CEP</label>
-                            <input type="text" value="{{$obra->cep}}" class="form-control" id="cep"
+                            <input type="text" value="{{$obra->cep}}" class="form-control cep" id="cep"
                                    name="cep"
                                    placeholder="Insira o CEP" required>
                             <div class="invalid-feedback">

@@ -42,22 +42,24 @@
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="funcao">Função</label>
-                        <select class="form-control" id="funcao" name="funcao">
-                            <option
-                                {{($funcionario->funcao=="Pedreiro")?"selected":""}} value="Pedreiro">
-                                Pedreiro
-                            </option>
-                            <option
-                                {{($funcionario->funcao=="Assistente de pedreiro")?"selected":""}} value="Assistente de pedreiro">
-                                Assistente de pedreiro
-                            </option>
-                            <option
-                                {{($funcionario->funcao=="Oreia seca")?"selected":""}} value="Oreia seca">
-                                Oreia Seca
-                            </option>
-                        </select>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="form-group">
+                            <label for="funcao">Função</label>
+                            <select class="form-control" id="funcao" name="funcao">
+                                <option
+                                    {{($funcionario->funcao=="Pedreiro")?"selected":""}} value="Pedreiro">
+                                    Pedreiro
+                                </option>
+                                <option
+                                    {{($funcionario->funcao=="Assistente de pedreiro")?"selected":""}} value="Assistente de pedreiro">
+                                    Assistente de pedreiro
+                                </option>
+                                <option
+                                    {{($funcionario->funcao=="Oreia seca")?"selected":""}} value="Oreia seca">
+                                    Oreia Seca
+                                </option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="card-action">

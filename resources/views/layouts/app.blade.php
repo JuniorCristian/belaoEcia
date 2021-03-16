@@ -227,6 +227,28 @@ $head['copyright'] = '';
                             </ul>
                         </div>
                     </li>
+                <li class="nav-item {{$MODULO == "lojas" ? "active submenu" : ""}}">
+                        <a data-toggle="collapse"
+                           href="#lojas" {{$MODULO== "lojas" ? "class aria-expanded='true'" : ""}}>
+                            <i class="fas fa-store"></i>
+                            <p>&nbsp;&nbsp;Lojas</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{$MODULO == "lojas" ? "show" : ""}}" id="lojas">
+                            <ul class="nav nav-collapse">
+                                <li class="{{$MODULO=="lojas" && $func == 'listar' ? "active" : ""}}">
+                                    <a href="{{route('lojas.index')}}">
+                                        <span class="sub-item">Ver lojas</span>
+                                    </a>
+                                </li>
+                                <li class="{{$MODULO=="lojas" && $func == 'criar' ? "active" : ""}}">
+                                    <a href="{{route('lojas.criar')}}">
+                                        <span class="sub-item">Criar loja</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

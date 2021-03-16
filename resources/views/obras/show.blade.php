@@ -19,7 +19,7 @@ $func = 'listar';
                             <i class="flaticon-right-arrow"></i>
                         </li>
                         <li class="nav-item">
-                            <a href="{{route('home')}}">Obras</a>
+                            <a>Obras</a>
                         </li>
                     </ul>
                 </div>

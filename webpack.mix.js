@@ -21,6 +21,7 @@ mix
     .styles('node_modules/sweetalert2/dist/sweetalert2.css', 'public/css/sweetalert2.min.css')
     .styles('resources/css/funcionarios.css', 'public/css/funcionarios.min.css').version()
     .styles('resources/css/clientes.css', 'public/css/clientes.min.css').version()
+    .styles('resources/css/lojas.css', 'public/css/lojas.min.css').version()
     .styles('resources/css/fonts.css', 'public/css/fonts.min.css').version()
     .styles(['resources/datatables/datatables.css', 'resources/datatables/responsive.datatables.css'], 'public/datatables/datatables.min.css').version()
     .sass('resources/fonts/flaticon/_flaticon.scss', 'public/fonts/flaticon/flaticon.min.css').version()
@@ -46,5 +47,6 @@ mix
     .scripts('resources/js/obras.js', 'public/js/obras.min.js').version()
     .scripts('resources/js/home.js', 'public/js/home.min.js').version()
     .scripts('resources/js/clientes.js', 'public/js/clientes.min.js').version()
+    .scripts('resources/js/lojas.js', 'public/js/lojas.min.js').version()
     .scripts('resources/js/login.js', 'public/js/login.min.js').version()
     .scripts('resources/js/funcionarios.js', 'public/js/funcionarios.min.js').version();

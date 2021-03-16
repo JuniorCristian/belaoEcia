@@ -30,7 +30,8 @@ class FuncionarioController extends Controller
     public function create()
     {
         if (Auth::check() === true) {
-            return view('funcionarios.create');
+            $funcionario = new Funcionario();
+            return view('funcionarios.create', compact('funcionario'));
         }
         return redirect()->route('dashboard.login');
     }

@@ -36,6 +36,7 @@ class ObraController extends Controller
     {
         if (Auth::check() === true) {
             $obra = new Obra();
+            $obra->cliente = '';
             $obra->data_inicio_prevista = date('Y-m-d');
             $obra->data_final_prevista = date('Y-m-'.(date('d')+1));
             $clientes = Cliente::all()->where('status_db', 1);

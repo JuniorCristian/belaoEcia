@@ -1,14 +1,15 @@
 <?php
-$seo['title'] = 'Obras';
-$MODULO = 'obras';
+$seo['title'] = 'Lojas';
+$MODULO = 'lojas';
 $func = 'criar';
 ?>
 @extends('layouts.app')
+
 @section('content')
     <div class="content">
         <div class="page-inner">
             <div class="page-header">
-                <h4 class="page-title">Obras</h4>
+                <h4 class="page-title">Lojas</h4>
                 <ul class="breadcrumbs">
                     <li class="nav-home">
                         <a href="{{route('home')}}">
@@ -19,19 +20,19 @@ $func = 'criar';
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('obras.show')}}">Obras</a>
+                        <a href="{{route('lojas.index')}}">Lojas</a>
                     </li>
                     <li class="separator">
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a>Nova Obra</a>
+                        <a>Nova Loja</a>
                     </li>
                 </ul>
             </div>
-            <form method="post" action="{{route('obras.store')}}" class="needs-validation" novalidate>
+            <form method="post" action="{{route('lojas.store')}}" class="needs-validation" novalidate>
                 @csrf
-                @include('obras.form', ['page'=>'Criar Obra'])
+                @include('lojas.form', ['page'=>'Criar Loja'])
             </form>
         </div>
     </div>

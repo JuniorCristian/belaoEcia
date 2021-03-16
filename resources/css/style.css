@@ -9,3 +9,21 @@
 .deleta{
     cursor: pointer;
 }
+
+.botoes-datatable a {
+    margin-right: 7%;
+    padding: 6px;
+}
+
+.visualizar-datatable {
+    background-color: #2ecc71;
+}
+
+.editar-datatable {
+    background-color: #f1c40f;
+}
+
+.excluir-datatable {
+    padding: 6px 10px;
+    background-color: #e74c3c;
+}
