@@ -2,17 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4283d64d-e0e6-4131-9207-fa18e48a4e32" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/resources/views/obras/fase_obra.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/FuncionarioController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/FuncionarioController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/seeders/MasterSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/MasterSeeder.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/style.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/script.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/script.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/resources/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/obras/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/show.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,7 +217,7 @@
       <workItem from="1615837657765" duration="1968000" />
       <workItem from="1615896833196" duration="2167000" />
       <workItem from="1615933396915" duration="7059000" />
-      <workItem from="1615982822071" duration="10322000" />
+      <workItem from="1615982822071" duration="10977000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch '1200027280068317'&#10;&#10;# Conflicts:&#10;#&#9;.env">
       <created>1615237756241</created>
