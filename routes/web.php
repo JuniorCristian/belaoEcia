@@ -17,6 +17,7 @@ use \App\Http\Controllers\AuthController;
 use \App\Http\Controllers\ObraController;
 use \App\Http\Controllers\FuncionarioController;
 use \App\Http\Controllers\ClienteController;
+use \App\Http\Controllers\FaseController;
 use \App\Http\Controllers\LojaController;
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/',[AuthController::class, 'dashboard'])->name('home');
@@ -74,6 +75,15 @@ Route::group(['prefix'=>'lojas', 'middleware'=>'auth'], function () {
     Route::post('/store', [LojaController::class, 'store'])->name('lojas.store');
     Route::put('/update/{loja}', [LojaController::class, 'update'])->name('lojas.update');
     Route::delete('/delete/{loja}', [LojaController::class, 'destroy'])->name('lojas.delete');
+});
+Route::group(['prefix'=>'fases', 'middleware'=>'auth'], function () {
+    Route::get('/', [FaseController::class, 'index'])->name('fases.index');
+    Route::get('/criar', [FaseController::class, 'create'])->name('fases.criar');
+    Route::get('/edit/{fase}', [FaseController::class, 'edit'])->name('fases.edit');
+    Route::post('/datatble', [FaseController::class, 'datatable'])->name('fases.datatable');
+    Route::post('/store', [FaseController::class, 'store'])->name('fases.store');
+    Route::put('/update/{fase}', [FaseController::class, 'update'])->name('fases.update');
+    Route::delete('/delete/{fase}', [FaseController::class, 'destroy'])->name('fases.delete');
 });
 
 

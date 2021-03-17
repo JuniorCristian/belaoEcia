@@ -227,7 +227,29 @@ $head['copyright'] = '';
                             </ul>
                         </div>
                     </li>
-                <li class="nav-item {{$MODULO == "lojas" ? "active submenu" : ""}}">
+                    <li class="nav-item {{$MODULO == "fases" ? "active submenu" : ""}}">
+                        <a data-toggle="collapse"
+                           href="#lojas" {{$MODULO== "fases" ? "class aria-expanded='true'" : ""}}>
+                            <i class="fas fa-percentage"></i>
+                            <p>&nbsp;&nbsp;Fases</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{$MODULO == "fases" ? "show" : ""}}" id="lojas">
+                            <ul class="nav nav-collapse">
+                                <li class="{{$MODULO=="fases" && $func == 'listar' ? "active" : ""}}">
+                                    <a href="{{route('fases.index')}}">
+                                        <span class="sub-item">Ver fases</span>
+                                    </a>
+                                </li>
+                                <li class="{{$MODULO=="fases" && $func == 'criar' ? "active" : ""}}">
+                                    <a href="{{route('fases.criar')}}">
+                                        <span class="sub-item">Criar fase</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item {{$MODULO == "lojas" ? "active submenu" : ""}}">
                         <a data-toggle="collapse"
                            href="#lojas" {{$MODULO== "lojas" ? "class aria-expanded='true'" : ""}}>
                             <i class="fas fa-store"></i>
@@ -256,7 +278,7 @@ $head['copyright'] = '';
     <!-- End Sidebar -->
     <div class="main-panel">
 
-    @yield('content')
+        @yield('content')
     </div>
 </div>
 

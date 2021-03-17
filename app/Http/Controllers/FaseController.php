@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Loja;
+use App\Models\Fase;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
-class LojaController extends Controller
+class FaseController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class LojaController extends Controller
      */
     public function index()
     {
-        return view('lojas.show');
+        return view('fases.index');
     }
 
     public function datatable()
@@ -24,15 +24,24 @@ class LojaController extends Controller
         $query = array();
 
         array_push($query, array(
-            'nome' => 'Loja 1',
-            'endereco'=>'Rua Teste, 550 Piraquara-PR',
+            'nome' => 'Fase da Obra 1',
+            'descricao'=>'Fase da obra 1',
+            'tipo'=>1,
             'status' => 1
         ));
 
         array_push($query, array(
-            'nome' => 'Loja 2',
-            'endereco'=>'Rua Teste, 550 Piraquara-PR',
+            'nome' => 'Fase da Obra 2',
+            'descricao'=>'Fase da obra 2',
+            'tipo'=>2,
             'status' => 0
+        ));
+
+        array_push($query, array(
+            'nome' => 'Fase da Obra 3',
+            'descricao'=>'Fase da obra 3',
+            'tipo'=>3,
+            'status' => 1
         ));
         /////// FIM QUERY DO DATATABLE ///////////////
 
@@ -47,13 +56,24 @@ class LojaController extends Controller
                 }
 
             })
+            ->editColumn('tipo', function ($row){
+                if($row['tipo'] == 1){
+                    return  "<label class=\"label-obra\">Obra</label> ";
+                }
+                if($row['tipo'] == 2){
+                    return  "<label class=\"label-reforma\">Reforma</label> ";
+                }
+                if($row['tipo'] == 3){
+                    return  "<label class=\"label-ambas\">Ambas</label> ";
+                }
+            })
             ->addColumn('acoes', function ($row)  {
                 $acoes = "<div class='botoes-datatable'>";
 
                 $acoes .= '<a class="visualizar-datatable"  href="">
                         <i class="fas fa-eye" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="editar-datatable" href="'.route('lojas.edit', ['loja'=>1]).'">
+                $acoes .= '<a class="editar-datatable" href="'.route('fases.edit', ['fase'=>1]).'">
                         <i class="fa fa-edit" style="color: #fff"></i></a>';
 
                 $acoes .= '<form method="POST" action="" style="display:inline">
@@ -78,9 +98,9 @@ class LojaController extends Controller
      */
     public function create()
     {
-        $loja = new Loja();
-        $loja->status = 1;
-        return view('lojas.create', compact('loja'));
+        $fase = new Fase();
+        $fase->status = 1;
+        return view('fases.create', compact('fase'));
     }
 
     /**
@@ -97,10 +117,10 @@ class LojaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Loja  $lojas
+     * @param  \App\Models\Fase  $fase
      * @return \Illuminate\Http\Response
      */
-    public function show(Loja $lojas)
+    public function show(Fase $fase)
     {
         //
     }
@@ -108,36 +128,22 @@ class LojaController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Loja  $loja
+     * @param  \App\Models\Fase  $fase
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(Fase $fase)
     {
-        $loja = new Loja();
-        $loja->id = 1;
-        $loja->nome="Loja 1";
-        $loja->descricao="Descrição da loja";
-        $loja->site="www.loja1.com.br";
-        $loja->telefone="41984699082";
-        $loja->cep="83.306-120";
-        $loja->rua="Rua da Loja";
-        $loja->numero="1";
-        $loja->complemento="";
-        $loja->bairro="Lojinha";
-        $loja->cidade="Piraquara";
-        $loja->uf="PR";
-        $loja->status=1;
-        return view('lojas.edit', compact('loja'));
+        return view('fases.edit', compact('fase'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Loja  $lojas
+     * @param  \App\Models\Fase  $fase
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Loja $lojas)
+    public function update(Request $request, Fase $fase)
     {
         //
     }
@@ -145,10 +151,10 @@ class LojaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Loja  $lojas
+     * @param  \App\Models\Fase  $fase
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Loja $lojas)
+    public function destroy(Fase $fase)
     {
         //
     }
