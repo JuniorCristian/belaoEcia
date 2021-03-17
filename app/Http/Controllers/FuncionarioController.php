@@ -49,7 +49,7 @@ class FuncionarioController extends Controller
             $funcionario->nome = $request->nome;
             $funcionario->cpf = $request->cpf;
             $funcionario->telefone = $request->telefone;
-            $funcionario->salario_dia = $request->salario_dia;
+            $funcionario->salario_dia = number_format(floatval($request->salario_dia), '2', '.', ',');
             $funcionario->funcao = $request->funcao;
             $funcionario->status_db = 1;
             if ($funcionario->save()) {
@@ -67,13 +67,12 @@ class FuncionarioController extends Controller
      */
     public function show()
     {
-        if (Auth::check() === true) {
+
             $funcionarios = Funcionario::all()->where('status_db', 1);
             return view('funcionarios.show', [
                 'funcionarios' => $funcionarios
             ]);
-        }
-        return redirect()->route('dashboard.login');
+
     }
 
     /**
@@ -84,10 +83,7 @@ class FuncionarioController extends Controller
      */
     public function edit(Funcionario $funcionario)
     {
-        if (Auth::check() === true) {
             return view('funcionarios.edit', ['funcionario'=>$funcionario]);
-        }
-        return redirect()->route('dashboard.login');
     }
 
     /**
@@ -99,9 +95,7 @@ class FuncionarioController extends Controller
      */
     public function update(Request $request, Funcionario $funcionario)
     {
-        if (Auth::check() === true) {
-        }
-        return redirect()->route('dashboard.login');
+
     }
 
     /**

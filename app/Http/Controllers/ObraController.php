@@ -10,6 +10,7 @@ use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use phpDocumentor\Reflection\Types\String_;
+use Yajra\DataTables\Facades\DataTables;
 use function GuzzleHttp\Promise\all;
 use function PHPUnit\Framework\countOf;
 
@@ -63,9 +64,9 @@ class ObraController extends Controller
                 }
             }
             $obra = new Obra();
-            $obra->orcamento = $request->orcamento;
+            $obra->orcamento = number_format(floatval($request->orcamento), '2', '.', ',');
             if (isset($request->has_orcamento_materias)) {
-                $obra->orcamento_material = $request->orcamento_materias;
+                $obra->orcamento_material = number_format(floatval($request->orcamento_materias), '2', '.', ',');
                 $obra->has_orcamento_material = $request->has_orcamento_materias;
             } else {
                 $obra->orcamento_material = 0;
@@ -153,9 +154,9 @@ class ObraController extends Controller
                     $funcionario[$key] = $func->id;
                 }
             }
-            $obra->orcamento = $request->orcamento;
+            $obra->orcamento = number_format(floatval($request->orcamento), '2', '.', ',');
             if (isset($request->has_orcamento_materias)) {
-                $obra->orcamento_material = $request->orcamento_materias;
+                $obra->orcamento_material = number_format(floatval($request->orcamento_materias), '2', '.', ',');
                 $obra->has_orcamento_material = $request->has_orcamento_materias;
             } else {
                 $obra->orcamento_material = 0;
@@ -320,35 +321,55 @@ class ObraController extends Controller
                 ->count();
         }
 
-        $data = array();
-        if (!empty($datatables)) {
-            foreach ($datatables as $key => $datatable) {
-                if ($datatable->data_inicio == null && $datatable->data_final == null) {
-                    $newData['status'] = 'Inativa';
-                } elseif ($datatable->data_inicio != null && $datatable->data_final == null) {
-                    $newData['status'] = 'Em andamento';
-                } elseif ($datatable->data_inicio != null && $datatable->data_final != null) {
-                    $newData['status'] = 'Concluida';
+        return DataTables::of($datatables)
+            ->editColumn('status', function ($row) {
+                if ($row['data_inicio'] == null && $row['data_final'] == null) {
+                    return "<label class=\"label-inativa\">Inativa</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] == null) {
+                    return "<label class=\"label-andamento\">Em andamento</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] != null) {
+                    return "<label class=\"label-concluido\">Concluida</label> ";
                 } else{
-                    $newData['status'] = 'Indisponivel';
+                    return "<label class=\"label-indisponivel\">Indisponivel</label> ";
                 }
-                $newData['cliente'] = $datatable->cliente()->first()->nome;
-                $newData['orcamento'] = $datatable->orcamento + $datatable->orcamento_material;
-                $newData['endereco'] = "Rua $datatable->rua, $datatable->numero $datatable->cidade-$datatable->uf";
-                $newData['acoes'] = '<a class="edit" href="'.route('obras.edit', ['obra'=>$datatable->id]).'"><i class="fa fa-edit"></i></a><a data-csrf="'.csrf_token().'" data-rota="'.route('obras.delete', ['obra'=>$datatable->id]).'" data-id="{{$obra->id}}" class="deleta"><i class="fa fa-trash"></i></a><a href="'.route('obras.relatorio', ['obra'=>$datatable->id]).'"><i class="fa fa-chart-bar"></i></a>';
-                $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
-                $newData['data_inicial'] = date('d/m/Y', strtotime(($datatable->data_inicio != null) ? $datatable->data_inicio : $datatable->data_inicio_prevista));
-                $newData['data_final'] = date('d/m/Y', strtotime(($datatable->data_final != null) ? $datatable->data_final : $datatable->data_final_prevista));
-                $data[] = $newData;
-            }
-        }
-        $json_data = array(
-            "draw" => intval($request->input('draw')),
-            "recordsTotal" => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data" => $data,
-        );
-        return json_encode($json_data);
+
+            })
+            ->editColumn('cliente', function ($row){
+                return $row->cliente()->first()->nome;
+            })
+            ->editColumn('orcamento', function ($row){
+                return "R$".number_format($row['orcamento'] + $row['orcamento_material'], '2', ',', '.');
+            })
+            ->editColumn('endereco', function ($row){
+                return "Rua ".$row['rua'].", ".$row['numero']." ".$row['cidade']."-".$row['uf'];
+            })
+            ->editColumn('data_inicial', function ($row){
+                return date('d/m/Y', strtotime(($row['data_inicio'] != null) ? $row['data_inicio'] : $row['data_inicio_prevista']));;
+            })
+            ->editColumn('data_final', function ($row){
+                return date('d/m/Y', strtotime(($row['data_final'] != null) ? $row['data_final'] : $row['data_final_prevista']));;
+            })
+            ->addColumn('acoes', function ($row)  {
+                $acoes = "<div class='botoes-datatable d-flex'>";
+
+                $acoes .= '<a class="edit editar-datatable" href="'.route('obras.edit', ['obra'=>$row['id']]).'">
+                        <i class="fa fa-edit" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="deleta excluir-datatable" data-csrf="'.csrf_token().'" data-rota="'.route('obras.delete', ['obra'=>$row['id']]).'" data-id="'.$row['id'].'">
+                        <i class="fa fa-trash" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="datatable-relatorio" href="'.route('obras.relatorio', ['obra'=>$row['id']]).'">
+                        <i class="fa fa-chart-bar" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="gerenciar-fases">
+                        <i class="fas fa-percentage" style="color: #fff"></i></a>';
+
+                $acoes .= "</div>";
+
+                return $acoes;
+            })
+            ->escapeColumns(['*'])
+            ->make(true);
     }
 
     public function datatableAtivas(Request $request)
@@ -381,29 +402,73 @@ class ObraController extends Controller
         $data = array();
         if (!empty($datatables)) {
             foreach ($datatables as $key => $datatable) {
-                $gastos = $datatable->faltas()->get();
+
 
                 $newData['cliente'] = $datatable->cliente()->first()->nome;
                 $newData['orcamento'] = $datatable->orcamento + $datatable->orcamento_material;
                 $newData['endereco'] = "Rua $datatable->rua, $datatable->numero $datatable->cidade-$datatable->uf";
-                $newData['acoes'] = '<a class="" href="' . route('obras.edit', ['obra' => $datatable->id]) . '"><i class="fa fa-edit"></i></a><a data-id="' . $datatable->id . '" class="conclui" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.concluir', ['obra' => $datatable->id]) . '"><i class="fa fa-check"></i></a><a href="' . route('obras.faltas', ['obra' => $datatable->id]) . '"><i class="fas fa-hard-hat"></i></a>';
+                $newData['acoes'] = '';
                 $newData['gastos'] = 0;
-                foreach ($gastos as $gasto) {
-                    $newData['gastos'] += $gasto->valor;
-                }
+
                 $newData['gastos'] = "R$" . number_format($newData['gastos'], "2", ",", ".");
                 $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
                 $newData['data_start'] = date('d/m/Y', strtotime($datatable->data_inicio));
                 $data[] = $newData;
             }
         }
-        $json_data = array(
-            "draw" => intval($request->input('draw')),
-            "recordsTotal" => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data" => $data,
-        );
-        return json_encode($json_data);
+        return DataTables::of($datatables)
+            ->editColumn('status', function ($row) {
+                if ($row['data_inicio'] == null && $row['data_final'] == null) {
+                    return "<label class=\"label-inativa\">Inativa</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] == null) {
+                    return "<label class=\"label-andamento\">Em andamento</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] != null) {
+                    return "<label class=\"label-concluido\">Concluida</label> ";
+                } else{
+                    return "<label class=\"label-indisponivel\">Indisponivel</label> ";
+                }
+
+            })
+            ->editColumn('cliente', function ($row){
+                return $row->cliente()->first()->nome;
+            })
+            ->editColumn('orcamento', function ($row){
+                return "R$".number_format($row['orcamento'] + $row['orcamento_material'], '2', ',', '.');
+            })
+            ->editColumn('gastos', function ($row){
+                $gastos = $row->faltas()->get();
+                $valor = 0;
+                foreach ($gastos as $gasto) {
+                    $valor += $gasto->valor;
+                }
+                return "R$".number_format($valor, '2', ',', '.');
+            })
+            ->editColumn('endereco', function ($row){
+                return "Rua ".$row['rua'].", ".$row['numero']." ".$row['cidade']."-".$row['uf'];
+            })
+            ->editColumn('data_start', function ($row){
+                return date('d/m/Y', strtotime($row['data_inicio']));
+            })
+            ->addColumn('acoes', function ($row)  {
+                $acoes = "<div class='botoes-datatable d-flex'>";
+                $acoes .= '<a class="edit editar-datatable" href="'.route('obras.edit', ['obra'=>$row['id']]).'">
+                        <i class="fa fa-edit" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="datatable-conclui" data-id="'.$row['id'].'" class="conclui" data-csrf="'.csrf_token().'" data-rota="'.route('obras.concluir', ['obra' => $row['id']]).'">
+                        <i class="fa fa-check" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="datatable-faltas" href="'.route('obras.faltas', ['obra' => $row['id']]).'">
+                        <i class="fas fa-hard-hat" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="gerenciar-fases">
+                        <i class="fas fa-percentage" style="color: #fff"></i></a>';
+
+                $acoes .= "</div>";
+
+                return $acoes;
+            })
+            ->escapeColumns(['*'])
+            ->make(true);
     }
 
     public function datatableRelatorio(Request $request, Obra $obra)
