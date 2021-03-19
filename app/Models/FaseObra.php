@@ -12,9 +12,21 @@ class FaseObra extends Model
     protected $table = 'fase_obras';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'obra',
+        'fase',
         'inicio',
         'final',
         'inicio_previsto',
         'final_previsto'
     ];
+
+    public function obra()
+    {
+        return $this->hasOne(Obra::class, 'id', 'obra')->where('status_db', 1)->first();
+    }
+
+    public function fase()
+    {
+        return $this->hasOne(Fase::class, 'id', 'fase')->where('status_db', 1)->first();
+    }
 }

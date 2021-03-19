@@ -44,7 +44,7 @@ Route::group(['prefix'=>'obras', 'middleware'=>'auth'], function (){
     Route::put('/{obra}/faltas/registar', [ObraController::class, 'registrarFaltas'])->name('obras.registrarFaltas');
     Route::put('/concluir/{obra}', [ObraController::class, 'concluir'])->name('obras.concluir');
     Route::delete('/delete/{obra}', [ObraController::class, 'destroy'])->name('obras.delete');
-
+    Route::get('/fase/{obra}', [ObraController::class, 'fase'])->name('obras.fase');
 });
 
 Route::group(['prefix'=>'funcionarios', 'middleware'=>'auth'], function () {

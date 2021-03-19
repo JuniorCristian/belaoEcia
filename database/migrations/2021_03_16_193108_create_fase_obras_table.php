@@ -15,11 +15,17 @@ class CreateFaseObrasTable extends Migration
     {
         Schema::create('fase_obras', function (Blueprint $table) {
             $table->id();
-            $table->date('inicio');
-            $table->date('final');
-            $table->date('inicio_previsto');
-            $table->date('final_previsto');
+            $table->foreignId('obra');
+            $table->foreignId('fase');
+            $table->date('inicio')->nullable();
+            $table->date('final')->nullable();
+            $table->date('inicio_previsto')->nullable();
+            $table->date('final_previsto')->nullable();
+            $table->boolean('status_db');
             $table->timestamps();
+
+            $table->foreign('obra')->references('id')->on('obras');
+            $table->foreign('fase')->references('id')->on('fases');
         });
     }
 

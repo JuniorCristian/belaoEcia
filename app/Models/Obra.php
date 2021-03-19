@@ -41,4 +41,9 @@ class Obra extends Model
     {
         return $this->hasMany(Faltas_Obra::class, 'obra', 'id');
     }
+
+    public function fases()
+    {
+        return $this->hasMany(FaseObra::class, 'obra', 'id');
+    }
 }

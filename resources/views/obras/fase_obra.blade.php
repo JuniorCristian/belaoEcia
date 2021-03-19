@@ -35,7 +35,7 @@ $func = 'criar';
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Editar Fase da Obra</h4>
+                            <h4 class="card-title">Gerenciar Fase {{$fase_obra->nome}} da Obra</h4>
                         </div>
                         @if($errors->all)
                             @foreach($errors->all() as $error)
@@ -49,25 +49,25 @@ $func = 'criar';
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="data_inicial_prevista_fase">Previsão de inicio</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" value="{{$fase_obra->inicio_previsto}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="data_final_prevista_fase">Previsão de finalização</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" value="{{$fase_obra->final_previsto}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="data_inicial_fase">Fase iniciada em</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" value="{{$fase_obra->inicio}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="data_final_fase">Fase finalizada em</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" value="{{$fase_obra->final}}">
                                     </div>
                                 </div>
                                 <div>
@@ -85,11 +85,16 @@ $func = 'criar';
                                             <div class="form-group">
                                                 @for($i = 0; $i < 15; $i++)
                                                     <img src="{{env('APP_URL')}}/storage/examples/example1-300x300.jpg"
-                                                         class="img-thumbnail rounded float-left"
-                                                         style="width:150px!important" alt="...">
+                                                         class="img-thumbnail rounded float-left imagem_fase"
+                                                         style="width:150px!important" alt="..."
+                                                         data-imagem="{{env('APP_URL')}}/storage/examples/example1.jpeg">
                                                 @endfor
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="card-action">
+                                        <button type="submit" class="btn btn-success">Salvar</button>
+                                        <a href="{{route('obras.show')}}" class="btn btn-danger">Cancelar</a>
                                     </div>
                                 </div>
                             </div>
@@ -97,4 +102,6 @@ $func = 'criar';
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 @endsection

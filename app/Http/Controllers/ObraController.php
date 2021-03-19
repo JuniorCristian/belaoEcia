@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Faltas_Obra;
+use App\Models\FaseObra;
 use App\Models\Funcionario;
 use App\Models\Funcionarios_Obra;
 use App\Models\Obra;
@@ -361,7 +362,7 @@ class ObraController extends Controller
                 $acoes .= '<a class="datatable-relatorio" href="'.route('obras.relatorio', ['obra'=>$row['id']]).'">
                         <i class="fa fa-chart-bar" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="gerenciar-fases">
+                $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase', ['obra', $row->id]).'">
                         <i class="fas fa-percentage" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
@@ -460,7 +461,7 @@ class ObraController extends Controller
                 $acoes .= '<a class="datatable-faltas" href="'.route('obras.faltas', ['obra' => $row['id']]).'">
                         <i class="fas fa-hard-hat" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="gerenciar-fases">
+                $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase').'">
                         <i class="fas fa-percentage" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
@@ -649,5 +650,13 @@ class ObraController extends Controller
         );
 
         return json_encode($json_data);
+    }
+
+    public function fase(Obra $obra)
+    {
+        $fase_obra = $obra->fases()->where('inicio', '!=', null)->where('final', null)->first();
+        $fase_obra->nome = $fase_obra->fase()->first()->nome;
+
+        return view('obras.fase_obra', compact('obra', 'fase_obra'));
     }
 }
