@@ -467,7 +467,7 @@ class ObraController extends Controller
                 $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase', ['obra' => $row['id']]).'">
                         <i class="fas fa-percentage" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="gerenciar-materiais" href="">
+                $acoes .= '<a class="gerenciar-materiais" href="'.route().'">
                         <i class="fas fa-toolbox" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
