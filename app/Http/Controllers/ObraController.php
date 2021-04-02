@@ -365,6 +365,9 @@ class ObraController extends Controller
                 $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase', ['obra', $row->id]).'">
                         <i class="fas fa-percentage" style="color: #fff"></i></a>';
 
+                $acoes .= '<a class="gerenciar-materiais" href="">
+                        <i class="fas fa-toolbox" style="color: #fff"></i></a>';
+
                 $acoes .= "</div>";
 
                 return $acoes;
@@ -461,8 +464,11 @@ class ObraController extends Controller
                 $acoes .= '<a class="datatable-faltas" href="'.route('obras.faltas', ['obra' => $row['id']]).'">
                         <i class="fas fa-hard-hat" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase').'">
+                $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase', ['obra' => $row['id']]).'">
                         <i class="fas fa-percentage" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="gerenciar-materiais" href="">
+                        <i class="fas fa-toolbox" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
 
@@ -658,5 +664,10 @@ class ObraController extends Controller
         $fase_obra->nome = $fase_obra->fase()->first()->nome;
 
         return view('obras.fase_obra', compact('obra', 'fase_obra'));
+    }
+
+    public function materiais(Obra $obra)
+    {
+
     }
 }

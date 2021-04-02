@@ -19,16 +19,17 @@ use \App\Http\Controllers\FuncionarioController;
 use \App\Http\Controllers\ClienteController;
 use \App\Http\Controllers\FaseController;
 use \App\Http\Controllers\LojaController;
+use \App\Http\Controllers\MaterialController;
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/',[AuthController::class, 'dashboard'])->name('home');
+Route::middleware(['auth:sanctum', 'verified'])->get('/', [AuthController::class, 'dashboard'])->name('home');
 
-Route::get('/login',[AuthController::class, 'showLoginForm'])->name('dashboard.login');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('dashboard.login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('dashboard.logout');
 Route::post('/login/do', [AuthController::class, 'login'])->name('dashboard.login.do');
-Route::get('/cadastrar',[AuthController::class, 'showCadastroForm'])->name('dashboard.cadastro');
-Route::post('/cadastrar/do',[AuthController::class, 'cadastro'])->name('dashboard.cadastro.do');
+Route::get('/cadastrar', [AuthController::class, 'showCadastroForm'])->name('dashboard.cadastro');
+Route::post('/cadastrar/do', [AuthController::class, 'cadastro'])->name('dashboard.cadastro.do');
 
-Route::group(['prefix'=>'obras', 'middleware'=>'auth'], function (){
+Route::group(['prefix' => 'obras', 'middleware' => 'auth'], function () {
     Route::get('/criar', [ObraController::class, 'create'])->name('obras.criar');
     Route::get('/', [ObraController::class, 'show'])->name('obras.show');
     Route::get('/ativas', [ObraController::class, 'gerenciar'])->name('obras.ativas');
@@ -45,9 +46,10 @@ Route::group(['prefix'=>'obras', 'middleware'=>'auth'], function (){
     Route::put('/concluir/{obra}', [ObraController::class, 'concluir'])->name('obras.concluir');
     Route::delete('/delete/{obra}', [ObraController::class, 'destroy'])->name('obras.delete');
     Route::get('/fase/{obra}', [ObraController::class, 'fase'])->name('obras.fase');
+    Route::get('/materiais/{obra}', [ObraController::class, 'materiais'])->name('obras.materiais');
 });
 
-Route::group(['prefix'=>'funcionarios', 'middleware'=>'auth'], function () {
+Route::group(['prefix' => 'funcionarios', 'middleware' => 'auth'], function () {
     Route::get('/criar', [FuncionarioController::class, 'create'])->name('funcionarios.criar');
     Route::get('/', [FuncionarioController::class, 'show'])->name('funcionarios.show');
     Route::get('/{funcionario}/edit', [FuncionarioController::class, 'edit'])->name('funcionarios.edit');
@@ -58,8 +60,7 @@ Route::group(['prefix'=>'funcionarios', 'middleware'=>'auth'], function () {
     Route::post('/pagar/{obra}', [FuncionarioController::class, 'pagar'])->name('funcionarios.pagar');
     Route::delete('/delete/{funcionario}', [FuncionarioController::class, 'destroy'])->name('funcionarios.delete');
 });
-
-Route::group(['prefix'=>'clientes', 'middleware'=>'auth'], function () {
+Route::group(['prefix' => 'clientes', 'middleware' => 'auth'], function () {
     Route::get('/criar', [ClienteController::class, 'create'])->name('clientes.criar');
     Route::get('/', [ClienteController::class, 'show'])->name('clientes.show');
     Route::get('/{cliente}/edit', [ClienteController::class, 'edit'])->name('clientes.edit');
@@ -67,7 +68,7 @@ Route::group(['prefix'=>'clientes', 'middleware'=>'auth'], function () {
     Route::put('/update/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
     Route::delete('/delete/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.delete');
 });
-Route::group(['prefix'=>'lojas', 'middleware'=>'auth'], function () {
+Route::group(['prefix' => 'lojas', 'middleware' => 'auth'], function () {
     Route::get('/', [LojaController::class, 'index'])->name('lojas.index');
     Route::get('/criar', [LojaController::class, 'create'])->name('lojas.criar');
     Route::get('/{loja}/edit', [LojaController::class, 'edit'])->name('lojas.edit');
@@ -76,7 +77,7 @@ Route::group(['prefix'=>'lojas', 'middleware'=>'auth'], function () {
     Route::put('/update/{loja}', [LojaController::class, 'update'])->name('lojas.update');
     Route::delete('/delete/{loja}', [LojaController::class, 'destroy'])->name('lojas.delete');
 });
-Route::group(['prefix'=>'fases', 'middleware'=>'auth'], function () {
+Route::group(['prefix' => 'fases', 'middleware' => 'auth'], function () {
     Route::get('/', [FaseController::class, 'index'])->name('fases.index');
     Route::get('/criar', [FaseController::class, 'create'])->name('fases.criar');
     Route::get('/edit/{fase}', [FaseController::class, 'edit'])->name('fases.edit');
@@ -85,5 +86,13 @@ Route::group(['prefix'=>'fases', 'middleware'=>'auth'], function () {
     Route::put('/update/{fase}', [FaseController::class, 'update'])->name('fases.update');
     Route::delete('/delete/{fase}', [FaseController::class, 'destroy'])->name('fases.delete');
 });
-
+Route::group(['prefix' => 'materiais', 'middleware' => 'auth'], function () {
+    Route::get('/', [MaterialController::class, 'index'])->name('materiais.index');
+    Route::get('/criar', [MaterialController::class, 'create'])->name('materiais.criar');
+    Route::get('/edit/{material}', [MaterialController::class, 'edit'])->name('materiais.edit');
+    Route::post('/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
+    Route::post('/store', [MaterialController::class, 'store'])->name('materiais.store');
+    Route::put('/update/{material}', [MaterialController::class, 'update'])->name('materiais.update');
+    Route::delete('/delete/{material}', [MaterialController::class, 'destroy'])->name('materiais.delete');
+});
 

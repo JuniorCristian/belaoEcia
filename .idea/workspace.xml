@@ -2,10 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4283d64d-e0e6-4131-9207-fa18e48a4e32" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/MaterialController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/HistoricoMaterial.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/Material.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/PrecoMaterial.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2021_03_22_201049_create_materiais_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2021_03_26_085551_create_historico_materiais_table.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ObraController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/css/style.min.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.min.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/obras.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/obras.min.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/script.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/script.min.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/mix-manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/public/mix-manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/home.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/home.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layouts/app.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/obras/show.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/obras/show.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_classmap.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/composer/autoload_static.php" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/composer/autoload_static.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,6 +191,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -221,6 +235,15 @@
       <workItem from="1615982822071" duration="11812000" />
       <workItem from="1616069421354" duration="3329000" />
       <workItem from="1616155640867" duration="5555000" />
+      <workItem from="1616262464284" duration="1795000" />
+      <workItem from="1616415235931" duration="582000" />
+      <workItem from="1616448980910" duration="2210000" />
+      <workItem from="1616757632238" duration="1329000" />
+      <workItem from="1616948003566" duration="1026000" />
+      <workItem from="1617016403256" duration="3099000" />
+      <workItem from="1617062068751" duration="2976000" />
+      <workItem from="1617289411379" duration="779000" />
+      <workItem from="1617375208541" duration="6287000" />
     </task>
     <task id="LOCAL-00001" summary="Merge branch '1200027280068317'&#10;&#10;# Conflicts:&#10;#&#9;.env">
       <created>1615237756241</created>

@@ -9,8 +9,7 @@
 
 .botoes-datatable {
     margin-left: -15px;
-.deleta{
-    cursor: pointer;
+}
 
 .botoes-datatable a {
     margin-right: 7%;
@@ -48,3 +47,8 @@
 .datatable-faltas {
     background-color: #3498db;
 }
+
+.gerenciar-materiais {
+    background-color: #95a5a6;
+}
+
