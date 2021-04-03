@@ -16,20 +16,19 @@
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="tipo">Tipo</label>
-                            <select name="tipo" id="tipo" class="form-control">
-                                <option {{($material->tipo == 1?"selected":"")}} value="1">Obra</option>
-                                <option {{($material->tipo == 2?"selected":"")}} value="2">Reforma</option>
-                                <option {{($material->tipo == 3?"selected":"")}} value="3">Ambos</option>
-                            </select>
+                            <label for="nome">Marca</label>
+                            <input value="{{$material->marca}}" type="text" id="marca" name="marca"
+                                   class="form-control"
+                                   placeholder="Insira a marca da Material">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="status">Status</label>
-                            <select name="status" id="status" class="form-control">
-                                <option {{($material->status == 1?"selected":"")}} value="1">Ativo</option>
-                                <option {{($material->status == 0?"selected":"")}} value="0">Inativo</option>
+                            <label for="tipo">Unidade</label>
+                            <select name="unidade" id="unidade" class="form-control">
+                                <option {{($material->unidade == 1?"selected":"")}} value="1">Kilograma</option>
+                                <option {{($material->unidade == 2?"selected":"")}} value="2">Metros quadrados</option>
+                                <option {{($material->unidade == 3?"selected":"")}} value="3">Metros cúbicos</option>
                             </select>
                         </div>
                     </div>

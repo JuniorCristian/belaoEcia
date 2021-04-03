@@ -87,7 +87,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/update/{fase}', [FaseController::class, 'update'])->name('fases.update');
         Route::delete('/delete/{fase}', [FaseController::class, 'destroy'])->name('fases.delete');
     });
-    Route::resource('materiais', MaterialController::class)->parameters(['materiais' => 'meterial']);
+    Route::resource('materiais', MaterialController::class)->parameters(['materiais' => 'material']);
     Route::post('materiais/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
 });
 

@@ -36,8 +36,8 @@
                                     <tr>
                                         <th>Nome</th>
                                         <th>Descrição</th>
-                                        <th>Tipo de Obra</th>
-                                        <th>Status</th>
+                                        <th>Marca</th>
+                                        <th>Unidade</th>
                                         <th>Ações</th>
                                     </tr>
                                     </thead>
@@ -84,8 +84,8 @@
             columns: [
                 {data: 'nome', name: 'nome'},
                 {data: 'descricao', name: 'descricao'},
-                {data: 'tipo', name: 'tipo'},
-                {data: 'status', name: 'status'},
+                {data: 'marca', name: 'marca'},
+                {data: 'unidade', name: 'unidade'},
                 {data: 'acoes', name: 'acoes'}
             ],
         });

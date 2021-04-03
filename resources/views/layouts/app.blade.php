@@ -284,12 +284,12 @@ $head['copyright'] = '';
                             <ul class="nav nav-collapse">
                                 <li class="{{$MODULO=="materiais" && $func == 'listar' ? "active" : ""}}">
                                     <a href="{{route('materiais.index')}}">
-                                        <span class="sub-item">Ver lojas</span>
+                                        <span class="sub-item">Ver materiais</span>
                                     </a>
                                 </li>
                                 <li class="{{$MODULO=="materiais" && $func == 'criar' ? "active" : ""}}">
                                     <a href="{{route('materiais.create')}}">
-                                        <span class="sub-item">Criar loja</span>
+                                        <span class="sub-item">Criar material</span>
                                     </a>
                                 </li>
                             </ul>
