@@ -36,7 +36,9 @@ $head['copyright'] = '';
     <link rel="stylesheet" href="{{url(mix("/fonts/flaticon/flaticon.min.css"))}}">
 
     <link rel="stylesheet" href="{{url(mix("/css/style.min.css"))}}">
-    <link rel="stylesheet" href="{{url(mix("/css/$MODULO.min.css"))}}">
+    @if(file_exists("/js/$MODULO.min.css"))
+        <link rel="stylesheet" href="{{url(mix("/css/$MODULO.min.css"))}}">
+    @endif
     <link rel="stylesheet" href="{{url(mix("/datatables/datatables.min.css"))}}">
 </head>
 <body data-background-color="bg1">
@@ -273,21 +275,21 @@ $head['copyright'] = '';
                     </li>
                     <li class="nav-item {{$MODULO == "materiais" ? "active submenu" : ""}}">
                         <a data-toggle="collapse"
-                           href="#lojas" {{$MODULO== "materiais" ? "class aria-expanded='true'" : ""}}>
+                           href="#materiais" {{$MODULO== "materiais" ? "class aria-expanded='true'" : ""}}>
                             <i class="fas fa-toolbox"></i>
                             <p>&nbsp;&nbsp;Materiais</p>
                             <span class="caret"></span>
                         </a>
-                        <div class="collapse {{$MODULO == "materiais" ? "show" : ""}}" id="lojas">
+                        <div class="collapse {{$MODULO == "materiais" ? "show" : ""}}" id="materiais">
                             <ul class="nav nav-collapse">
                                 <li class="{{$MODULO=="materiais" && $func == 'listar' ? "active" : ""}}">
                                     <a href="{{route('materiais.index')}}">
-                                        <span class="sub-item">Ver lojas</span>
+                                        <span class="sub-item">Ver materiais</span>
                                     </a>
                                 </li>
                                 <li class="{{$MODULO=="materiais" && $func == 'criar' ? "active" : ""}}">
-                                    <a href="{{route('materiais.criar')}}">
-                                        <span class="sub-item">Criar loja</span>
+                                    <a href="{{route('materiais.create')}}">
+                                        <span class="sub-item">Criar material</span>
                                     </a>
                                 </li>
                             </ul>
@@ -344,7 +346,9 @@ $head['copyright'] = '';
 <!-- JQuery Mask -->
 <script src="{{url(mix("/js/plugin/jquery-mask/jquery.mask.min.js"))}}"></script>
 
-<script src="{{url(mix("/js/$MODULO.min.js"))}}"></script>
+@if(file_exists("/js/$MODULO.min.js"))
+    <script src="{{url(mix("/js/$MODULO.min.js"))}}"></script>
+@endif
 <script src="{{url(mix("/js/script.min.js"))}}"></script>
 @stack('scripts')
 

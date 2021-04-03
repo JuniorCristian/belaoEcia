@@ -29,7 +29,7 @@ Route::post('/login/do', [AuthController::class, 'login'])->name('dashboard.logi
 Route::get('/cadastrar', [AuthController::class, 'showCadastroForm'])->name('dashboard.cadastro');
 Route::post('/cadastrar/do', [AuthController::class, 'cadastro'])->name('dashboard.cadastro.do');
 
-Route::middleware('auth')->group(function (){
+Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'obras'], function () {
         Route::get('/criar', [ObraController::class, 'create'])->name('obras.criar');
         Route::get('/', [ObraController::class, 'show'])->name('obras.show');
@@ -87,15 +87,7 @@ Route::middleware('auth')->group(function (){
         Route::put('/update/{fase}', [FaseController::class, 'update'])->name('fases.update');
         Route::delete('/delete/{fase}', [FaseController::class, 'destroy'])->name('fases.delete');
     });
-//    Route::group(['prefix' => 'material'], function () {
-//        Route::get('/', [MaterialController::class, 'index'])->name('materiais.index');
-//        Route::get('/criar', [MaterialController::class, 'create'])->name('materiais.criar');
-//        Route::get('/edit/{material}', [MaterialController::class, 'edit'])->name('materiais.edit');
-//        Route::post('/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
-//        Route::post('/store', [MaterialController::class, 'store'])->name('materiais.store');
-//        Route::put('/update/{material}', [MaterialController::class, 'update'])->name('materiais.update');
-//        Route::delete('/delete/{material}', [MaterialController::class, 'destroy'])->name('materiais.delete');
-//    });
-    Route::resource('teste', 'MaterialController');
+    Route::resource('materiais', MaterialController::class)->parameters(['materiais' => 'material']);
+    Route::post('materiais/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
 });
 
