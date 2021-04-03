@@ -87,14 +87,15 @@ Route::middleware('auth')->group(function (){
         Route::put('/update/{fase}', [FaseController::class, 'update'])->name('fases.update');
         Route::delete('/delete/{fase}', [FaseController::class, 'destroy'])->name('fases.delete');
     });
-    Route::group(['prefix' => 'materiais'], function () {
-        Route::get('/', [MaterialController::class, 'index'])->name('materiais.index');
-        Route::get('/criar', [MaterialController::class, 'create'])->name('materiais.criar');
-        Route::get('/edit/{material}', [MaterialController::class, 'edit'])->name('materiais.edit');
-        Route::post('/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
-        Route::post('/store', [MaterialController::class, 'store'])->name('materiais.store');
-        Route::put('/update/{material}', [MaterialController::class, 'update'])->name('materiais.update');
-        Route::delete('/delete/{material}', [MaterialController::class, 'destroy'])->name('materiais.delete');
-    });
+//    Route::group(['prefix' => 'material'], function () {
+//        Route::get('/', [MaterialController::class, 'index'])->name('materiais.index');
+//        Route::get('/criar', [MaterialController::class, 'create'])->name('materiais.criar');
+//        Route::get('/edit/{material}', [MaterialController::class, 'edit'])->name('materiais.edit');
+//        Route::post('/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
+//        Route::post('/store', [MaterialController::class, 'store'])->name('materiais.store');
+//        Route::put('/update/{material}', [MaterialController::class, 'update'])->name('materiais.update');
+//        Route::delete('/delete/{material}', [MaterialController::class, 'destroy'])->name('materiais.delete');
+//    });
+    Route::resource('teste', 'MaterialController');
 });
 

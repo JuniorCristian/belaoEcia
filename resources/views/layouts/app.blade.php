@@ -271,28 +271,28 @@ $head['copyright'] = '';
                             </ul>
                         </div>
                     </li>
-{{--                    <li class="nav-item {{$MODULO == "materiais" ? "active submenu" : ""}}">--}}
-{{--                        <a data-toggle="collapse"--}}
-{{--                           href="#lojas" {{$MODULO== "materiais" ? "class aria-expanded='true'" : ""}}>--}}
-{{--                            <i class="fas fa-toolbox"></i>--}}
-{{--                            <p>&nbsp;&nbsp;Materiais</p>--}}
-{{--                            <span class="caret"></span>--}}
-{{--                        </a>--}}
-{{--                        <div class="collapse {{$MODULO == "materiais" ? "show" : ""}}" id="lojas">--}}
-{{--                            <ul class="nav nav-collapse">--}}
-{{--                                <li class="{{$MODULO=="materiais" && $func == 'listar' ? "active" : ""}}">--}}
-{{--                                    <a href="{{route('materiais.index')}}">--}}
-{{--                                        <span class="sub-item">Ver lojas</span>--}}
-{{--                                    </a>--}}
-{{--                                </li>--}}
-{{--                                <li class="{{$MODULO=="materiais" && $func == 'criar' ? "active" : ""}}">--}}
-{{--                                    <a href="{{route('materiais.criar')}}">--}}
-{{--                                        <span class="sub-item">Criar loja</span>--}}
-{{--                                    </a>--}}
-{{--                                </li>--}}
-{{--                            </ul>--}}
-{{--                        </div>--}}
-{{--                    </li>--}}
+                    <li class="nav-item {{$MODULO == "materiais" ? "active submenu" : ""}}">
+                        <a data-toggle="collapse"
+                           href="#lojas" {{$MODULO== "materiais" ? "class aria-expanded='true'" : ""}}>
+                            <i class="fas fa-toolbox"></i>
+                            <p>&nbsp;&nbsp;Materiais</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{$MODULO == "materiais" ? "show" : ""}}" id="lojas">
+                            <ul class="nav nav-collapse">
+                                <li class="{{$MODULO=="materiais" && $func == 'listar' ? "active" : ""}}">
+                                    <a href="{{route('materiais.index')}}">
+                                        <span class="sub-item">Ver lojas</span>
+                                    </a>
+                                </li>
+                                <li class="{{$MODULO=="materiais" && $func == 'criar' ? "active" : ""}}">
+                                    <a href="{{route('materiais.criar')}}">
+                                        <span class="sub-item">Criar loja</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
