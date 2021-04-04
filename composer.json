@@ -19,6 +19,8 @@
         "laravel/jetstream": "^1.6",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
+        "nyholm/psr7": "^1.4",
+        "symfony/psr-http-message-bridge": "^2.1",
         "tightenco/ziggy": "^0.9.4",
         "yajra/laravel-datatables-oracle": "~9.0"
     },

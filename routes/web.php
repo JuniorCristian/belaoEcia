@@ -89,5 +89,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('materiais', MaterialController::class)->parameters(['materiais' => 'material']);
     Route::post('materiais/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
+
+    Route::get('teste_api', [\App\Repository\AutodeskAPI::class, 'uparArquivo']);
 });
 
