@@ -49,7 +49,7 @@ class ClientController extends Controller
             $client->tokens()->delete();
 
             $token = $client->createToken('my-app-token');
-
+            //TODO Create a Request Class for this method.
             return response([
                 'status' => 200,
                 'data' => $client,
