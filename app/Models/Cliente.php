@@ -23,6 +23,10 @@ class Cliente extends Model
         'senha', 'remember_token',
     ];
 
+    protected $fillable = [
+        'email', 'senha'
+    ];
+
     public function getAuthPassword()
     {
         return $this->senha;
