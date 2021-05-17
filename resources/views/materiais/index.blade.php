@@ -87,7 +87,16 @@
                 {data: 'marca', name: 'marca'},
                 {data: 'unidade', name: 'unidade'},
                 {data: 'acoes', name: 'acoes'}
-            ],
+            ], 'drawCallback': function (settings) {
+                geraTooltip("editar");
+                geraTooltip("ver");
+                geraTooltip("deletar");
+            }
         });
+        function geraTooltip(nome){
+            $(function () {
+                $('[data-toggle="'+nome+'"]').tooltip();
+            });
+        }
     </script>
 @endpush

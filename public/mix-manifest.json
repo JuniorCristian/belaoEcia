@@ -1,6 +1,5 @@
 {
     "/fonts/flaticon/flaticon.min.css": "/fonts/flaticon/flaticon.min.css?id=22860a75149e5b63c770",
-    "/css/atlantis.min.css": "/css/atlantis.min.css?id=042854e7a9ad41693a39",
     "/css/all.min.css": "/css/all.min.css?id=9c609bcd1b2817eb9c9f",
     "/css/demo.min.css": "/css/demo.min.css?id=fea33bd35f99f748e5a9",
     "/css/bootstrap.min.css": "/css/bootstrap.min.css?id=b04aefa2252fe508d28b",
@@ -38,5 +37,6 @@
     "/js/lojas.min.js": "/js/lojas.min.js?id=d41d8cd98f00b204e980",
     "/js/fases.min.js": "/js/fases.min.js?id=d41d8cd98f00b204e980",
     "/js/login.min.js": "/js/login.min.js?id=d41d8cd98f00b204e980",
-    "/js/funcionarios.min.js": "/js/funcionarios.min.js?id=7d64fe49c32401f4d38e"
+    "/js/funcionarios.min.js": "/js/funcionarios.min.js?id=7d64fe49c32401f4d38e",
+    "/css/atlantis.min.css": "/css/atlantis.min.css?id=042854e7a9ad41693a39"
 }

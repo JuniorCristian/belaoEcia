@@ -233,7 +233,7 @@ class ObraController extends Controller
     public function faltas(Obra $obra)
     {
         if (Auth::check() === true) {
-            $faltas_obra = Faltas_Obra::all()->where('obra', $obra->id)->whereBetween('created_at', [date('Y-m-d'), date('Y-m-d 23:59:59.998')]);
+            $faltas_obra = Faltas_Obra::get()->where('obra', $obra->id)->whereBetween('created_at', [date('Y-m-d'), date('Y-m-d 23:59:59.998')]);
             if (count($faltas_obra) > 0) {
                 return redirect()->route('obras.show')->withErrors(['Registro de falta dessa obra já foi feito hoje']);
             }
@@ -365,7 +365,7 @@ class ObraController extends Controller
                 $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase', ['obra', $row->id]).'">
                         <i class="fas fa-percentage" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="gerenciar-materiais" href="">
+                $acoes .= '<a class="gerenciar-materiais" href="'.route('obras.materiais', ['obra' => $row['id']]).'">
                         <i class="fas fa-toolbox" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
@@ -467,7 +467,7 @@ class ObraController extends Controller
                 $acoes .= '<a class="gerenciar-fases" href="'.route('obras.fase', ['obra' => $row['id']]).'">
                         <i class="fas fa-percentage" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="gerenciar-materiais" href="">
+                $acoes .= '<a class="gerenciar-materiais" href="'.route('obras.materiais', ['obra' => $row['id']]).'">
                         <i class="fas fa-toolbox" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
@@ -668,6 +668,6 @@ class ObraController extends Controller
 
     public function materiais(Obra $obra)
     {
-
+        return view('obras.materias');
     }
 }

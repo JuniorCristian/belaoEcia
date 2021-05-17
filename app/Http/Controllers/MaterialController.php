@@ -27,48 +27,50 @@ class MaterialController extends Controller
             'nome' => 'Material 1',
             'descricao'=>'Material 1',
             'marca'=>'Marca 1',
-            'unidade'=>'Kg'
+            'unidade'=> 1
         ));
 
         array_push($query, array(
             'nome' => 'Material 2',
             'descricao'=>'Material 2',
             'marca'=>'Marca 2',
-            'unidade'=>'M²'
+            'unidade'=> 2
         ));
 
         array_push($query, array(
             'nome' => 'Material 3',
             'descricao'=>'Material 3',
             'marca'=>'Marca 3',
-            'unidade'=>'M³'
+            'unidade'=> 3
         ));
         /////// FIM QUERY DO DATATABLE ///////////////
 
         return DataTables::of($query)
             ->editColumn('unidade', function ($row){
-                switch ($row){
+                switch ($row['unidade']){
                     case 1:
-                        return "Kg";
+                        return "Quilograma";
                     case 2:
-                        return "M²";
+                        return "Metro Quadrado";
                     case 3:
-                        return "M³";
+                        return "Metro Cúbico";
+                    default:
+                        return "Sem unidade definida";
                 }
             })
             ->addColumn('acoes', function ($row)  {
                 $acoes = "<div class='botoes-datatable'>";
 
-                $acoes .= '<a class="visualizar-datatable"  href="">
+                $acoes .= '<a class="visualizar-datatable" data-toggle="ver" data-placement="top" title="Ver"  href="">
                         <i class="fas fa-eye" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="editar-datatable" href="'.route('materiais.edit', ['material'=>1]).'">
+                $acoes .= '<a class="editar-datatable" data-toggle="editar" data-placement="top" title="Editar" href="'.route('materiais.edit', ['material'=>1]).'">
                         <i class="fa fa-edit" style="color: #fff"></i></a>';
 
                 $acoes .= '<form method="POST" action="" style="display:inline">
                             <input name="_method" value="DELETE" type="hidden">
                             '. csrf_field() .'
-                            <a class="excluir-datatable deleta" onclick="alertModal (\'Excluir Material?\',this)">
+                            <a class="excluir-datatable deleta" data-toggle="deletar" data-placement="top" title="Deletar" onclick="alertModal (\'Excluir Material?\',this)">
                                 <i class="fa fa-trash" style="color: #fff"></i></a>
                         </form>';
 
