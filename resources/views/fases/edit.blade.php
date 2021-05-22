@@ -29,10 +29,10 @@
                     </li>
                 </ul>
             </div>
-            <form method="post" action="{{route('fases.update', ['fase'=>$fase->id])}}">
+            <form class="needs-validation" novalidate method="post" action="{{route('fases.update', ['fase'=>$fase->id])}}">
                 @csrf
                 @method('put')
-                @include('fases.form', ['page'=>'Editar'])
+                @include('fases.form', ['page'=>'Editar', 'edit'=>true])
             </form>
         </div>
     </div>

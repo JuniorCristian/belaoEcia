@@ -51,4 +51,5 @@ mix
     .scripts('resources/js/lojas.js', 'public/js/lojas.min.js').version()
     .scripts('resources/js/fases.js', 'public/js/fases.min.js').version()
     .scripts('resources/js/login.js', 'public/js/login.min.js').version()
+    .scripts('resources/js/materiais.js', 'public/js/materiais.min.js').version()
     .scripts('resources/js/funcionarios.js', 'public/js/funcionarios.min.js').version();

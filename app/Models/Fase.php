@@ -18,4 +18,10 @@ class Fase extends Model
         'status',
         'status_db'
     ];
+
+
+    public function fase_obra()
+    {
+        return $this->hasOne(FaseObra::class, 'fase', 'id')->first();
+    }
 }

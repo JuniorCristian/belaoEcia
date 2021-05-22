@@ -26,10 +26,12 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header d-flex">
                             <h4 class="card-title">Ver Fases</h4>
+                            <a class="add_novo bg-primary text-white font-weight-bold p-2" href="{{route('fases.criar')}}"><i class="fa fa-plus-circle"></i> Nova</a>
                         </div>
                         <div class="card-body">
+                            @include('layouts.messages')
                             <div class="table-responsive">
                                 <table id="datatable" class="display table table-striped table-hover">
                                     <thead>
@@ -88,6 +90,32 @@
                 {data: 'status', name: 'status'},
                 {data: 'acoes', name: 'acoes'}
             ],
+            "drawCallback":function (){
+                deleta();
+            }
         });
+        function deleta() {
+            $('.deleta').click(function () {
+                id = $(this).data('id');
+                Swal.fire({
+                    title: "Tem certeza que deseja deletar essa fase?",
+                    text: "Uma vez deletada você irá perder todos os dados dela",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                    .then((willDelete) => {
+                        if (willDelete.isConfirmed) {
+                            var form = $('<form action="fases/delete/'+ id +'" method="post">' +
+                                '<input type="hiden" name="_token" value="{{csrf_token()}}" />' +
+                                '<input type="hiden" name="_method" value="delete" />' +
+                                '<input type="hiden" name="obra" value="' + id + '" />' +
+                                '</form>');
+                            $('body').append(form);
+                            form.submit();
+                        }
+                    });
+            });
+        }
     </script>
 @endpush

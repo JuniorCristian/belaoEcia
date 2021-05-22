@@ -42,8 +42,13 @@ class Obra extends Model
         return $this->hasMany(Faltas_Obra::class, 'obra', 'id');
     }
 
-    public function fases()
+    public function fase_obra()
     {
         return $this->hasMany(FaseObra::class, 'obra', 'id');
+    }
+
+    public function fases()
+    {
+        return $this->belongsToMany(Fase::class, 'fase_obras', 'obra', 'fase');
     }
 }

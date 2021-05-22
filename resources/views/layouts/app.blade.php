@@ -40,6 +40,7 @@ $head['copyright'] = '';
         <link rel="stylesheet" href="{{url(mix("/css/$MODULO.min.css"))}}">
     @endif
     <link rel="stylesheet" href="{{url(mix("/datatables/datatables.min.css"))}}">
+    @stack('css')
 </head>
 <body data-background-color="bg1">
 <div class="wrapper">
@@ -346,9 +347,9 @@ $head['copyright'] = '';
 <!-- JQuery Mask -->
 <script src="{{url(mix("/js/plugin/jquery-mask/jquery.mask.min.js"))}}"></script>
 
-@if(file_exists("/js/$MODULO.min.js"))
+{{--@if(file_exists(url(mix("/js/$MODULO.min.js"))))--}}
     <script src="{{url(mix("/js/$MODULO.min.js"))}}"></script>
-@endif
+{{--@endif--}}
 <script src="{{url(mix("/js/script.min.js"))}}"></script>
 @stack('scripts')
 

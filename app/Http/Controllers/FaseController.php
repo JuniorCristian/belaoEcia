@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Fase;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use \Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
 
 class FaseController extends Controller
@@ -18,34 +22,49 @@ class FaseController extends Controller
         return view('fases.index');
     }
 
-    public function datatable()
+    public function datatable(Request $request)
     {
-        /////// QUERY DO DATATABLE ///////////////
-        $query = array();
+        $columns = array(
+            0 => 'nome',
+            1 => 'descricao',
+            2 => 'tipo',
+            3 => 'status',
+            4 => 'acoes',
+        );
 
-        array_push($query, array(
-            'nome' => 'Fase da Obra 1',
-            'descricao'=>'Fase da obra 1',
-            'tipo'=>1,
-            'status' => 1
-        ));
+        $totalData = Fase::get()->where("status_db", "1")->count();
 
-        array_push($query, array(
-            'nome' => 'Fase da Obra 2',
-            'descricao'=>'Fase da obra 2',
-            'tipo'=>2,
-            'status' => 0
-        ));
+        $totalFiltered = $totalData;
 
-        array_push($query, array(
-            'nome' => 'Fase da Obra 3',
-            'descricao'=>'Fase da obra 3',
-            'tipo'=>3,
-            'status' => 1
-        ));
-        /////// FIM QUERY DO DATATABLE ///////////////
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
 
-        return DataTables::of($query)
+        if(empty($request->input('search.value')))
+        {
+            $datatables = Fase::where("status_db", "1")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        }
+        else {
+            $search = $request->input('search.value');
+
+            $datatables =  Fase::where("status_db", "1")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order,$dir)
+                ->get();
+
+            $totalFiltered = Fase::where("status_db", "1")
+                ->count();
+        }
+
+
+
+        return DataTables::of(Fase::where('status_db', 1))
             ->editColumn('status', function ($row) {
                 if($row['status'] == 1) {
                     return  "<label class=\"label-ativo\">Ativo</label> ";
@@ -70,18 +89,14 @@ class FaseController extends Controller
             ->addColumn('acoes', function ($row)  {
                 $acoes = "<div class='botoes-datatable'>";
 
-                $acoes .= '<a class="visualizar-datatable"  href="">
+                $acoes .= '<a class="visualizar-datatable" href="'.route('fases.show', ['fase'=>$row->id]).'">
                         <i class="fas fa-eye" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="editar-datatable" href="'.route('fases.edit', ['fase'=>1]).'">
+                $acoes .= '<a class="editar-datatable" href="'.route('fases.edit', ['fase'=>$row->id]).'">
                         <i class="fa fa-edit" style="color: #fff"></i></a>';
 
-                $acoes .= '<form method="POST" action="" style="display:inline">
-                            <input name="_method" value="DELETE" type="hidden">
-                            '. csrf_field() .'
-                            <a class="excluir-datatable deleta" onclick="alertModal (\'Excluir Crud?\',this)">
-                                <i class="fa fa-trash" style="color: #fff"></i></a>
-                        </form>';
+                $acoes .= '<a class="excluir-datatable deleta" data-id="'.$row->id.'">
+                                <i class="fa fa-trash" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
 
@@ -111,7 +126,19 @@ class FaseController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $fase = new Fase();
+            $fase->fill($request->all());
+            $fase->status_db = 1;
+            $fase->save();
+            DB::commit();
+            Session::flash('success_message', 'Fase adicionada com sucesso');
+        }catch (\Exception $e){
+            DB::rollBack();
+            Session::flash('error_message', 'Erro ao adicionar Fase');
+        }
+        return redirect()->route('fases.index');
     }
 
     /**
@@ -122,7 +149,7 @@ class FaseController extends Controller
      */
     public function show(Fase $fase)
     {
-        //
+        return view('fases.show', compact('fase'));
     }
 
     /**
@@ -145,7 +172,17 @@ class FaseController extends Controller
      */
     public function update(Request $request, Fase $fase)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $fase->fill($request->all());
+            $fase->save();
+            DB::commit();
+            Session::flash('success_message', 'Fase editada com sucesso');
+        }catch (\Exception $e){
+            DB::rollBack();
+            Session::flash('error_message', 'Erro ao editar Fase');
+        }
+        return redirect()->route('fases.index');
     }
 
     /**
@@ -156,6 +193,16 @@ class FaseController extends Controller
      */
     public function destroy(Fase $fase)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $fase->status_db = 0;
+            $fase->save();
+            DB::commit();
+            Session::flash('success_message', 'Fase excluida com sucesso');
+        }catch (\Exception $e){
+            DB::rollBack();
+            Session::flash('error_message', 'Erro ao excluir Fase');
+        }
+        return redirect()->route('fases.index');
     }
 }

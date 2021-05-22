@@ -1,9 +1,10 @@
 {
     "/fonts/flaticon/flaticon.min.css": "/fonts/flaticon/flaticon.min.css?id=22860a75149e5b63c770",
+    "/css/atlantis.min.css": "/css/atlantis.min.css?id=798cb7759f9bb55db197",
     "/css/all.min.css": "/css/all.min.css?id=9c609bcd1b2817eb9c9f",
     "/css/demo.min.css": "/css/demo.min.css?id=fea33bd35f99f748e5a9",
     "/css/bootstrap.min.css": "/css/bootstrap.min.css?id=b04aefa2252fe508d28b",
-    "/css/style.min.css": "/css/style.min.css?id=385a0d65429c79327ec5",
+    "/css/style.min.css": "/css/style.min.css?id=93ac6d60a1cf7feef0b8",
     "/css/obras.min.css": "/css/obras.min.css?id=b9323e532181710e2c55",
     "/css/home.min.css": "/css/home.min.css?id=d41d8cd98f00b204e980",
     "/css/sweetalert2.min.css": "/css/sweetalert2.min.css?id=7b8473c00a68f71a75cf",
@@ -31,12 +32,12 @@
     "/js/atlantis.min.js": "/js/atlantis.min.js?id=c24abfd593b04000379a",
     "/js/script.min.js": "/js/script.min.js?id=3787b0c46e4cfb6e88e2",
     "/js/all.min.js": "/js/all.min.js?id=305154c950ce5e305db6",
-    "/js/obras.min.js": "/js/obras.min.js?id=80127391325d8fdb29fe",
+    "/js/obras.min.js": "/js/obras.min.js?id=9463861cea5839536703",
     "/js/home.min.js": "/js/home.min.js?id=d41d8cd98f00b204e980",
     "/js/clientes.min.js": "/js/clientes.min.js?id=299d18b7f027e1baf864",
     "/js/lojas.min.js": "/js/lojas.min.js?id=d41d8cd98f00b204e980",
-    "/js/fases.min.js": "/js/fases.min.js?id=d41d8cd98f00b204e980",
+    "/js/fases.min.js": "/js/fases.min.js?id=68b329da9893e34099c7",
     "/js/login.min.js": "/js/login.min.js?id=d41d8cd98f00b204e980",
-    "/js/funcionarios.min.js": "/js/funcionarios.min.js?id=7d64fe49c32401f4d38e",
-    "/css/atlantis.min.css": "/css/atlantis.min.css?id=042854e7a9ad41693a39"
+    "/js/materiais.min.js": "/js/materiais.min.js?id=0551a1797b7ab0e10d78",
+    "/js/funcionarios.min.js": "/js/funcionarios.min.js?id=7d64fe49c32401f4d38e"
 }

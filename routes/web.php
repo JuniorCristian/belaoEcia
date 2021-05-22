@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
         Route::put('/concluir/{obra}', [ObraController::class, 'concluir'])->name('obras.concluir');
         Route::delete('/delete/{obra}', [ObraController::class, 'destroy'])->name('obras.delete');
         Route::get('/fase/{obra}', [ObraController::class, 'fase'])->name('obras.fase');
+        Route::put('/fase/update/{obra}', [ObraController::class, 'faseUpdate'])->name('obras.fase.update');
+        Route::post('/fase/upload/{obra}', [ObraController::class, 'faseUpload'])->name('obras.fase.upload');
         Route::get('/materiais/{obra}', [ObraController::class, 'materiais'])->name('obras.materiais');
     });
 
@@ -81,6 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'fases'], function () {
         Route::get('/', [FaseController::class, 'index'])->name('fases.index');
         Route::get('/criar', [FaseController::class, 'create'])->name('fases.criar');
+        Route::get('/show/{fase}', [FaseController::class, 'show'])->name('fases.show');
         Route::get('/edit/{fase}', [FaseController::class, 'edit'])->name('fases.edit');
         Route::post('/datatble', [FaseController::class, 'datatable'])->name('fases.datatable');
         Route::post('/store', [FaseController::class, 'store'])->name('fases.store');

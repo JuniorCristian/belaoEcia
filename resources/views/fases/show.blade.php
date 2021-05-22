@@ -1,7 +1,7 @@
 @php
     $seo['title'] = 'Fases';
     $MODULO = 'fases';
-    $func = 'criar';
+    $func = 'listar';
 @endphp
 @extends('layouts.app')
 @section('content')
@@ -25,13 +25,14 @@
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a>Nova Fase</a>
+                        <a>Editar Fase</a>
                     </li>
                 </ul>
             </div>
-            <form class="needs-validation" novalidate method="post" action="{{route('fases.store')}}">
+            <form method="post" action="{{route('fases.update', ['fase'=>$fase->id])}}">
                 @csrf
-                @include('fases.form', ['page'=>'Criar', 'edit'=>true])
+                @method('put')
+                @include('fases.form', ['page'=>'Editar', 'edit'=>false])
             </form>
         </div>
     </div>

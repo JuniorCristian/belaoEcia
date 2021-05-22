@@ -261,11 +261,3 @@ $('.meio_dia').click(function (){
         $(this).parent().parent().parent().find('.falta').prop("checked", false);
     }
 });
-$('.imagem_fase').click(function (){
-    imagem = $(this).data('imagem');
-    Swal.fire({
-        imageUrl: imagem,
-        showCloseButton: true,
-        showConfirmButton: false
-    });
-});
