@@ -17,6 +17,8 @@ class CreateFaseObraImagensTable extends Migration
             $table->id();
             $table->foreignId('fase_obra');
             $table->string('path');
+            $table->string('thumb_path');
+            $table->string('descricao', 5000);
             $table->boolean('status_db');
             $table->timestamps();
 

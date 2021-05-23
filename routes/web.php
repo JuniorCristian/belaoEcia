@@ -49,6 +49,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/fase/{obra}', [ObraController::class, 'fase'])->name('obras.fase');
         Route::put('/fase/update/{obra}', [ObraController::class, 'faseUpdate'])->name('obras.fase.update');
         Route::post('/fase/upload/{obra}', [ObraController::class, 'faseUpload'])->name('obras.fase.upload');
+        Route::put('/fase/edit/', [ObraController::class, 'faseEdit'])->name('obras.fase.edit');
+        Route::delete('/fase/delete/', [ObraController::class, 'faseDelete'])->name('obras.fase.delete');
         Route::get('/materiais/{obra}', [ObraController::class, 'materiais'])->name('obras.materiais');
     });
 

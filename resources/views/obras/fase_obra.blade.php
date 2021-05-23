@@ -99,10 +99,12 @@ $func = 'listar';
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <label for="exampleFormControlFile1">Imagens da fase</label>
-                                                            <form id="formfase{{$fase->id}}" enctype="multipart/form-data" method="POST">
+                                                            <form id="formfase{{$fase->id}}"
+                                                                  enctype="multipart/form-data" method="POST">
                                                                 @csrf
                                                                 <input type="file" name="arquivos[]"
-                                                                       multiple="multiple" data-id_form="formfase{{$fase->id}}"
+                                                                       multiple="multiple"
+                                                                       data-id_form="formfase{{$fase->id}}"
                                                                        class="form-control-file envia_fotos">
                                                             </form>
                                                         </div>
@@ -114,13 +116,20 @@ $func = 'listar';
                                                             @foreach(\App\Models\FaseObraImagem::where('fase_obra', $fase->id)->where('status_db', 1)->get() as $images)
                                                                 <div class="images-list">
                                                                     <img
-                                                                        src="{{env('APP_URL')}}/storage/{{$images->path}}"
-                                                                        class="img-thumbnail rounded float-left imagem_fase m-1"
+                                                                        src="{{env('APP_URL')}}/storage/{{$images->thumb_path}}"
+                                                                        class="img-thumbnail rounded float-left imagem_fase"
                                                                         style="width:150px!important" alt="..."
-                                                                        data-imagem="{{env('APP_URL')}}/storage/{{$images->path}}">
-                                                                </div>
-                                                                <div class="images_opx" style="display: none">
-
+                                                                        data-imagem="{{env('APP_URL')}}/storage/{{$images->path}}"
+                                                                        data-fase_imagem="{{$images->id}}"
+                                                                        data-descricao="{{$images->descricao}}">
+                                                                    <div class="images_opx" style="display: none">
+                                                                        <div class="fundo"></div>
+                                                                        <div class="acoes_image">
+                                                                            <a class="delete_img"><i class="fa fa-trash"></i></a>
+                                                                            <a class="edit_img"><i class="fa fa-edit"></i></a>
+                                                                            <a class="show_img"><i class="fa fa-eye"></i></a>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             @endforeach
                                                         </div>
@@ -148,23 +157,77 @@ $func = 'listar';
             .nav-tabs .nav-link {
                 color: #6c7378;
             }
+
             .images-list {
                 display: inline-table;
+                height: 150px;
+                width: 150px;
+                margin-right: 8px;
             }
-            .imagem_fase{
+
+            .acoes_image {
+                position: relative;
+                top: -54%;
+                left: 18%;
+            }
+
+            .acoes_image a{
+                font-size: 14px;
+                border-radius: 50%;
+                color: white!important;
+                margin-right: 4px;
+            }
+
+            .delete_img {
+                background-color: #e74c3c;
+                padding: 4px 6px;
+            }
+
+            .delete_img:hover {
+                background-color: #bb3a2f;
+            }
+
+            .edit_img {
+                background-color: #f1c40f;
+                padding: 4px 5px;
+            }
+
+            .edit_img:hover {
+                background-color: #c9a40d;
+            }
+
+            .show_img {
+                background-color: #2ecc71;
+                padding: 4px 5px;
+            }
+
+            .show_img:hover {
+                background-color: #239353;
+            }
+
+            .imagem_fase {
                 cursor: pointer;
+            }
+
+            .images_opx {
+                width: 150px;
+                height: 150px;
+                position: absolute;
+            }
+            .fundo {
+                width: 100%;
+                height: 100%;
+                background: black;
+                opacity: 0.5;
             }
         </style>
     @endpush
     @push('scripts')
         <script>
             var mostra_opx = false;
+            carregafuncoes();
             $('.envia_fotos').change(function () {
                 var data = new FormData(document.getElementById($(this).data('id_form')));
-                // for(i = 0; i < $(this).get(0).files.length; i++){
-                //     data.append('arquivos['+i+']', $(this).get(0).files[i]);
-                //     console.log($(this).get(0).files[i]);
-                // }
                 data.append('_token', "{{csrf_token()}}");
                 data.append('fase_obra', $(this).parents('.tab-pane').data('fase'));
                 $.ajax({
@@ -176,55 +239,28 @@ $func = 'listar';
                     type: "POST",
                     data: data
                 }).done(function (data) {
-                    if(data.status){
-                        for(i = 0; i < data.images.length; i++){
-                            $('.tab-pane.show.active').find('div.list_images').append('<div class="images-list"><img src="{{env('APP_URL')}}/storage/'+data.images[i]+'"'+
-                            'class="img-thumbnail rounded float-left imagem_fase m-1"'+
-                            'style="width:150px!important" alt="..."'+
-                            'data-imagem="{{env('APP_URL')}}/storage/'+data.images[i]+'"></div>');
-                        }
-                        $('.imagem_fase').click(function (){
-                            imagem = $(this).data('imagem');
-                            Swal.fire({
-                                imageUrl: imagem,
-                                showCloseButton: true,
-                                showConfirmButton: false
-                            });
-                        });
-                    }else{
-                    }
-                });
-            });
-            $('.salva_fase').click(function () {
-                var fase = $(this).parents('.tab-pane');
-                var data_inicial_prevista_fase = fase.find('.data_inicial_prevista_fase').val();
-                var data_final_prevista_fase = fase.find('.data_final_prevista_fase').val();
-                var data_inicial_fase = fase.find('.data_inicial_fase').val();
-                var data_final_fase = fase.find('.data_final_fase').val();
-                $.ajax({
-                    url: "{{route('obras.fase.update', ['obra'=>$obra->id])}}",
-                    dataType: "JSON",
-                    type: "POST",
-                    data: {
-                        _token: "{{csrf_token()}}",
-                        _method: "PUT",
-                        inicio_previsto: data_inicial_prevista_fase,
-                        final_previsto: data_final_prevista_fase,
-                        inicio: data_inicial_fase,
-                        final: data_final_fase,
-                        id_fase: fase.data('fase')
-
-                    }
-                }).done(function (data) {
                     if (data.status) {
-                        swal.fire({
-                            title: "Sucesso",
-                            icon: "success",
-                            text: data.message,
-                            showCloseButton: true,
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
+                        for (i = 0; i < data.images.length; i++) {
+                            $('.tab-pane.show.active').find('div.list_images').append(
+                                '<div class="images-list">'+
+                                '    <img'+
+                                '        src="{{env('APP_URL')}}/storage/' + data.thumbs[i] + '"'+
+                                '       class="img-thumbnail rounded float-left imagem_fase"'+
+                                '       style="width:150px!important" alt="..."'+
+                                '        data-imagem="{{env('APP_URL')}}/storage/' + data.images[i] + '"'+
+                                '        data-fase_imagem="' + data.fase_id[i] + '"'+
+                                '        data-descricao="">'+
+                                '        <div class="images_opx" style="display: none">'+
+                                '            <div class="fundo"></div>'+
+                                '            <div class="acoes_image">'+
+                                '                <a class="delete_img"><i class="fa fa-trash"></i></a>'+
+                                '                <a class="edit_img"><i class="fa fa-edit"></i></a>'+
+                                '                <a class="show_img"><i class="fa fa-eye"></i></a>'+
+                                '            </div>'+
+                                '        </div>'+
+                                '</div>');
+                        }
+                        carregafuncoes();
                     } else {
                         swal.fire({
                             title: "Falha",
@@ -233,28 +269,189 @@ $func = 'listar';
                             showCloseButton: true,
                             showConfirmButton: false,
                             timer: 2000
-                        }).then(function () {
-                            window.location.reload();
                         });
                     }
                 });
             });
-            $('.imagem_fase').click(function (){
-                imagem = $(this).data('imagem');
-                Swal.fire({
-                    imageUrl: imagem,
-                    showCloseButton: true,
-                    showConfirmButton: false
+            function carregafuncoes() {
+                $('.salva_fase').click(function () {
+                    var fase = $(this).parents('.tab-pane');
+                    var data_inicial_prevista_fase = fase.find('.data_inicial_prevista_fase').val();
+                    var data_final_prevista_fase = fase.find('.data_final_prevista_fase').val();
+                    var data_inicial_fase = fase.find('.data_inicial_fase').val();
+                    var data_final_fase = fase.find('.data_final_fase').val();
+                    $.ajax({
+                        url: "{{route('obras.fase.update', ['obra'=>$obra->id])}}",
+                        dataType: "JSON",
+                        type: "POST",
+                        data: {
+                            _token: "{{csrf_token()}}",
+                            _method: "PUT",
+                            inicio_previsto: data_inicial_prevista_fase,
+                            final_previsto: data_final_prevista_fase,
+                            inicio: data_inicial_fase,
+                            final: data_final_fase,
+                            id_fase: fase.data('fase')
+
+                        }
+                    }).done(function (data) {
+                        if (data.status) {
+                            swal.fire({
+                                title: "Sucesso",
+                                icon: "success",
+                                text: data.message,
+                                showCloseButton: true,
+                                showConfirmButton: false,
+                                timer: 2000
+                            });
+                        } else {
+                            swal.fire({
+                                title: "Falha",
+                                icon: "warning",
+                                text: data.message,
+                                showCloseButton: true,
+                                showConfirmButton: false,
+                                timer: 2000
+                            }).then(function () {
+                                window.location.reload();
+                            });
+                        }
+                    });
                 });
-            });
-            $('.imagem_fase').hover(function (){
-                mostra_opx = !mostra_opx;
-                if(mostra_opx){
-                    console.log("Teste");
-                }else{
-                    console.log("Teste2");
-                }
-            });
+                $('.show_img').click(function () {
+                    var imagem = $(this).parents('.images-list').find('.imagem_fase').data('imagem');
+                    Swal.fire({
+                        imageUrl: imagem,
+                        showCloseButton: true,
+                        showConfirmButton: false
+                    });
+                });
+                $('.edit_img').click(function () {
+                    var image = $(this).parents('.images-list').find('.imagem_fase');
+                    const edit_image_text = Swal.mixin({
+                        customClass: {
+                            cancelButton: 'btn btn-danger',
+                            confirmButton: 'btn btn-success mr-2'
+                        },
+                        buttonsStyling: false
+                    })
+                    edit_image_text.fire({
+                        title: 'Descrição da imagem',
+                        text: 'Coloque uma descrição para a imagem para que o cliente saiba o que foi feito',
+                        input: 'textarea',
+                        inputAttributes: {
+                            autocapitalize: 'off'
+                        },
+                        inputValue: image.data('descricao'),
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Salvar',
+                        cancelButtonText: 'Cancelar',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "{{route('obras.fase.edit')}}",
+                                dataType: "JSON",
+                                type: "POST",
+                                data: {
+                                    _token: "{{csrf_token()}}",
+                                    _method: "PUT",
+                                    id_fase_imagem: image.data('fase_imagem'),
+                                    descricao: $('.swal2-textarea').val()
+                                }
+                            }).done(function (data) {
+                                if (data.status) {
+                                    image.data('descricao', data.descricao);
+                                    console.log(image.data('imagem'));
+                                    swal.fire({
+                                        title: "Sucesso",
+                                        icon: "success",
+                                        text: data.message,
+                                        showCloseButton: true,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                } else {
+                                    swal.fire({
+                                        title: "Falha",
+                                        icon: "warning",
+                                        text: data.message,
+                                        showCloseButton: true,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+                $('.delete_img').click(function (){
+                    var image = $(this).parents('.images-list').find('.imagem_fase');
+                    const delete_image_text = Swal.mixin({
+                        customClass: {
+                            cancelButton: 'btn btn-danger',
+                            confirmButton: 'btn btn-success mr-2'
+                        },
+                        buttonsStyling: false
+                    })
+                    delete_image_text.fire({
+                        title: 'Confirma a exclusão da imagem!',
+                        text: 'Se você deletar essa imagem, ela não ficar mais acessivel',
+                        icon: 'warning',
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        confirmButtonText: 'Confimar',
+                        cancelButtonText: 'Cancelar',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "{{route('obras.fase.delete')}}",
+                                dataType: "JSON",
+                                type: "POST",
+                                data: {
+                                    _token: "{{csrf_token()}}",
+                                    _method: "DELETE",
+                                    id_fase_imagem: image.data('fase_imagem')
+                                }
+                            }).done(function (data) {
+                                if (data.status) {
+                                    image.parent().remove();
+                                    console.log(image.data('imagem'));
+                                    swal.fire({
+                                        title: "Sucesso",
+                                        icon: "success",
+                                        text: data.message,
+                                        showCloseButton: true,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
+                                } else {
+                                    swal.fire({
+                                        title: "Falha",
+                                        icon: "warning",
+                                        text: data.message,
+                                        showCloseButton: true,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(function () {
+                                        window.location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+                });
+                $('.images-list').hover(function (e) {
+                    mostra_opx = !mostra_opx;
+                    if (mostra_opx) {
+                        $(this).find('.images_opx').show();
+                    } else {
+                        $(this).find('.images_opx').hide();
+                    }
+                });
+            }
         </script>
     @endpush
 @endsection

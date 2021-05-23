@@ -14,6 +14,8 @@ class FaseObraImagem extends Model
     protected $fillable = [
         'fase_obra',
         'path',
+        'thumb_path',
+        'descricao',
         'status_db'
     ];
 }

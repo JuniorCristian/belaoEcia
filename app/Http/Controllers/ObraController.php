@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
 use Intervention\Image\Facades\Image;
-use function PHPUnit\Framework\directoryExists;
 
 class ObraController extends Controller
 {
@@ -698,21 +697,66 @@ class ObraController extends Controller
         DB::beginTransaction();
         try {
             $images = [];
+            $thumbs = [];
+            $fase_id = [];
             foreach ($request->allFiles()['arquivos'] as $image) {
                 $faseImage = new FaseObraImagem();
                 $faseImage->fase_obra = $request->fase_obra;
                 $faseImage->path = $image->store('fase_obra/' . $request->fase_obra);
+                list($thumb['width'], $thumb['height']) = getimagesize('storage/'.$faseImage->path);
+                $filename = $faseImage->path;
+                $filename = str_replace('fase_obra/'.$request->fase_obra.'/', 'fase_obra/'.$request->fase_obra.'/thumb_', $filename);
+                $faseImage->thumb_path = $filename;
+                $faseImage->descricao = '';
+                if($thumb['width'] < $thumb['height']){
+                    $menorDistancia = $thumb['width'];
+                }else{
+                    $menorDistancia = $thumb['height'];
+                }
+                Image::make($image)->crop($menorDistancia, $menorDistancia,
+                    intval($thumb['width']/2)-intval($menorDistancia/2), intval($thumb['height']/2)-intval($menorDistancia/2))->resize('300', '300')->save(public_path('storage/'.$filename));
                 $images[] = $faseImage->path;
+                $thumbs[] = $filename;
                 $faseImage->status_db = 1;
                 $faseImage->save();
-                unset($faseImage);
+                $fase_id[] = $faseImage->id;
+                unset($faseImage,$thumb);
             }
             DB::commit();
-            return json_encode(['status'=>true, 'images'=>$images]);
+            return json_encode(['status'=>true, 'images'=>$images, 'thumbs'=>$thumbs, 'fase_id'=>$fase_id]);
         }catch (\Exception $e){
             DB::rollBack();
-            dd($e);
             return json_encode(['status'=>false, 'message'=>'Erro ao adicionar as imagens']);
+        }
+    }
+
+    public function faseEdit(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $fase_image = FaseObraImagem::where('id', $request->id_fase_imagem)->first();
+            $fase_image->descricao = $request->descricao;
+            $fase_image->save();
+            DB::commit();
+            return json_encode(['status'=>true, 'message'=>'Descrição atualizada com sucesso!', 'descricao'=>$request->descricao]);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return json_encode(['status'=>false, 'message'=>'Falha ao atualizar descrição!']);
+        }
+    }
+
+    public function faseDelete(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $fase_image = FaseObraImagem::where('id', $request->id_fase_imagem)->first();
+            $fase_image->status_db = 0;
+            $fase_image->save();
+            DB::commit();
+            return json_encode(['status'=>true, 'message'=>'Imagem ecluida com sucesso!']);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return json_encode(['status'=>false, 'message'=>'Falha ao excluir descrição!']);
         }
     }
 
