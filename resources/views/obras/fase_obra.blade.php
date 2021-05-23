@@ -260,6 +260,7 @@ $func = 'listar';
                                 '        </div>'+
                                 '</div>');
                         }
+                        removeFuncoes();
                         carregafuncoes();
                     } else {
                         swal.fire({
@@ -273,6 +274,14 @@ $func = 'listar';
                     }
                 });
             });
+            function removeFuncoes(){
+                $('.salva_fase').off('click');
+                $('.show_img').off('click');
+                $('.edit_img').off('click');
+                $('.delete_img').off('click');
+                $('.images-list').off('mouseover');
+                $('.images-list').off('mouseout');
+            }
             function carregafuncoes() {
                 $('.salva_fase').click(function () {
                     var fase = $(this).parents('.tab-pane');
@@ -443,13 +452,11 @@ $func = 'listar';
                         }
                     });
                 });
-                $('.images-list').hover(function (e) {
-                    mostra_opx = !mostra_opx;
-                    if (mostra_opx) {
+                $('.images-list').mouseover(function (e) {
                         $(this).find('.images_opx').show();
-                    } else {
+                });
+                $('.images-list').mouseout(function (e) {
                         $(this).find('.images_opx').hide();
-                    }
                 });
             }
         </script>
