@@ -38,7 +38,7 @@ class AuthController extends Controller
         }
         $credentials = [
             'email'=> $request->email,
-            'password'=> $request->password
+            'password'=> $request->senha
         ];
         if(Auth::attempt($credentials)){
             return redirect()->route('home');

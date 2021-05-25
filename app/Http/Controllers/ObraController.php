@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Faltas_Obra;
+use App\Models\FaseObra;
+use App\Models\FaseObraImagem;
 use App\Models\Funcionario;
 use App\Models\Funcionarios_Obra;
 use App\Models\Obra;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use phpDocumentor\Reflection\Types\String_;
-use function GuzzleHttp\Promise\all;
-use function PHPUnit\Framework\countOf;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Yajra\DataTables\Facades\DataTables;
+use Intervention\Image\Facades\Image;
 
 class ObraController extends Controller
 {
@@ -38,7 +41,7 @@ class ObraController extends Controller
             $obra = new Obra();
             $obra->cliente = '';
             $obra->data_inicio_prevista = date('Y-m-d');
-            $obra->data_final_prevista = date('Y-m-'.(date('d')+1));
+            $obra->data_final_prevista = date('Y-m-' . (date('d') + 1));
             $clientes = Cliente::all()->where('status_db', 1);
             $funcionarios = Funcionario::all()->where('status_db', 1);
             return view('obras.create', compact('clientes', 'funcionarios', 'obra'));
@@ -63,9 +66,9 @@ class ObraController extends Controller
                 }
             }
             $obra = new Obra();
-            $obra->orcamento = $request->orcamento;
+            $obra->orcamento = number_format(floatval($request->orcamento), '2', '.', ',');
             if (isset($request->has_orcamento_materias)) {
-                $obra->orcamento_material = $request->orcamento_materias;
+                $obra->orcamento_material = number_format(floatval($request->orcamento_materias), '2', '.', ',');
                 $obra->has_orcamento_material = $request->has_orcamento_materias;
             } else {
                 $obra->orcamento_material = 0;
@@ -153,9 +156,9 @@ class ObraController extends Controller
                     $funcionario[$key] = $func->id;
                 }
             }
-            $obra->orcamento = $request->orcamento;
+            $obra->orcamento = number_format(floatval($request->orcamento), '2', '.', ',');
             if (isset($request->has_orcamento_materias)) {
-                $obra->orcamento_material = $request->orcamento_materias;
+                $obra->orcamento_material = number_format(floatval($request->orcamento_materias), '2', '.', ',');
                 $obra->has_orcamento_material = $request->has_orcamento_materias;
             } else {
                 $obra->orcamento_material = 0;
@@ -231,7 +234,7 @@ class ObraController extends Controller
     public function faltas(Obra $obra)
     {
         if (Auth::check() === true) {
-            $faltas_obra = Faltas_Obra::all()->where('obra', $obra->id)->whereBetween('created_at', [date('Y-m-d'), date('Y-m-d 23:59:59.998')]);
+            $faltas_obra = Faltas_Obra::get()->where('obra', $obra->id)->whereBetween('created_at', [date('Y-m-d'), date('Y-m-d 23:59:59.998')]);
             if (count($faltas_obra) > 0) {
                 return redirect()->route('obras.show')->withErrors(['Registro de falta dessa obra já foi feito hoje']);
             }
@@ -299,56 +302,77 @@ class ObraController extends Controller
         $order = $columns[$request->input('order.0.column')];
         $dir = $request->input('order.0.dir');
 
-        if(empty($request->input('search.value')))
-        {
+        if (empty($request->input('search.value'))) {
             $datatables = Obra::where("status_db", "1")
                 ->offset($start)
                 ->limit($limit)
                 ->orderBy($order, $dir)
                 ->get();
-        }
-        else {
+        } else {
             $search = $request->input('search.value');
 
-            $datatables =  Obra::where("status_db", "1")
+            $datatables = Obra::where("status_db", "1")
                 ->offset($start)
                 ->limit($limit)
-                ->orderBy($order,$dir)
+                ->orderBy($order, $dir)
                 ->get();
 
             $totalFiltered = Obra::where("status_db", "1")
                 ->count();
         }
 
-        $data = array();
-        if (!empty($datatables)) {
-            foreach ($datatables as $key => $datatable) {
-                if ($datatable->data_inicio == null && $datatable->data_final == null) {
-                    $newData['status'] = 'Inativa';
-                } elseif ($datatable->data_inicio != null && $datatable->data_final == null) {
-                    $newData['status'] = 'Em andamento';
-                } elseif ($datatable->data_inicio != null && $datatable->data_final != null) {
-                    $newData['status'] = 'Concluida';
-                } else{
-                    $newData['status'] = 'Indisponivel';
+        return DataTables::of($datatables)
+            ->editColumn('status', function ($row) {
+                if ($row['data_inicio'] == null && $row['data_final'] == null) {
+                    return "<label class=\"label-inativa\">Inativa</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] == null) {
+                    return "<label class=\"label-andamento\">Em andamento</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] != null) {
+                    return "<label class=\"label-concluido\">Concluida</label> ";
+                } else {
+                    return "<label class=\"label-indisponivel\">Indisponivel</label> ";
                 }
-                $newData['cliente'] = $datatable->cliente()->first()->nome;
-                $newData['orcamento'] = $datatable->orcamento + $datatable->orcamento_material;
-                $newData['endereco'] = "Rua $datatable->rua, $datatable->numero $datatable->cidade-$datatable->uf";
-                $newData['acoes'] = '<a class="edit" href="'.route('obras.edit', ['obra'=>$datatable->id]).'"><i class="fa fa-edit"></i></a><a data-csrf="'.csrf_token().'" data-rota="'.route('obras.delete', ['obra'=>$datatable->id]).'" data-id="{{$obra->id}}" class="deleta"><i class="fa fa-trash"></i></a><a href="'.route('obras.relatorio', ['obra'=>$datatable->id]).'"><i class="fa fa-chart-bar"></i></a>';
-                $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
-                $newData['data_inicial'] = date('d/m/Y', strtotime(($datatable->data_inicio != null) ? $datatable->data_inicio : $datatable->data_inicio_prevista));
-                $newData['data_final'] = date('d/m/Y', strtotime(($datatable->data_final != null) ? $datatable->data_final : $datatable->data_final_prevista));
-                $data[] = $newData;
-            }
-        }
-        $json_data = array(
-            "draw" => intval($request->input('draw')),
-            "recordsTotal" => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data" => $data,
-        );
-        return json_encode($json_data);
+
+            })
+            ->editColumn('cliente', function ($row) {
+                return $row->cliente()->first()->nome;
+            })
+            ->editColumn('orcamento', function ($row) {
+                return "R$" . number_format($row['orcamento'] + $row['orcamento_material'], '2', ',', '.');
+            })
+            ->editColumn('endereco', function ($row) {
+                return "Rua " . $row['rua'] . ", " . $row['numero'] . " " . $row['cidade'] . "-" . $row['uf'];
+            })
+            ->editColumn('data_inicial', function ($row) {
+                return date('d/m/Y', strtotime(($row['data_inicio'] != null) ? $row['data_inicio'] : $row['data_inicio_prevista']));;
+            })
+            ->editColumn('data_final', function ($row) {
+                return date('d/m/Y', strtotime(($row['data_final'] != null) ? $row['data_final'] : $row['data_final_prevista']));;
+            })
+            ->addColumn('acoes', function ($row) {
+                $acoes = "<div class='botoes-datatable d-flex'>";
+
+                $acoes .= '<a class="edit editar-datatable" href="' . route('obras.edit', ['obra' => $row['id']]) . '">
+                        <i class="fa fa-edit" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="deleta excluir-datatable" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.delete', ['obra' => $row['id']]) . '" data-id="' . $row['id'] . '">
+                        <i class="fa fa-trash" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="datatable-relatorio" href="' . route('obras.relatorio', ['obra' => $row['id']]) . '">
+                        <i class="fa fa-chart-bar" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="gerenciar-fases" href="' . route('obras.fase', ['obra' => $row->id]) . '">
+                        <i class="fas fa-percentage" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="gerenciar-materiais" href="' . route('obras.materiais', ['obra' => $row['id']]) . '">
+                        <i class="fas fa-toolbox" style="color: #fff"></i></a>';
+
+                $acoes .= "</div>";
+
+                return $acoes;
+            })
+            ->escapeColumns(['*'])
+            ->make(true);
     }
 
     public function datatableAtivas(Request $request)
@@ -381,29 +405,76 @@ class ObraController extends Controller
         $data = array();
         if (!empty($datatables)) {
             foreach ($datatables as $key => $datatable) {
-                $gastos = $datatable->faltas()->get();
+
 
                 $newData['cliente'] = $datatable->cliente()->first()->nome;
                 $newData['orcamento'] = $datatable->orcamento + $datatable->orcamento_material;
                 $newData['endereco'] = "Rua $datatable->rua, $datatable->numero $datatable->cidade-$datatable->uf";
-                $newData['acoes'] = '<a class="" href="' . route('obras.edit', ['obra' => $datatable->id]) . '"><i class="fa fa-edit"></i></a><a data-id="' . $datatable->id . '" class="conclui" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.concluir', ['obra' => $datatable->id]) . '"><i class="fa fa-check"></i></a><a href="' . route('obras.faltas', ['obra' => $datatable->id]) . '"><i class="fas fa-hard-hat"></i></a>';
+                $newData['acoes'] = '';
                 $newData['gastos'] = 0;
-                foreach ($gastos as $gasto) {
-                    $newData['gastos'] += $gasto->valor;
-                }
+
                 $newData['gastos'] = "R$" . number_format($newData['gastos'], "2", ",", ".");
                 $newData['orcamento'] = "R$" . number_format($datatable->orcamento, "2", ",", ".");
                 $newData['data_start'] = date('d/m/Y', strtotime($datatable->data_inicio));
                 $data[] = $newData;
             }
         }
-        $json_data = array(
-            "draw" => intval($request->input('draw')),
-            "recordsTotal" => intval($totalData),
-            "recordsFiltered" => intval($totalFiltered),
-            "data" => $data,
-        );
-        return json_encode($json_data);
+        return DataTables::of($datatables)
+            ->editColumn('status', function ($row) {
+                if ($row['data_inicio'] == null && $row['data_final'] == null) {
+                    return "<label class=\"label-inativa\">Inativa</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] == null) {
+                    return "<label class=\"label-andamento\">Em andamento</label> ";
+                } elseif ($row['data_inicio'] != null && $row['data_final'] != null) {
+                    return "<label class=\"label-concluido\">Concluida</label> ";
+                } else {
+                    return "<label class=\"label-indisponivel\">Indisponivel</label> ";
+                }
+
+            })
+            ->editColumn('cliente', function ($row) {
+                return $row->cliente()->first()->nome;
+            })
+            ->editColumn('orcamento', function ($row) {
+                return "R$" . number_format($row['orcamento'] + $row['orcamento_material'], '2', ',', '.');
+            })
+            ->editColumn('gastos', function ($row) {
+                $gastos = $row->faltas()->get();
+                $valor = 0;
+                foreach ($gastos as $gasto) {
+                    $valor += $gasto->valor;
+                }
+                return "R$" . number_format($valor, '2', ',', '.');
+            })
+            ->editColumn('endereco', function ($row) {
+                return "Rua " . $row['rua'] . ", " . $row['numero'] . " " . $row['cidade'] . "-" . $row['uf'];
+            })
+            ->editColumn('data_start', function ($row) {
+                return date('d/m/Y', strtotime($row['data_inicio']));
+            })
+            ->addColumn('acoes', function ($row) {
+                $acoes = "<div class='botoes-datatable d-flex'>";
+                $acoes .= '<a class="edit editar-datatable" href="' . route('obras.edit', ['obra' => $row['id']]) . '">
+                        <i class="fa fa-edit" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="datatable-conclui" data-id="' . $row['id'] . '" class="conclui" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.concluir', ['obra' => $row['id']]) . '">
+                        <i class="fa fa-check" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="datatable-faltas" href="' . route('obras.faltas', ['obra' => $row['id']]) . '">
+                        <i class="fas fa-hard-hat" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="gerenciar-fases" href="' . route('obras.fase', ['obra' => $row['id']]) . '">
+                        <i class="fas fa-percentage" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="gerenciar-materiais" href="' . route('obras.materiais', ['obra' => $row['id']]) . '">
+                        <i class="fas fa-toolbox" style="color: #fff"></i></a>';
+
+                $acoes .= "</div>";
+
+                return $acoes;
+            })
+            ->escapeColumns(['*'])
+            ->make(true);
     }
 
     public function datatableRelatorio(Request $request, Obra $obra)
@@ -584,5 +655,113 @@ class ObraController extends Controller
         );
 
         return json_encode($json_data);
+    }
+
+    public function fase(Obra $obra)
+    {
+        $fase_obra = $obra->fase_obra()->orderBy('inicio_previsto', 'ASC')->get();
+        $fase_obra_ativa = $obra->fase_obra()->where('inicio', '!=', null)->where('final', null)->first();
+        $fase_obra_ativa->nome = $fase_obra_ativa->fase()->nome;
+
+        return view('obras.fase_obra', compact('obra', 'fase_obra', 'fase_obra_ativa'));
+    }
+
+    public function faseUpdate(Request $request, Obra $obra)
+    {
+        DB::beginTransaction();
+        try {
+            $faseObra = FaseObra::where("id", $request->id_fase);
+            $requestData['inicio_previsto'] = $request->inicio_previsto;
+            $requestData['final_previsto'] = $request->final_previsto;
+            $requestData['inicio'] = $request->inicio;
+            $requestData['final'] = $request->final;
+            $faseObra->update($requestData);
+            DB::commit();
+            return json_encode(['status'=>'true', 'message'=>'Fase editada com sucesso!']);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return json_encode(['status'=>'fase', 'message'=>'Falha ao editar fase!']);
+        }
+
+
+    }
+
+    public function faseUpload(Request $request)
+    {
+        if(!is_dir('storage/fase_obra')){
+            mkdir('storage/fase_obra');
+        }
+        if(!is_dir('storage/fase_obra/'.$request->fase_obra)){
+            mkdir('storage/fase_obra/'.$request->fase_obra);
+        }
+        DB::beginTransaction();
+        try {
+            $images = [];
+            $thumbs = [];
+            $fase_id = [];
+            foreach ($request->allFiles()['arquivos'] as $image) {
+                $faseImage = new FaseObraImagem();
+                $faseImage->fase_obra = $request->fase_obra;
+                $faseImage->path = $image->store('fase_obra/' . $request->fase_obra);
+                list($thumb['width'], $thumb['height']) = getimagesize('storage/'.$faseImage->path);
+                $filename = $faseImage->path;
+                $filename = str_replace('fase_obra/'.$request->fase_obra.'/', 'fase_obra/'.$request->fase_obra.'/thumb_', $filename);
+                $faseImage->thumb_path = $filename;
+                $faseImage->descricao = '';
+                if($thumb['width'] < $thumb['height']){
+                    $menorDistancia = $thumb['width'];
+                }else{
+                    $menorDistancia = $thumb['height'];
+                }
+                Image::make($image)->crop($menorDistancia, $menorDistancia,
+                    intval($thumb['width']/2)-intval($menorDistancia/2), intval($thumb['height']/2)-intval($menorDistancia/2))->resize('300', '300')->save(public_path('storage/'.$filename));
+                $images[] = $faseImage->path;
+                $thumbs[] = $filename;
+                $faseImage->status_db = 1;
+                $faseImage->save();
+                $fase_id[] = $faseImage->id;
+                unset($faseImage,$thumb);
+            }
+            DB::commit();
+            return json_encode(['status'=>true, 'images'=>$images, 'thumbs'=>$thumbs, 'fase_id'=>$fase_id]);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return json_encode(['status'=>false, 'message'=>'Erro ao adicionar as imagens']);
+        }
+    }
+
+    public function faseEdit(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $fase_image = FaseObraImagem::where('id', $request->id_fase_imagem)->first();
+            $fase_image->descricao = $request->descricao;
+            $fase_image->save();
+            DB::commit();
+            return json_encode(['status'=>true, 'message'=>'Descrição atualizada com sucesso!', 'descricao'=>$request->descricao]);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return json_encode(['status'=>false, 'message'=>'Falha ao atualizar descrição!']);
+        }
+    }
+
+    public function faseDelete(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $fase_image = FaseObraImagem::where('id', $request->id_fase_imagem)->first();
+            $fase_image->status_db = 0;
+            $fase_image->save();
+            DB::commit();
+            return json_encode(['status'=>true, 'message'=>'Imagem ecluida com sucesso!']);
+        }catch (\Exception $e){
+            DB::rollBack();
+            return json_encode(['status'=>false, 'message'=>'Falha ao excluir descrição!']);
+        }
+    }
+
+    public function materiais(Obra $obra)
+    {
+        return view('obras.materias');
     }
 }

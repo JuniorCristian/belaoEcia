@@ -36,8 +36,11 @@ $head['copyright'] = '';
     <link rel="stylesheet" href="{{url(mix("/fonts/flaticon/flaticon.min.css"))}}">
 
     <link rel="stylesheet" href="{{url(mix("/css/style.min.css"))}}">
-    <link rel="stylesheet" href="{{url(mix("/css/$MODULO.min.css"))}}">
+    @if(file_exists("/js/$MODULO.min.css"))
+        <link rel="stylesheet" href="{{url(mix("/css/$MODULO.min.css"))}}">
+    @endif
     <link rel="stylesheet" href="{{url(mix("/datatables/datatables.min.css"))}}">
+    @stack('css')
 </head>
 <body data-background-color="bg1">
 <div class="wrapper">
@@ -227,7 +230,29 @@ $head['copyright'] = '';
                             </ul>
                         </div>
                     </li>
-                <li class="nav-item {{$MODULO == "lojas" ? "active submenu" : ""}}">
+                    <li class="nav-item {{$MODULO == "fases" ? "active submenu" : ""}}">
+                        <a data-toggle="collapse"
+                           href="#fases" {{$MODULO== "fases" ? "class aria-expanded='true'" : ""}}>
+                            <i class="fas fa-percentage"></i>
+                            <p>&nbsp;&nbsp;Fases</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{$MODULO == "fases" ? "show" : ""}}" id="fases">
+                            <ul class="nav nav-collapse">
+                                <li class="{{$MODULO=="fases" && $func == 'listar' ? "active" : ""}}">
+                                    <a href="{{route('fases.index')}}">
+                                        <span class="sub-item">Ver fases</span>
+                                    </a>
+                                </li>
+                                <li class="{{$MODULO=="fases" && $func == 'criar' ? "active" : ""}}">
+                                    <a href="{{route('fases.criar')}}">
+                                        <span class="sub-item">Criar fase</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item {{$MODULO == "lojas" ? "active submenu" : ""}}">
                         <a data-toggle="collapse"
                            href="#lojas" {{$MODULO== "lojas" ? "class aria-expanded='true'" : ""}}>
                             <i class="fas fa-store"></i>
@@ -249,6 +274,28 @@ $head['copyright'] = '';
                             </ul>
                         </div>
                     </li>
+                    <li class="nav-item {{$MODULO == "materiais" ? "active submenu" : ""}}">
+                        <a data-toggle="collapse"
+                           href="#materiais" {{$MODULO== "materiais" ? "class aria-expanded='true'" : ""}}>
+                            <i class="fas fa-toolbox"></i>
+                            <p>&nbsp;&nbsp;Materiais</p>
+                            <span class="caret"></span>
+                        </a>
+                        <div class="collapse {{$MODULO == "materiais" ? "show" : ""}}" id="materiais">
+                            <ul class="nav nav-collapse">
+                                <li class="{{$MODULO=="materiais" && $func == 'listar' ? "active" : ""}}">
+                                    <a href="{{route('materiais.index')}}">
+                                        <span class="sub-item">Ver materiais</span>
+                                    </a>
+                                </li>
+                                <li class="{{$MODULO=="materiais" && $func == 'criar' ? "active" : ""}}">
+                                    <a href="{{route('materiais.create')}}">
+                                        <span class="sub-item">Criar material</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -256,7 +303,7 @@ $head['copyright'] = '';
     <!-- End Sidebar -->
     <div class="main-panel">
 
-    @yield('content')
+        @yield('content')
     </div>
 </div>
 
@@ -300,7 +347,9 @@ $head['copyright'] = '';
 <!-- JQuery Mask -->
 <script src="{{url(mix("/js/plugin/jquery-mask/jquery.mask.min.js"))}}"></script>
 
-<script src="{{url(mix("/js/$MODULO.min.js"))}}"></script>
+{{--@if(file_exists(url(mix("/js/$MODULO.min.js"))))--}}
+    <script src="{{url(mix("/js/$MODULO.min.js"))}}"></script>
+{{--@endif--}}
 <script src="{{url(mix("/js/script.min.js"))}}"></script>
 @stack('scripts')
 

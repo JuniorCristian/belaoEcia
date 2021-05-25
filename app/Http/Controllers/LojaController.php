@@ -8,11 +8,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class LojaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         return view('lojas.show');
@@ -20,7 +15,7 @@ class LojaController extends Controller
 
     public function datatable()
     {
-/////// QUERY DO DATATABLE ///////////////
+        /////// QUERY DO DATATABLE ///////////////
         $query = array();
 
         array_push($query, array(
@@ -71,11 +66,6 @@ class LojaController extends Controller
             ->make(true);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $loja = new Loja();
@@ -83,34 +73,16 @@ class LojaController extends Controller
         return view('lojas.create', compact('loja'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Loja  $lojas
-     * @return \Illuminate\Http\Response
-     */
     public function show(Loja $lojas)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Loja  $loja
-     * @return \Illuminate\Http\Response
-     */
     public function edit()
     {
         $loja = new Loja();
