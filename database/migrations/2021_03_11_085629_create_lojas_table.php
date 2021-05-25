@@ -16,7 +16,7 @@ class CreateLojasTable extends Migration
         Schema::create('lojas', function (Blueprint $table) {
             $table->id();
             $table->string('nome');
-            $table->text('descrição');
+            $table->text('descricao');
             $table->string('site');
             $table->string('telefone', 11);
             $table->string('cep');

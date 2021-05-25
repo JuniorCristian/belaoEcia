@@ -73,14 +73,15 @@ Route::middleware('auth')->group(function () {
         Route::put('/update/{cliente}', [ClienteController::class, 'update'])->name('clientes.update');
         Route::delete('/delete/{cliente}', [ClienteController::class, 'destroy'])->name('clientes.delete');
     });
+    Route::resource('lojas', LojaController::class)->parameters(['lojas' => 'loja']);
     Route::group(['prefix' => 'lojas'], function () {
-        Route::get('/', [LojaController::class, 'index'])->name('lojas.index');
-        Route::get('/criar', [LojaController::class, 'create'])->name('lojas.criar');
-        Route::get('/{loja}/edit', [LojaController::class, 'edit'])->name('lojas.edit');
+//        Route::get('/', [LojaController::class, 'index'])->name('lojas.index');
+//        Route::get('/criar', [LojaController::class, 'create'])->name('lojas.criar');
+//        Route::get('/{loja}/edit', [LojaController::class, 'edit'])->name('lojas.edit');
         Route::post('/datatble', [LojaController::class, 'datatable'])->name('lojas.datatable');
-        Route::post('/store', [LojaController::class, 'store'])->name('lojas.store');
-        Route::put('/update/{loja}', [LojaController::class, 'update'])->name('lojas.update');
-        Route::delete('/delete/{loja}', [LojaController::class, 'destroy'])->name('lojas.delete');
+//        Route::post('/store', [LojaController::class, 'store'])->name('lojas.store');
+//        Route::put('/update/{loja}', [LojaController::class, 'update'])->name('lojas.update');
+//        Route::delete('/delete/{loja}', [LojaController::class, 'destroy'])->name('lojas.delete');
     });
     Route::group(['prefix' => 'fases'], function () {
         Route::get('/', [FaseController::class, 'index'])->name('fases.index');

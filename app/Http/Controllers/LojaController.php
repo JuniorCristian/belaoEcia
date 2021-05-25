@@ -10,10 +10,10 @@ class LojaController extends Controller
 {
     public function index()
     {
-        return view('lojas.show');
+        return view('lojas.index');
     }
 
-    public function datatable()
+    public function datatable(Request $request)
     {
         /////// QUERY DO DATATABLE ///////////////
         $query = array();
@@ -31,7 +31,50 @@ class LojaController extends Controller
         ));
         /////// FIM QUERY DO DATATABLE ///////////////
 
-        return DataTables::of($query)
+        $columns = array(
+            0 => 'nome',
+            1 => 'descricao',
+            2 => 'tipo',
+            3 => 'status',
+            4 => 'acoes',
+        );
+
+        $totalData = Loja::get()->where("status_db", "1")->count();
+
+        $totalFiltered = $totalData;
+
+        $limit = $request->input('length');
+        $start = $request->input('start');
+        $order = $columns[$request->input('order.0.column')];
+        $dir = $request->input('order.0.dir');
+
+        if(empty($request->input('search.value')))
+        {
+            $datatables = Loja::where("status_db", "1")
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order, $dir)
+                ->get();
+        }
+        else {
+            $search = $request->input('search.value');
+
+            $datatables =  Loja::where("status_db", "1")
+                ->orWhere('descricao', $search)
+                ->orWhere('site', $search)
+                ->orWhere('telefone', $search)
+                ->offset($start)
+                ->limit($limit)
+                ->orderBy($order,$dir)
+                ->get();
+
+            $totalFiltered = Loja::where("status_db", "1")
+                ->count();
+        }
+
+
+
+        return DataTables::of($datatables)
             ->editColumn('status', function ($row) {
                 if($row['status'] == 1) {
                     return  "<label class=\"label-ativo\">Ativo</label> ";
@@ -42,21 +85,20 @@ class LojaController extends Controller
                 }
 
             })
+            ->editColumn('endereco', function ($row){
+                return "Rua ".$row->rua.", ".$row->numero." ".$row->cidade."-".$row->uf;
+            })
             ->addColumn('acoes', function ($row)  {
                 $acoes = "<div class='botoes-datatable'>";
 
-                $acoes .= '<a class="visualizar-datatable"  href="">
+                $acoes .= '<a class="visualizar-datatable"  href="'.route('lojas.show', ['loja'=>$row->id]).'">
                         <i class="fas fa-eye" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="editar-datatable" href="'.route('lojas.edit', ['loja'=>1]).'">
+                $acoes .= '<a class="editar-datatable" href="'.route('lojas.edit', ['loja'=>$row->id]).'">
                         <i class="fa fa-edit" style="color: #fff"></i></a>';
 
-                $acoes .= '<form method="POST" action="" style="display:inline">
-                            <input name="_method" value="DELETE" type="hidden">
-                            '. csrf_field() .'
-                            <a class="excluir-datatable deleta" onclick="alertModal (\'Excluir Crud?\',this)">
-                                <i class="fa fa-trash" style="color: #fff"></i></a>
-                        </form>';
+                $acoes .= '<a class="excluir-datatable deleta" data-id="'.$row->id.'">
+                                <i class="fa fa-trash" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
 
@@ -75,7 +117,7 @@ class LojaController extends Controller
 
     public function store(Request $request)
     {
-        //
+        dd($request->all());
     }
 
     public function show(Loja $lojas)

@@ -267,7 +267,7 @@ $head['copyright'] = '';
                                     </a>
                                 </li>
                                 <li class="{{$MODULO=="lojas" && $func == 'criar' ? "active" : ""}}">
-                                    <a href="{{route('lojas.criar')}}">
+                                    <a href="{{route('lojas.create')}}">
                                         <span class="sub-item">Criar loja</span>
                                     </a>
                                 </li>
