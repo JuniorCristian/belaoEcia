@@ -9,19 +9,28 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="nome">Nome</label>
-                            <input type="text" name="nome" class="form-control form-text" value="{{$loja->nome}}" placeholder="Insira o nome da loja">
+                            <input type="text" name="nome" class="form-control form-text" value="{{$loja->nome}}" required placeholder="Insira o nome da loja">
+                            <div class="invalid-feedback">
+                                Por favor preencha o nome da loja
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="site">Site</label>
-                            <input type="text" name="site" class="form-control form-text" value="{{$loja->site}}" placeholder="Insira o site da loja">
+                            <input type="text" name="site" class="form-control form-text" value="{{$loja->site}}"required placeholder="Insira o site da loja">
+                            <div class="invalid-feedback">
+                                Por favor preencha o site da loja
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="telefone">Telefone</label>
-                            <input type="text" name="telefone" class="form-control form-text telefone" value="{{$loja->telefone}}" placeholder="Insira o telefone da loja">
+                            <input type="text" name="telefone" class="form-control form-text telefone" value="{{$loja->telefone}}" required placeholder="Insira o telefone da loja">
+                             <div class="invalid-feedback">
+                                Por favor preencha o telefone da loja
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -29,7 +38,10 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="descricao">Descriçao</label>
-                            <textarea name="descricao" cols="30" rows="10" class="form-control form-text"> {{$loja->descricao}}</textarea>
+                            <textarea name="descricao" cols="30" rows="10" required class="form-control form-text"> {{$loja->descricao}}</textarea>
+                            <div class="invalid-feedback">
+                                Por favor informe a descrição da loja
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -60,8 +72,11 @@
                         <div class="form-group">
                             <label for="numero">Número</label>
                             <input type="text" value="{{$loja->numero}}" class="form-control"
-                                   id="numero" name="numero"
+                                   id="numero" name="numero" required
                                    placeholder="Insira o número">
+                            <div class="invalid-feedback">
+                                Por favor infirme o número da loja
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4">

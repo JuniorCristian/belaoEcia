@@ -18,7 +18,7 @@ class CreateLojasTable extends Migration
             $table->string('nome');
             $table->text('descricao');
             $table->string('site');
-            $table->string('telefone', 11);
+            $table->string('telefone', 15);
             $table->string('cep');
             $table->string('rua');
             $table->string('numero');
@@ -27,7 +27,7 @@ class CreateLojasTable extends Migration
             $table->string('cidade');
             $table->string('uf', 2);
             $table->boolean('status');
-            $table->boolean('status_db');
+            $table->boolean('status_db')->default(1);
             $table->timestamps();
         });
     }

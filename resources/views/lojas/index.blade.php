@@ -31,13 +31,7 @@ $func = 'listar';
                         <div class="card-header">
                             <h4 class="card-title">Ver Lojas</h4>
                         </div>
-                        @if($errors->all)
-                            @foreach($errors->all() as $error)
-                                <div class="alert alert-danger" role="alert">
-                                    {{$error}}
-                                </div>
-                            @endforeach
-                        @endif
+                        @include('layouts.messages')
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="datatable" class="display table table-striped table-hover">
@@ -96,7 +90,32 @@ $func = 'listar';
                     {data: 'status', name: 'status'},
                     {data: 'acoes', name: 'acoes'},
                 ],
+                "drawCallback":function (){
+                    deleta();
+                }
             });
+            function deleta() {
+                $('.deleta').click(function () {
+                    id = $(this).data('id');
+                    Swal.fire({
+                        title: "Tem certeza que deseja deletar essa loja?",
+                        text: "Uma vez deletada você irá perder todos os dados dela",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                    })
+                        .then((willDelete) => {
+                            if (willDelete.isConfirmed) {
+                                var form = $('<form action="lojas/'+ id +'" method="post">' +
+                                    '<input type="hiden" name="_token" value="{{csrf_token()}}" />' +
+                                    '<input type="hiden" name="_method" value="delete" />' +
+                                    '</form>');
+                                $('body').append(form);
+                                form.submit();
+                            }
+                        });
+                });
+            }
         </script>
     @endpush
 @endsection

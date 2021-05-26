@@ -146,7 +146,7 @@ class ObraController extends Controller
     public function update(Request $request, Obra $obra)
     {
         if (Auth::check() === true) {
-            $funcionarios = Funcionario::all()->where('obra', $obra->id);
+            $funcionarios = Funcionarios_Obra::all()->where('obra', $obra->id);
             foreach ($funcionarios as $funcionario) {
                 $funcionario->delete();
             }

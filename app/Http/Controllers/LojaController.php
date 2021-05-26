@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loja;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
 
 class LojaController extends Controller
@@ -91,9 +94,6 @@ class LojaController extends Controller
             ->addColumn('acoes', function ($row)  {
                 $acoes = "<div class='botoes-datatable'>";
 
-                $acoes .= '<a class="visualizar-datatable"  href="'.route('lojas.show', ['loja'=>$row->id]).'">
-                        <i class="fas fa-eye" style="color: #fff"></i></a>';
-
                 $acoes .= '<a class="editar-datatable" href="'.route('lojas.edit', ['loja'=>$row->id]).'">
                         <i class="fa fa-edit" style="color: #fff"></i></a>';
 
@@ -117,30 +117,45 @@ class LojaController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+        DB::beginTransaction();
+        try {
+            $requestData['nome'] = $request->nome;
+            if(strpos($request->site, 'http') && $request->site != null){
+                $requestData['site'] = 'https://' . $request->site;
+            }elseif($request->site != null){
+                $requestData['site'] = $request->site;
+            }else{
+                $requestData['site'] = env('APP_URL');
+            }
+            $requestData['telefone'] = $request->telefone;
+            $requestData['descricao'] = $request->descricao;
+            $requestData['cep'] = $request->cep;
+            $requestData['rua'] = $request->rua;
+            $requestData['numero'] = $request->numero;
+            $requestData['complemento'] = $request->complemento;
+            $requestData['bairro'] = $request->bairro;
+            $requestData['cidade'] = $request->cidade;
+            $requestData['uf'] = $request->uf;
+            $requestData['status'] = $request->status;
+            $requestData['status_db'] = 1;
+            $loja = new Loja();
+            $loja->create($requestData);
+            DB::commit();
+            Session::flash('success_message', 'Loja adicionada com sucesso!');
+        }catch (\Exception $e){
+            DB::rollBack();
+            Session::flash('error_message', 'Falha ao adicionar loja!');
+        }
+        return redirect()->route('lojas.index');
     }
 
     public function show(Loja $lojas)
     {
-        //
+
     }
 
-    public function edit()
+    public function edit(Loja $loja)
     {
-        $loja = new Loja();
-        $loja->id = 1;
-        $loja->nome="Loja 1";
-        $loja->descricao="Descrição da loja";
-        $loja->site="www.loja1.com.br";
-        $loja->telefone="41984699082";
-        $loja->cep="83.306-120";
-        $loja->rua="Rua da Loja";
-        $loja->numero="1";
-        $loja->complemento="";
-        $loja->bairro="Lojinha";
-        $loja->cidade="Piraquara";
-        $loja->uf="PR";
-        $loja->status=1;
         return view('lojas.edit', compact('loja'));
     }
 
@@ -151,9 +166,36 @@ class LojaController extends Controller
      * @param  \App\Models\Loja  $lojas
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Loja $lojas)
+    public function update(Request $request, Loja $loja)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $requestData['nome'] = $request->nome;
+            if(strpos($request->site, 'http') && $request->site != null){
+                $requestData['site'] = 'https://' . $request->site;
+            }elseif($request->site != null){
+                $requestData['site'] = $request->site;
+            }else{
+                $requestData['site'] = env('APP_URL');
+            }
+            $requestData['telefone'] = $request->telefone;
+            $requestData['descricao'] = $request->descricao;
+            $requestData['cep'] = $request->cep;
+            $requestData['rua'] = $request->rua;
+            $requestData['numero'] = $request->numero;
+            $requestData['complemento'] = $request->complemento;
+            $requestData['bairro'] = $request->bairro;
+            $requestData['cidade'] = $request->cidade;
+            $requestData['uf'] = $request->uf;
+            $requestData['status'] = $request->status;
+            $loja->update($requestData);
+            DB::commit();
+            Session::flash('success_message', 'Loja editada com sucesso!');
+        }catch (\Exception $e){
+            DB::rollBack();
+            Session::flash('error_message', 'Falha ao editar loja!');
+        }
+        return redirect()->route('lojas.index');
     }
 
     /**
@@ -162,8 +204,18 @@ class LojaController extends Controller
      * @param  \App\Models\Loja  $lojas
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Loja $lojas)
+    public function destroy(Loja $loja)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $loja->status_db = 0;
+            $loja->save();
+            DB::commit();
+            Session::flash('success_message', 'Loja excluida com sucesso');
+        }catch (\Exception $e){
+            DB::rollBack();
+            Session::flash('error_message', 'Erro ao excluir Loja');
+        }
+        return redirect()->route('lojas.index');
     }
 }
