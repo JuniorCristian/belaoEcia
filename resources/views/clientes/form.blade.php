@@ -113,3 +113,20 @@
         </div>
     </div>
 </div>
+@push('scripts')
+    <script>
+        $('#documento').blur(function () {
+            if (!valida_cpf_cnpj($(this).val()) && $(this).val().length != 0) {
+                Swal.fire({
+                    title: 'CPF/CNPJ Invalido, por favor insira outro',
+                    showConfirmButton: false,
+                    icon: 'error',
+                    showCloseButton: true,
+                    timer: 3000
+                });
+                $(this).val("");
+                $(this).focus();
+            }
+        });
+    </script>
+@endpush

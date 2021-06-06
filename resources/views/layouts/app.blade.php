@@ -174,7 +174,7 @@ $head['copyright'] = '';
                                     </a>
                                 </li>
                                 <li class="{{$MODULO=="obras" && $func == 'listar' ? "active" : ""}}">
-                                    <a href="{{route('obras.show')}}">
+                                    <a href="{{route('obras.index')}}">
                                         <span class="sub-item">Ver obras</span>
                                     </a>
                                 </li>

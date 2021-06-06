@@ -69,7 +69,7 @@ $func = 'gerenciar';
                                     <div class="col-md-10 col-lg-5">
                                         <div class="card-action">
                                             <button type="submit" class="btn btn-success">Salvar</button>
-                                            <a href="{{route('obras.show')}}" class="btn btn-danger">Cancelar</a>
+                                            <a href="{{route('obras.index')}}" class="btn btn-danger">Cancelar</a>
                                         </div>
                                     </div>
                                 </div>

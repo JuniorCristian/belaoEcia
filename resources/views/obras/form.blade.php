@@ -218,14 +218,14 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-4">
+                        <label for="funcionario">Funcionários</label>
                         <div class="funcionarios">
-                            <label for="funcionario">Funcionários</label><br>
                             @foreach($funcionarios as $key=>$funcionario)
                                 <div class="form-check">
                                     <label class="form-check-label">
                                         <input class="form-check-input"
-                                               name="funcionario{{$funcionario->id}}"
+                                               name="funcionario[]" value="{{$funcionario->id}}"
                                                @foreach($obra->funcionario as $f)
                                                @if($funcionario->id == $f->id)
                                                checked
@@ -237,9 +237,8 @@
                                 </div>
                             @endforeach
                         </div>
-                        <a class="novo_funcionario link_add_novo">Criar novo funcionário</a>
                     </div>
-                    <div class="col-md-6 col-lg-4">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="cliente">Cliente</label>
                             <select class="form-control" id="cliente" name="cliente" required>
@@ -252,14 +251,46 @@
                                 Por favor informe o cliente da a obra
                             </div>
                         </div>
-                        <a class="novo_cliente link_add_novo">Criar novo cliente</a>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fase">Fases</label>
+                        <div class="fase">
+                            @foreach($fases as $key=>$fase)
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input"
+                                               name="fase[]" value="{{$key}}"
+                                               @foreach($fases_selecionadas as $fase_selecionada)
+                                               @if($key == $fase_selecionada->id)
+                                               checked
+                                               @endif
+                                               @endforeach
+                                               type="checkbox">
+                                        <span class="form-check-sign">{{$fase}}</span>
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
                 <div class="card-action">
                     <button type="submit" class="btn btn-success">Salvar</button>
-                    <a href="{{route('obras.show')}}" class="btn btn-danger">Cancelar</a>
+                    <a href="{{route('obras.index')}}" class="btn btn-danger">Cancelar</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@push('css')
+    <style>
+        .fase{
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .funcionarios{
+            max-height: 180px;
+            overflow-y: auto;
+        }
+    </style>
+@endpush

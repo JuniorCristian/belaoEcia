@@ -19,7 +19,7 @@ $func = 'criar';
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('obras.show')}}">Obras</a>
+                        <a href="{{route('obras.index')}}">Obras</a>
                     </li>
                     <li class="separator">
                         <i class="flaticon-right-arrow"></i>

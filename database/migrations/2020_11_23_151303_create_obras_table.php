@@ -16,8 +16,8 @@ class CreateObrasTable extends Migration
         Schema::create('obras', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cliente');
-            $table->integer('orcamento');
-            $table->integer('orcamento_material')->nullable();
+            $table->double('orcamento', '8,2');
+            $table->double('orcamento_material', '8,2')->nullable();
             $table->boolean('has_orcamento_material');
             $table->dateTime('data_inicio_prevista')->nullable();
             $table->dateTime('data_final_prevista')->nullable();
@@ -32,6 +32,7 @@ class CreateObrasTable extends Migration
             $table->string('uf')->nullable();
             $table->boolean('status_db');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('cliente')->references('id')->on('clientes')->onDelete('cascade');
         });

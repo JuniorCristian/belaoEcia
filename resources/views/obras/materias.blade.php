@@ -19,7 +19,7 @@ $func = 'listar';
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('obras.show')}}">Obras</a>
+                        <a href="{{route('obras.index')}}">Obras</a>
                     </li>
                     <li class="separator">
                         <i class="flaticon-right-arrow"></i>
@@ -119,7 +119,7 @@ $func = 'listar';
                                 </div>
                                 <div class="row">
                                     <button type="submit" class="btn btn-success ml-4 pl-3 pr-3 adicionar_material">Adicionar</button>
-                                    <a href="{{route('obras.show')}}" class="btn btn-danger ml-2 pl-3 pr-3">Voltar</a>
+                                    <a href="{{route('obras.index')}}" class="btn btn-danger ml-2 pl-3 pr-3">Voltar</a>
                                 </div>
                                 <div class="row bg-primary mt-3 ml-3 mr-3">
                                     <div

@@ -32,7 +32,7 @@ Route::post('/cadastrar/do', [AuthController::class, 'cadastro'])->name('dashboa
 Route::middleware('auth')->group(function () {
     Route::group(['prefix' => 'obras'], function () {
         Route::get('/criar', [ObraController::class, 'create'])->name('obras.criar');
-        Route::get('/', [ObraController::class, 'show'])->name('obras.show');
+        Route::get('/', [ObraController::class, 'index'])->name('obras.index');
         Route::get('/ativas', [ObraController::class, 'gerenciar'])->name('obras.ativas');
         Route::get('/{obra}/edit', [ObraController::class, 'edit'])->name('obras.edit');
         Route::get('/{obra}/faltas', [ObraController::class, 'faltas'])->name('obras.faltas');

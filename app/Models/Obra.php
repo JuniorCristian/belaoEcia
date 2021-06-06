@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Obra extends Model
 {
+    use HasFactory, SoftDeletes;
     protected $table = 'obras';
     protected $fillable = [
         'cliente',
@@ -29,12 +31,12 @@ class Obra extends Model
 
     public function cliente()
     {
-        return $this->belongsTo(Cliente::class, 'cliente', 'id')->where('status_db', 1);
+        return $this->belongsTo(Cliente::class, 'cliente', 'id');
     }
 
     public function funcionario()
     {
-        return $this->belongsToMany(Funcionario::class, 'funcionarios_obras', 'obra', 'funcionario')->where('status_db', 1);
+        return $this->belongsToMany(Funcionario::class, 'funcionarios_obras', 'obra', 'funcionario');
     }
 
     public function faltas()

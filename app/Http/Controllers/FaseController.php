@@ -24,47 +24,7 @@ class FaseController extends Controller
 
     public function datatable(Request $request)
     {
-        $columns = array(
-            0 => 'nome',
-            1 => 'descricao',
-            2 => 'tipo',
-            3 => 'status',
-            4 => 'acoes',
-        );
-
-        $totalData = Fase::get()->where("status_db", "1")->count();
-
-        $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-
-        if(empty($request->input('search.value')))
-        {
-            $datatables = Fase::where("status_db", "1")
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        }
-        else {
-            $search = $request->input('search.value');
-
-            $datatables =  Fase::where("status_db", "1")
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order,$dir)
-                ->get();
-
-            $totalFiltered = Fase::where("status_db", "1")
-                ->count();
-        }
-
-
-
-        return DataTables::of(Fase::where('status_db', 1))
+        return DataTables::of(Fase::all())
             ->editColumn('status', function ($row) {
                 if($row['status'] == 1) {
                     return  "<label class=\"label-ativo\">Ativo</label> ";

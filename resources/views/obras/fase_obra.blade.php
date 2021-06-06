@@ -19,7 +19,7 @@ $func = 'listar';
                         <i class="flaticon-right-arrow"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{route('obras.show')}}">Obras</a>
+                        <a href="{{route('obras.index')}}">Obras</a>
                     </li>
                     <li class="separator">
                         <i class="flaticon-right-arrow"></i>
@@ -138,7 +138,7 @@ $func = 'listar';
                                                 <div class="card-action">
                                                     <button type="button" class="btn btn-success salva_fase">Salvar
                                                     </button>
-                                                    <a href="{{route('obras.show')}}"
+                                                    <a href="{{route('obras.index')}}"
                                                        class="btn btn-danger">Cancelar</a>
                                                 </div>
                                             </div>

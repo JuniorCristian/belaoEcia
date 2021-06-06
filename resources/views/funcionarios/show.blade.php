@@ -26,8 +26,9 @@ $func = 'listar';
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header d-flex">
                             <h4 class="card-title">Ver Funcionários</h4>
+                            <a class="add_novo bg-primary text-white font-weight-bold p-2" href="{{route('funcionarios.criar')}}"><i class="fa fa-plus-circle"></i> Novo</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -77,6 +78,13 @@ $func = 'listar';
         </div>
     </div>
 @endsection
+@push('css')
+    <style>
+        .add_novo {
+            margin-left: 86% !important;
+        }
+    </style>
+@endpush
 @push('scripts')
     <script>
         function reload() {

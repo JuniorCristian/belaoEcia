@@ -37,6 +37,7 @@ $func = 'gerenciar';
                         <div class="card-header">
                             <h4 class="card-title">Ver Obras Ativas</h4>
                         </div>
+                        @include('layouts.messages')
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="datatable" class="display table table-striped table-hover">

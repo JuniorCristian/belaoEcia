@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Faltas_Obra;
+use App\Models\Fase;
 use App\Models\FaseObra;
 use App\Models\FaseObraImagem;
 use App\Models\Funcionario;
@@ -13,6 +14,7 @@ use App\Models\MateriaisObraFase;
 use App\Models\Material;
 use App\Models\Obra;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,9 +31,7 @@ class ObraController extends Controller
      */
     public function index()
     {
-        if (Auth::check() === true) {
-        }
-        return redirect()->route('dashboard.login');
+        return view('obras.index');
     }
 
     /**
@@ -41,16 +41,15 @@ class ObraController extends Controller
      */
     public function create()
     {
-        if (Auth::check() === true) {
-            $obra = new Obra();
-            $obra->cliente = '';
-            $obra->data_inicio_prevista = date('Y-m-d');
-            $obra->data_final_prevista = date('Y-m-' . (date('d') + 1));
-            $clientes = Cliente::all()->where('status_db', 1);
-            $funcionarios = Funcionario::all()->where('status_db', 1);
-            return view('obras.create', compact('clientes', 'funcionarios', 'obra'));
-        }
-        return redirect()->route('dashboard.login');
+        $obra = new Obra();
+        $obra->cliente = '';
+        $obra->data_inicio_prevista = Carbon::now();
+        $obra->data_final_prevista = Carbon::now()->addDay();
+        $clientes = Cliente::all()->where('status_db', 1);
+        $funcionarios = Funcionario::all()->where('status_db', 1);
+        $fases = Fase::all()->pluck('nome', 'id');
+        $fases_selecionadas = [];
+        return view('obras.create', compact('clientes', 'funcionarios', 'obra', 'fases', 'fases_selecionadas'));
     }
 
     /**
@@ -61,18 +60,12 @@ class ObraController extends Controller
      */
     public function store(Request $request)
     {
-
-        if (Auth::check() === true) {
-            $funcionarios = Funcionario::all();
-            foreach ($funcionarios as $key => $func) {
-                if (isset($request['funcionario' . $func->id]) && $request['funcionario' . $func->id]) {
-                    $funcionario[$key] = $func->id;
-                }
-            }
+        DB::beginTransaction();
+        try {
             $obra = new Obra();
-            $obra->orcamento = number_format(floatval($request->orcamento), '2', '.', ',');
+            $obra->orcamento = str_replace(',', '.', str_replace('.', '', $request->orcamento));
             if (isset($request->has_orcamento_materias)) {
-                $obra->orcamento_material = number_format(floatval($request->orcamento_materias), '2', '.', ',');
+                $obra->orcamento_material = str_replace(',', '.', str_replace('.', '', $request->orcamento_materias));
                 $obra->has_orcamento_material = $request->has_orcamento_materias;
             } else {
                 $obra->orcamento_material = 0;
@@ -90,31 +83,26 @@ class ObraController extends Controller
             $obra->uf = $request->uf;
             $obra->cliente = $request->cliente;
             $obra->status_db = 1;
-            if ($obra->save()) {
-                foreach ($funcionario as $id) {
-                    $funcionarios_obra = new Funcionarios_Obra();
-                    $funcionarios_obra->funcionario = $id;
-                    $funcionarios_obra->obra = $obra->id;
-                    $funcionarios_obra->save();
-                }
-                return redirect()->route('obras.show');
+            $obra->save();
+            foreach ($request->funcionario as $id) {
+                $funcionarios_obra = new Funcionarios_Obra();
+                $funcionarios_obra->funcionario = $id;
+                $funcionarios_obra->obra = $obra->id;
+                $funcionarios_obra->save();
             }
+            foreach ($request->fase as $f) {
+                $fase_obra = new FaseObra();
+                $fase_obra->obra = $obra->id;
+                $fase_obra->fase = $f;
+                $fase_obra->save();
+            }
+            DB::commit();
+            Session::flash('success_message', 'Obra adicionada com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Session::flash('error_message', 'Falha ao adicionar Obra!');
         }
-        return redirect()->route('dashboard.login');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\Obra $obra
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
-    {
-        if (Auth::check() === true) {
-            return view('obras.show');
-        }
-        return redirect()->route('dashboard.login');
+        return redirect()->route('obras.index');
     }
 
     /**
@@ -125,19 +113,14 @@ class ObraController extends Controller
      */
     public function edit(Obra $obra)
     {
-        if (Auth::check() === true) {
-            $obra->funcionario = $obra->funcionario()->get();
-            $obra->orcamento = number_format($obra->orcamento, "0", ",", ".");
-            $obra->orcamento_material = number_format($obra->orcamento_material, "0", ",", ".");
-            $funcionarios = Funcionario::all()->where('status_db', 1);
-            $clientes = Cliente::all()->where('status_db', 1);
-            return view('obras.edit', [
-                'obra' => $obra,
-                'funcionarios' => $funcionarios,
-                'clientes' => $clientes
-            ]);
-        }
-        return redirect()->route('dashboard.login');
+        $obra->funcionario = $obra->funcionario()->get();
+        $obra->orcamento = number_format($obra->orcamento, 2, ",", ".");
+        $obra->orcamento_material = number_format($obra->orcamento_material, 2, ",", ".");
+        $funcionarios = Funcionario::all()->where('status_db', 1);
+        $clientes = Cliente::all()->where('status_db', 1);
+        $fases = Fase::all()->pluck('nome', 'id');
+        $fases_selecionadas = $obra->fases()->get();
+        return view('obras.edit', compact('obra', 'funcionarios', 'clientes', 'fases', 'fases_selecionadas'));
     }
 
     /**
@@ -149,20 +132,13 @@ class ObraController extends Controller
      */
     public function update(Request $request, Obra $obra)
     {
-        if (Auth::check() === true) {
-            $funcionarios = Funcionarios_Obra::all()->where('obra', $obra->id);
-            foreach ($funcionarios as $funcionario) {
-                $funcionario->delete();
-            }
-            $funcionarios = Funcionario::all();
-            foreach ($funcionarios as $key => $func) {
-                if (isset($request['funcionario' . $func->id]) && $request['funcionario' . $func->id]) {
-                    $funcionario[$key] = $func->id;
-                }
-            }
-            $obra->orcamento = number_format(floatval($request->orcamento), '2', '.', ',');
+        DB::beginTransaction();
+        try {
+            Funcionarios_Obra::where('obra', $obra->id)->delete();
+            FaseObra::where('obra', $obra->id)->delete();
+            $obra->orcamento = str_replace(',', '.', str_replace('.', '', $request->orcamento));
             if (isset($request->has_orcamento_materias)) {
-                $obra->orcamento_material = number_format(floatval($request->orcamento_materias), '2', '.', ',');
+                $obra->orcamento_material = str_replace(',', '.', str_replace('.', '', $request->orcamento_materias));
                 $obra->has_orcamento_material = $request->has_orcamento_materias;
             } else {
                 $obra->orcamento_material = 0;
@@ -181,17 +157,27 @@ class ObraController extends Controller
             $obra->cidade = $request->cidade;
             $obra->uf = $request->uf;
             $obra->cliente = $request->cliente;
-            if ($obra->save()) {
-                foreach ($funcionario as $id) {
-                    $funcionarios_obra = new Funcionarios_Obra();
-                    $funcionarios_obra->funcionario = $id;
-                    $funcionarios_obra->obra = $obra->id;
-                    $funcionarios_obra->save();
-                }
-                return redirect()->route('obras.show');
+            $obra->save();
+            foreach ($request->funcionario as $id) {
+                $funcionarios_obra = new Funcionarios_Obra();
+                $funcionarios_obra->funcionario = $id;
+                $funcionarios_obra->obra = $obra->id;
+                $funcionarios_obra->save();
             }
+            foreach ($request->fase as $f) {
+                $fase_obra = new FaseObra();
+                $fase_obra->obra = $obra->id;
+                $fase_obra->fase = $f;
+                $fase_obra->save();
+            }
+            DB::commit();
+            Session::flash('success_message', 'Obra atualizada com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            Session::flash('error_message', 'Erro ao atualizar Obra!');
         }
-        return redirect()->route('dashboard.login');
+        return redirect()->route('obras.index');
     }
 
     /**
@@ -202,76 +188,68 @@ class ObraController extends Controller
      */
     public function destroy(Obra $obra)
     {
-        if (Auth::check() === true) {
-            $obra->status_db = 0;
-            $obra->save();
-            return redirect()->route('obras.show');
+        DB::beginTransaction();
+        try {
+            $obra->delete();
+            DB::commit();
+            Session::flash('success_message', 'Obra deletada com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Session::flash('success_message', 'Erro ao deletar Obra!');
         }
-        return redirect()->route('dashboard.login');
+        return redirect()->route('obras.index');
     }
 
     public function gerenciar()
     {
-        if (Auth::check() === true) {
-            $obras = Obra::all()->where('status_db', 1)->where('data_final', '=', null)->where('data_inicio', '!=', null);
-            if (count($obras) == 1) {
-                return redirect()->route('obras.faltas', ['obra' => $obras->first()]);
-            }
-            return view('obras.active', [
-                'obras' => $obras
-            ]);
+        $obras = Obra::where('data_final', '=', null)->where('data_inicio', '!=', null)->get();
+        if (count($obras) == 1) {
+            return redirect()->route('obras.faltas', ['obra' => $obras->first()]);
         }
-        return redirect()->route('dashboard.login');
+        return view('obras.active', compact('obras'));
     }
 
     public function concluir(Obra $obra)
     {
-        if (Auth::check() === true) {
-            $obra->data_final = date('Y-m-d H:i:s');
-            if ($obra->save()) {
-                return redirect()->route('obras.ativas');
-            }
+        $obra->data_final = date('Y-m-d H:i:s');
+        if ($obra->save()) {
+            return redirect()->route('obras.ativas');
         }
-        return redirect()->route('dashboard.login');
     }
 
     public function faltas(Obra $obra)
     {
-        if (Auth::check() === true) {
-            $faltas_obra = Faltas_Obra::get()->where('obra', $obra->id)->whereBetween('created_at', [date('Y-m-d'), date('Y-m-d 23:59:59.998')]);
-            if (count($faltas_obra) > 0) {
-                return redirect()->route('obras.show')->withErrors(['Registro de falta dessa obra já foi feito hoje']);
-            }
-            $funcionarios = $obra->funcionario()->get();
-            return view('obras.faltas', ['obra' => $obra, 'funcionarios' => $funcionarios]);
+        $faltas_obra = Faltas_Obra::get()->where('obra', $obra->id)->whereBetween('created_at', [date('Y-m-d'), date('Y-m-d 23:59:59.998')]);
+        if (count($faltas_obra) > 0) {
+            Session::flash('warning_message', 'Registro de falta dessa obra já foi feito hoje!');
+            return redirect()->route('obras.ativas');
         }
-        return redirect()->route('dashboard.login');
+        $funcionarios = $obra->funcionario()->get();
+        return view('obras.faltas', compact('obra', 'funcionarios'));
     }
 
     public function registrarFaltas(Obra $obra, Request $request)
     {
-        if (Auth::check() === true) {
-            $funcionarios = $obra->funcionario()->get();
-            foreach ($funcionarios as $id) {
-                $faltas_obras = new Faltas_Obra();
-                $faltas_obras->funcionario = $id->id;
-                $faltas_obras->obra = $obra->id;
-                if (isset($request['falta' . $id->id])) {
-                    $faltas_obras->falta = 1;
-                    $faltas_obras->meio_dia = 0;
-                } elseif (isset($request['meio_dia' . $id->id])) {
-                    $faltas_obras->falta = 0;
-                    $faltas_obras->meio_dia = 1;
-                } else {
-                    $faltas_obras->falta = 0;
-                    $faltas_obras->meio_dia = 0;
-                }
-                $faltas_obras->dia_pago = 0;
-                $faltas_obras->save();
+        $funcionarios = $obra->funcionario()->get();
+        foreach ($funcionarios as $id) {
+            $faltas_obras = new Faltas_Obra();
+            $faltas_obras->funcionario = $id->id;
+            $faltas_obras->valor = $id->salario_dia;
+            $faltas_obras->obra = $obra->id;
+            if (isset($request['falta' . $id->id])) {
+                $faltas_obras->falta = 1;
+                $faltas_obras->meio_dia = 0;
+            } elseif (isset($request['meio_dia' . $id->id])) {
+                $faltas_obras->falta = 0;
+                $faltas_obras->meio_dia = 1;
+            } else {
+                $faltas_obras->falta = 0;
+                $faltas_obras->meio_dia = 0;
             }
-            return redirect()->route('obras.show');
+            $faltas_obras->dia_pago = 0;
+            $faltas_obras->save();
         }
-        return redirect()->route('dashboard.login');
+        return redirect()->route('obras.ativas');
     }
 
     public function relatorio(Obra $obra)
@@ -359,7 +337,7 @@ class ObraController extends Controller
                 $acoes .= '<a class="edit editar-datatable" href="' . route('obras.edit', ['obra' => $row['id']]) . '">
                         <i class="fa fa-edit" style="color: #fff"></i></a>';
 
-                $acoes .= '<a class="deleta excluir-datatable" data-csrf="' . csrf_token() . '" data-rota="' . route('obras.delete', ['obra' => $row['id']]) . '" data-id="' . $row['id'] . '">
+                $acoes .= '<a class="deleta excluir-datatable" data-id="' . $row['id'] . '">
                         <i class="fa fa-trash" style="color: #fff"></i></a>';
 
                 $acoes .= '<a class="datatable-relatorio" href="' . route('obras.relatorio', ['obra' => $row['id']]) . '">
@@ -665,6 +643,9 @@ class ObraController extends Controller
     {
         $fase_obra = $obra->fase_obra()->orderBy('inicio_previsto', 'ASC')->get();
         $fase_obra_ativa = $obra->fase_obra()->where('inicio', '!=', null)->where('final', null)->first();
+        if (!isset($fase_obra_ativa)) {
+            $fase_obra_ativa = $obra->fase_obra()->first();
+        }
         $fase_obra_ativa->nome = $fase_obra_ativa->fase()->nome;
 
         return view('obras.fase_obra', compact('obra', 'fase_obra', 'fase_obra_ativa'));
@@ -721,7 +702,6 @@ class ObraController extends Controller
                     intval($thumb['width'] / 2) - intval($menorDistancia / 2), intval($thumb['height'] / 2) - intval($menorDistancia / 2))->resize('300', '300')->save(public_path('storage/' . $filename));
                 $images[] = $faseImage->path;
                 $thumbs[] = $filename;
-                $faseImage->status_db = 1;
                 $faseImage->save();
                 $fase_id[] = $faseImage->id;
                 unset($faseImage, $thumb);
@@ -754,8 +734,7 @@ class ObraController extends Controller
         DB::beginTransaction();
         try {
             $fase_image = FaseObraImagem::where('id', $request->id_fase_imagem)->first();
-            $fase_image->status_db = 0;
-            $fase_image->save();
+            $fase_image->delete();
             DB::commit();
             return json_encode(['status' => true, 'message' => 'Imagem ecluida com sucesso!']);
         } catch (\Exception $e) {
@@ -825,6 +804,6 @@ class ObraController extends Controller
             DB::rollBack();
             Session::flash('error_message', 'Falha ao deletar material!');
         }
-        return redirect()->route('obras.materiais', ['obra'=>$obra->id]);
+        return redirect()->route('obras.materiais', ['obra' => $obra->id]);
     }
 }
