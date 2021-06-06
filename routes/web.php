@@ -20,6 +20,8 @@ use \App\Http\Controllers\ClienteController;
 use \App\Http\Controllers\FaseController;
 use \App\Http\Controllers\LojaController;
 use \App\Http\Controllers\MaterialController;
+use \App\Repository\AutodeskAPI;
+use \App\Repository\Autodesk\AuthClientTwoLegged;
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/', [AuthController::class, 'dashboard'])->name('home');
 
@@ -93,5 +95,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('materiais', MaterialController::class)->parameters(['materiais' => 'material']);
     Route::post('materiais/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
+
+    Route::get('teste_api', [AutodeskAPI::class, 'verificaBucket']);
 });
 
