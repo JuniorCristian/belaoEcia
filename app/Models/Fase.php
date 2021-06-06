@@ -24,4 +24,9 @@ class Fase extends Model
     {
         return $this->hasOne(FaseObra::class, 'fase', 'id')->first();
     }
+
+    public function materiais_fase()
+    {
+        return $this->belongsTo(MateriaisObraFase::class, 'fase', 'id');
+    }
 }

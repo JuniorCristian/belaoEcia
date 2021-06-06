@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HistoricoMaterial;
 use App\Models\Loja;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -18,66 +19,10 @@ class LojaController extends Controller
 
     public function datatable(Request $request)
     {
-        /////// QUERY DO DATATABLE ///////////////
-        $query = array();
-
-        array_push($query, array(
-            'nome' => 'Loja 1',
-            'endereco'=>'Rua Teste, 550 Piraquara-PR',
-            'status' => 1
-        ));
-
-        array_push($query, array(
-            'nome' => 'Loja 2',
-            'endereco'=>'Rua Teste, 550 Piraquara-PR',
-            'status' => 0
-        ));
-        /////// FIM QUERY DO DATATABLE ///////////////
-
-        $columns = array(
-            0 => 'nome',
-            1 => 'descricao',
-            2 => 'tipo',
-            3 => 'status',
-            4 => 'acoes',
-        );
-
-        $totalData = Loja::get()->where("status_db", "1")->count();
-
-        $totalFiltered = $totalData;
-
-        $limit = $request->input('length');
-        $start = $request->input('start');
-        $order = $columns[$request->input('order.0.column')];
-        $dir = $request->input('order.0.dir');
-
-        if(empty($request->input('search.value')))
-        {
-            $datatables = Loja::where("status_db", "1")
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order, $dir)
-                ->get();
-        }
-        else {
-            $search = $request->input('search.value');
-
-            $datatables =  Loja::where("status_db", "1")
-                ->orWhere('descricao', $search)
-                ->orWhere('site', $search)
-                ->orWhere('telefone', $search)
-                ->offset($start)
-                ->limit($limit)
-                ->orderBy($order,$dir)
-                ->get();
-
-            $totalFiltered = Loja::where("status_db", "1")
-                ->count();
-        }
 
 
 
-        return DataTables::of($datatables)
+        return DataTables::of(Loja::all())
             ->editColumn('status', function ($row) {
                 if($row['status'] == 1) {
                     return  "<label class=\"label-ativo\">Ativo</label> ";
@@ -137,7 +82,6 @@ class LojaController extends Controller
             $requestData['cidade'] = $request->cidade;
             $requestData['uf'] = $request->uf;
             $requestData['status'] = $request->status;
-            $requestData['status_db'] = 1;
             $loja = new Loja();
             $loja->create($requestData);
             DB::commit();
@@ -208,8 +152,8 @@ class LojaController extends Controller
     {
         DB::beginTransaction();
         try {
-            $loja->status_db = 0;
-            $loja->save();
+            HistoricoMaterial::where('loja', $loja->id)->delete();
+            $loja->delete();
             DB::commit();
             Session::flash('success_message', 'Loja excluida com sucesso');
         }catch (\Exception $e){

@@ -27,8 +27,8 @@ class CreateLojasTable extends Migration
             $table->string('cidade');
             $table->string('uf', 2);
             $table->boolean('status');
-            $table->boolean('status_db')->default(1);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

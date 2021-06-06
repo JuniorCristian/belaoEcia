@@ -28,8 +28,9 @@ $func = 'listar';
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header d-flex">
                             <h4 class="card-title">Ver Lojas</h4>
+                            <a class="add_novo bg-primary text-white font-weight-bold p-2" href="{{route('lojas.create')}}"><i class="fa fa-plus-circle"></i> Nova</a>
                         </div>
                         @include('layouts.messages')
                         <div class="card-body">

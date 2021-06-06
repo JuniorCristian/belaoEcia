@@ -52,6 +52,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/fase/edit/', [ObraController::class, 'faseEdit'])->name('obras.fase.edit');
         Route::delete('/fase/delete/', [ObraController::class, 'faseDelete'])->name('obras.fase.delete');
         Route::get('/materiais/{obra}', [ObraController::class, 'materiais'])->name('obras.materiais');
+        Route::post('/materiais/loja/{material}', [ObraController::class, 'buscaLoja'])->name('obras.materiais.lojas');
+        Route::post('/materiais/loja/preco/{material}', [ObraController::class, 'buscaPreco'])->name('obras.materiais.lojas.preco');
+        Route::post('/materiais/create/{obra}', [ObraController::class, 'materiaisCreate'])->name('obras.materiais.create');
+        Route::delete('/materiais/delete/{obra}', [ObraController::class, 'materiaisDelete'])->name('obras.materiais.delete');
     });
 
     Route::group(['prefix' => 'funcionarios'], function () {
@@ -75,13 +79,7 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('lojas', LojaController::class)->parameters(['lojas' => 'loja']);
     Route::group(['prefix' => 'lojas'], function () {
-//        Route::get('/', [LojaController::class, 'index'])->name('lojas.index');
-//        Route::get('/criar', [LojaController::class, 'create'])->name('lojas.criar');
-//        Route::get('/{loja}/edit', [LojaController::class, 'edit'])->name('lojas.edit');
         Route::post('/datatble', [LojaController::class, 'datatable'])->name('lojas.datatable');
-//        Route::post('/store', [LojaController::class, 'store'])->name('lojas.store');
-//        Route::put('/update/{loja}', [LojaController::class, 'update'])->name('lojas.update');
-//        Route::delete('/delete/{loja}', [LojaController::class, 'destroy'])->name('lojas.delete');
     });
     Route::group(['prefix' => 'fases'], function () {
         Route::get('/', [FaseController::class, 'index'])->name('fases.index');

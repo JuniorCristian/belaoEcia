@@ -18,9 +18,12 @@ class CreateMateriaisTable extends Migration
             $table->string('nome');
             $table->string('marca');
             $table->string('unidade');
-            $table->text('descricao');
-            $table->string('imagem');
+            $table->string('sku', 70)->nullable();
+            $table->string('mpn', 70)->unique();
+            $table->text('descricao')->nullable();
+            $table->string('imagem')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

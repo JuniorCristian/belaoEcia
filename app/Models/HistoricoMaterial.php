@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class HistoricoMaterial extends Model
 {
     use HasFactory;
-    protected $table = "historico_mateiais";
+    protected $table = "historico_materiais";
     protected $primaryKey = "id";
     protected $fillable = [
         'material',
@@ -16,4 +16,9 @@ class HistoricoMaterial extends Model
         'data',
         'preco'
     ];
+
+    public function loja()
+    {
+        return $this->belongsTo(Loja::class, 'loja', 'id', 'id')->first();
+    }
 }

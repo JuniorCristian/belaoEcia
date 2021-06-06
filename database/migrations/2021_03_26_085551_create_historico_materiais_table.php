@@ -17,7 +17,7 @@ class CreateHistoricoMateriaisTable extends Migration
             $table->id();
             $table->foreignId("material");
             $table->foreignId("loja");
-            $table->dateTime("data");
+            $table->date("data");
             $table->float("preco");
             $table->timestamps();
 

@@ -8,7 +8,11 @@ use App\Models\FaseObra;
 use App\Models\FaseObraImagem;
 use App\Models\Funcionario;
 use App\Models\Funcionarios_Obra;
+use App\Models\HistoricoMaterial;
+use App\Models\MateriaisObraFase;
+use App\Models\Material;
 use App\Models\Obra;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -677,10 +681,10 @@ class ObraController extends Controller
             $requestData['final'] = $request->final;
             $faseObra->update($requestData);
             DB::commit();
-            return json_encode(['status'=>'true', 'message'=>'Fase editada com sucesso!']);
-        }catch (\Exception $e){
+            return json_encode(['status' => 'true', 'message' => 'Fase editada com sucesso!']);
+        } catch (\Exception $e) {
             DB::rollBack();
-            return json_encode(['status'=>'fase', 'message'=>'Falha ao editar fase!']);
+            return json_encode(['status' => 'fase', 'message' => 'Falha ao editar fase!']);
         }
 
 
@@ -688,11 +692,11 @@ class ObraController extends Controller
 
     public function faseUpload(Request $request)
     {
-        if(!is_dir('storage/fase_obra')){
+        if (!is_dir('storage/fase_obra')) {
             mkdir('storage/fase_obra');
         }
-        if(!is_dir('storage/fase_obra/'.$request->fase_obra)){
-            mkdir('storage/fase_obra/'.$request->fase_obra);
+        if (!is_dir('storage/fase_obra/' . $request->fase_obra)) {
+            mkdir('storage/fase_obra/' . $request->fase_obra);
         }
         DB::beginTransaction();
         try {
@@ -703,65 +707,124 @@ class ObraController extends Controller
                 $faseImage = new FaseObraImagem();
                 $faseImage->fase_obra = $request->fase_obra;
                 $faseImage->path = $image->store('fase_obra/' . $request->fase_obra);
-                list($thumb['width'], $thumb['height']) = getimagesize('storage/'.$faseImage->path);
+                list($thumb['width'], $thumb['height']) = getimagesize('storage/' . $faseImage->path);
                 $filename = $faseImage->path;
-                $filename = str_replace('fase_obra/'.$request->fase_obra.'/', 'fase_obra/'.$request->fase_obra.'/thumb_', $filename);
+                $filename = str_replace('fase_obra/' . $request->fase_obra . '/', 'fase_obra/' . $request->fase_obra . '/thumb_', $filename);
                 $faseImage->thumb_path = $filename;
                 $faseImage->descricao = '';
-                if($thumb['width'] < $thumb['height']){
+                if ($thumb['width'] < $thumb['height']) {
                     $menorDistancia = $thumb['width'];
-                }else{
+                } else {
                     $menorDistancia = $thumb['height'];
                 }
                 Image::make($image)->crop($menorDistancia, $menorDistancia,
-                    intval($thumb['width']/2)-intval($menorDistancia/2), intval($thumb['height']/2)-intval($menorDistancia/2))->resize('300', '300')->save(public_path('storage/'.$filename));
+                    intval($thumb['width'] / 2) - intval($menorDistancia / 2), intval($thumb['height'] / 2) - intval($menorDistancia / 2))->resize('300', '300')->save(public_path('storage/' . $filename));
                 $images[] = $faseImage->path;
                 $thumbs[] = $filename;
                 $faseImage->status_db = 1;
                 $faseImage->save();
                 $fase_id[] = $faseImage->id;
-                unset($faseImage,$thumb);
+                unset($faseImage, $thumb);
             }
             DB::commit();
-            return json_encode(['status'=>true, 'images'=>$images, 'thumbs'=>$thumbs, 'fase_id'=>$fase_id]);
-        }catch (\Exception $e){
+            return json_encode(['status' => true, 'images' => $images, 'thumbs' => $thumbs, 'fase_id' => $fase_id]);
+        } catch (\Exception $e) {
             DB::rollBack();
-            return json_encode(['status'=>false, 'message'=>'Erro ao adicionar as imagens']);
+            return json_encode(['status' => false, 'message' => 'Erro ao adicionar as imagens']);
         }
     }
 
     public function faseEdit(Request $request)
     {
         DB::beginTransaction();
-        try{
+        try {
             $fase_image = FaseObraImagem::where('id', $request->id_fase_imagem)->first();
             $fase_image->descricao = $request->descricao;
             $fase_image->save();
             DB::commit();
-            return json_encode(['status'=>true, 'message'=>'Descrição atualizada com sucesso!', 'descricao'=>$request->descricao]);
-        }catch (\Exception $e){
+            return json_encode(['status' => true, 'message' => 'Descrição atualizada com sucesso!', 'descricao' => $request->descricao]);
+        } catch (\Exception $e) {
             DB::rollBack();
-            return json_encode(['status'=>false, 'message'=>'Falha ao atualizar descrição!']);
+            return json_encode(['status' => false, 'message' => 'Falha ao atualizar descrição!']);
         }
     }
 
     public function faseDelete(Request $request)
     {
         DB::beginTransaction();
-        try{
+        try {
             $fase_image = FaseObraImagem::where('id', $request->id_fase_imagem)->first();
             $fase_image->status_db = 0;
             $fase_image->save();
             DB::commit();
-            return json_encode(['status'=>true, 'message'=>'Imagem ecluida com sucesso!']);
-        }catch (\Exception $e){
+            return json_encode(['status' => true, 'message' => 'Imagem ecluida com sucesso!']);
+        } catch (\Exception $e) {
             DB::rollBack();
-            return json_encode(['status'=>false, 'message'=>'Falha ao excluir descrição!']);
+            return json_encode(['status' => false, 'message' => 'Falha ao excluir descrição!']);
         }
     }
 
     public function materiais(Obra $obra)
     {
-        return view('obras.materias');
+        $materiais = Material::all()->pluck('nome', 'id')->prepend('Selecione um material', '');
+        $materiais_obra = $obra->fases()->join('materiais_obra_fases as mos', 'fases.id', '=', 'mos.fase_obra')->join('materiais as m', 'mos.material', '=', 'm.id')->join('lojas as l', 'mos.loja', '=', 'l.id')->orderBy('mos.data_compra', 'DESC')->select('mos.*', 'm.nome as material_nome', 'fases.nome as fase_nome', 'l.nome as loja_nome')->get();
+        $fase_obra = FaseObra::where('obra', $obra->id)->orderBy('inicio_previsto', 'ASC')->join('fases as f', 'fase_obras.fase', '=', 'f.id')->pluck('f.nome', 'f.id')->prepend('Selecione uma fase', '');
+        return view('obras.materias', compact('obra', 'materiais', 'materiais_obra', 'fase_obra'));
+    }
+
+    public function buscaLoja(Material $material)
+    {
+        $lojas = $material->precoLojas()->pluck('lojas.nome', 'lojas.id')->prepend('Selecione uma loja', '');
+        $html = "";
+        foreach ($lojas as $key => $loja) {
+            $html .= "<option value='$key'>$loja</option>";
+        }
+        return json_encode(['status' => true, 'lojas' => $html]);
+    }
+
+    public function buscaPreco(Request $request)
+    {
+        try {
+            $preco = number_format(HistoricoMaterial::where('material', $request->material)->where('loja', $request->loja)->whereDate('data', '<=', $request->data)->first()->preco, 2, ',', '.');
+            return json_encode(['status' => true, 'preco' => $preco]);
+        } catch (\Exception $e) {
+            return json_encode(['status' => false]);
+        }
+    }
+
+    public function materiaisCreate(Request $request, Obra $obra)
+    {
+        DB::beginTransaction();
+        try {
+            $material_obra = new MateriaisObraFase();
+            $material_obra->material = $request->material;
+            $material_obra->data_compra = $request->data_compra;
+            $material_obra->qtd = floatval($request->quantidade);
+            $material_obra->loja = $request->loja;
+            $material_obra->preco_unitario = floatval($request->preco);
+            $material_obra->fase_obra = $request->fase;
+            $material_obra->save();
+            DB::commit();
+            Session::flash('success_message', 'Material adicionado com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Session::flash('error_message', 'Falha ao adicionar material!');
+        }
+        return redirect()->route('obras.materiais', $obra->id);
+    }
+
+    public function materiaisDelete(Request $request, Obra $obra)
+    {
+        $materiaisObraFase = MateriaisObraFase::where('id', $request->materiaisObraFase);
+        DB::beginTransaction();
+        try {
+            $materiaisObraFase->delete();
+            DB::commit();
+            Session::flash('success_message', 'Material deletado com sucesso!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Session::flash('error_message', 'Falha ao deletar material!');
+        }
+        return redirect()->route('obras.materiais', ['obra'=>$obra->id]);
     }
 }
