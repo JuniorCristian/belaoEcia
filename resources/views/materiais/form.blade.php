@@ -167,7 +167,7 @@
                 </div>
                 <div class="card-action">
                     <button type="submit" class="btn btn-success">Salvar</button>
-                    <a href="{{route('funcionarios.show')}}" class="btn btn-danger">Cancelar</a>
+                    <a href="{{route('materiais.index')}}" class="btn btn-danger">Cancelar</a>
                 </div>
             </div>
         </div>

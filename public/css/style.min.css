@@ -12,7 +12,7 @@
 }
 
 .botoes-datatable a {
-    margin-right: 7%;
+    margin-right: 5%;
     padding: 7px 8px;
     border-radius: 5px;
     cursor: pointer;
@@ -50,6 +50,10 @@
 
 .gerenciar-materiais{
     background-color: #2c3e50;
+}
+
+.orcamento-previo{
+    background-color: #f39c12;;
 }
 
 .add_novo {
