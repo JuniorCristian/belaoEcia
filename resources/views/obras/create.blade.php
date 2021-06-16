@@ -31,7 +31,7 @@ $func = 'criar';
             </div>
             <form method="post" action="{{route('obras.store')}}" class="needs-validation" novalidate>
                 @csrf
-                @include('obras.form', ['page'=>'Criar Obra'])
+                @include('obras.form', ['page'=>'Criar Obra', 'create'=>true])
             </form>
         </div>
     </div>

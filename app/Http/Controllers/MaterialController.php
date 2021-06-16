@@ -35,6 +35,8 @@ class MaterialController extends Controller
                         return "Metro Quadrado";
                     case 3:
                         return "Metro Cúbico";
+                    case 4:
+                        return "Unidade";
                     default:
                         return "Sem unidade definida";
                 }
@@ -85,6 +87,7 @@ class MaterialController extends Controller
         $requestData['marca'] = $request->marca;
         $requestData['unidade'] = $request->unidade;
         $requestData['sku'] = $request->sku;
+        $requestData['mpn'] = $request->mpn;
         $requestData['descricao'] = $request->descricao;
         DB::beginTransaction();
         try {

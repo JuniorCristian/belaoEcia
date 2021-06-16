@@ -39,7 +39,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">R$</span>
                                     </div>
-                                    <input  num id="orcamento_materias"
+                                    <input num id="orcamento_materias"
                                            name="orcamento_materias"
                                            value="{{$obra->orcamento_material}}"
                                            class="form-control money"
@@ -216,6 +216,14 @@
                             </div>
                         </div>
                     </div>
+                    @if(isset($create) && $create)
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="carregaProjeto">Projeto do Revit para fazer o orçamento prévio</label>
+                                <input type="file" class="form-control-file" accept=".rvt" id="carregaProjeto" name="carregaProjeto">
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <div class="row">
                     <div class="col-md-4">
@@ -244,7 +252,8 @@
                             <select class="form-control" id="cliente" name="cliente" required>
                                 <option>Selecione um cliente</option>
                                 @foreach($clientes as $cliente)
-                                    <option {{($cliente->id == $obra->cliente) ? 'selected' : ''}} value="{{$cliente->id}}">{{$cliente->nome}}</option>
+                                    <option
+                                        {{($cliente->id == $obra->cliente) ? 'selected' : ''}} value="{{$cliente->id}}">{{$cliente->nome}}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback">
@@ -284,11 +293,12 @@
 
 @push('css')
     <style>
-        .fase{
+        .fase {
             max-height: 180px;
             overflow-y: auto;
         }
-        .funcionarios{
+
+        .funcionarios {
             max-height: 180px;
             overflow-y: auto;
         }

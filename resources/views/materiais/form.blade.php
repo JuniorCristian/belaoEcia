@@ -35,7 +35,7 @@
                                 <option {{($material->unidade == 1?"selected":"")}} value="1">Kilograma</option>
                                 <option {{($material->unidade == 2?"selected":"")}} value="2">Metros quadrados</option>
                                 <option {{($material->unidade == 3?"selected":"")}} value="3">Metros cúbicos</option>
-                                <option {{($material->unidade == 4?"selected":"")}} value="3">Unidade</option>
+                                <option {{($material->unidade == 4?"selected":"")}} value="4">Unidade</option>
                             </select>
                             <div class="invalid-feedback">
                                 Por favor preencha a unidade do material
@@ -47,7 +47,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="nome">SKU</label>
-                            <input value="{{$material->sku}}" type="text" required id="sku" name="sku"
+                            <input value="{{$material->sku}}" type="text" id="sku" name="sku"
                                    class="form-control"
                                    placeholder="Insira o SKU da Material">
                             <div class="invalid-feedback">
@@ -58,7 +58,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="mpn">MPN</label>
-                            <input value="{{$material->mpn}}" type="text" required id="mpn" name="mpn"
+                            <input value="{{$material->mpn}}" type="text" id="mpn" name="mpn"
                                    class="form-control"
                                    placeholder="Insira o MPN da Material">
                             <div class="invalid-feedback">
@@ -221,10 +221,13 @@
                 '    </div>' +
                 '</div>';
 
-            $('.precos').each(function (index){
-                if($(this).hasClass('editing')){
-                    if(Date.parse($(this).find('input[name^=data]').val()) != Date.parse(data)){
-                        $('.precos').each(function (index){
+            if($('.precos').length == 0){
+                $('.lista_precos').append(linha);
+            }else{
+                $('.precos').each(function (index){
+                    if($(this).hasClass('editing')){
+                        if(Date.parse($(this).find('input[name^=data]').val()) != Date.parse(data)){
+                            $('.precos').each(function (index){
                                 if(Date.parse($(this).find('input[name^=data]').val()) > Date.parse(data)){
                                     $(linha).insertBefore(this);
                                     return false;
@@ -232,21 +235,22 @@
                                     $(linha).insertAfter(this);
                                     return false;
                                 }
-                        });
+                            });
+                        }else{
+                            $(linha).insertBefore(this);
+                        }
+                        return false;
                     }else{
-                        $(linha).insertBefore(this);
+                        if(Date.parse($(this).find('input[name^=data]').val()) > Date.parse(data)){
+                            $(linha).insertBefore(this);
+                            return false;
+                        }else if(index+1 == $('.precos').length){
+                            $(linha).insertAfter(this);
+                            return false;
+                        }
                     }
-                    return false;
-                }else{
-                    if(Date.parse($(this).find('input[name^=data]').val()) > Date.parse(data)){
-                        $(linha).insertBefore(this);
-                        return false;
-                    }else if(index+1 == $('.precos').length){
-                        $(linha).insertAfter(this);
-                        return false;
-                    }
-                }
-            });
+                });
+            }
             $('.editing').remove();
             data = new Date();
             $('#preco').val('');
