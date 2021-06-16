@@ -13,6 +13,7 @@ use App\Models\HistoricoMaterial;
 use App\Models\MateriaisObraFase;
 use App\Models\Material;
 use App\Models\Obra;
+use App\Repository\AutodeskAPI;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -52,12 +53,180 @@ class ObraController extends Controller
         return view('obras.create', compact('clientes', 'funcionarios', 'obra', 'fases', 'fases_selecionadas'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+
+    public function carregaProjeto()
+    {
+        $requestData = new \stdClass();
+        $apiAutodesk = new AutodeskAPI();
+        $requestData->bucket_name = "belao_e_cia_bucket_teste_aaaaaaaaaaa";
+        $requestData->file = "storage/rac_basic_sample_project.rvt";
+        $requestData->file_name = "teste_basic_sample_project.rvt";
+        $chao = 0;
+        $parede = 0;
+        $viga = 0;
+        $area_chao = 0;
+        $parametros = ParamentrosOrcamento::paramentros();
+        $cimento = Material::where('id', 4)->first()->lista()->get();
+        $areia = Material::where('id', 5)->first()->lista()->get();
+        $pedra = Material::where('id', 6)->first()->lista()->get();
+        $cal = Material::where('id', 7)->first()->lista()->get();
+        $tijolo = Material::where('id', 8)->first()->lista()->get();
+        $retorno = $apiAutodesk->getModelDerivativeProperties($requestData);
+        foreach ($retorno['data']['collection'] as $data){
+            if((strpos($data['name'], 'Floor') !== false || strpos($data['name'], 'Wall') !== false || strpos($data['name'], 'M_Pile-Steel Pipe') !== false || strpos($data['name'], 'Pile Cap-Rectangular') !== false || strpos($data['name'], 'Column') !== false) && isset($data['properties']['Dimensions'])){
+                if(strpos($data['name'], 'Floor') !== false && strpos($data['properties']['Identity Data']['Type Name'], 'Concrete') !== false){
+                    $chao += str_replace(' m^3', '', $data['properties']['Dimensions']['Volume']);
+                    $area_chao += str_replace(' m^2', '', $data['properties']['Dimensions']['Area']);
+                }
+                if(strpos($data['name'], 'Basic Wall') !== false && strpos($data['properties']['Materials and Finishes']['Structural Material'], 'Concrete') !== false){
+                    $parede += str_replace(' m^2', '', $data['properties']['Dimensions']['Area']);
+                }
+                if(strpos($data['name'], 'M_Pile-Steel Pipe') !== false){
+                    $raio = str_replace(' mm', '', $data['properties']['Dimensions']['Radius'])/1000;
+                    $profundidade = str_replace(' mm', '', $data['properties']['Dimensions']['Depth'])/1000;
+                    $viga += ($raio*$raio)*pi()*$profundidade;
+                }
+            }
+        }
+        $chao = ($chao/0.55)*0.10;
+        $preco_parede = [];
+        $preco_chao = [];
+        $preco_tijolo = [];
+        $preco_cimento = [];
+        $preco_areia = [];
+        $preco_pedra = [];
+        $preco_cal = [];
+        $preco_total = [];
+        foreach ($tijolo as $loja){
+            if(!isset($preco_parede[$loja->loja]['tijolo'])){
+                $preco_parede[$loja->loja]['tijolo'] = 0;
+            }
+            if(!isset($preco_parede[$loja->loja]['total'])){
+                $preco_parede[$loja->loja]['total'] = 0;
+            }
+            if(!isset($preco_total[$loja->loja]['total'])){
+                $preco_total[$loja->loja]['total'] = 0;
+            }
+            $preco_tijolo[$loja->loja]['preco'] = ceil($parametros['parede']['tijolos']*$parede)*$loja->preco;
+            $preco_tijolo[$loja->loja]['quantidade'] = ceil($parametros['parede']['tijolos']*$parede);
+            $preco_tijolo[$loja->loja]['unidade'] = 'Unidades';
+            $preco_tijolo[$loja->loja]['id_material'] = $loja->material;
+            $preco_parede[$loja->loja]['tijolo'] += $preco_tijolo[$loja->loja]['preco'];
+            $preco_parede[$loja->loja]['total'] += $preco_tijolo[$loja->loja]['preco'];
+            $preco_total[$loja->loja]['tijolo'] = $preco_tijolo[$loja->loja];
+            $preco_total[$loja->loja]['total'] += $preco_tijolo[$loja->loja]['preco'];
+        }
+        foreach ($cimento as $loja){
+            if(!isset($preco_parede[$loja->loja]['cimento'])){
+                $preco_parede[$loja->loja]['cimento'] = 0;
+            }
+            if(!isset($preco_parede[$loja->loja]['total'])){
+                $preco_parede[$loja->loja]['total'] = 0;
+            }
+            if(!isset($preco_chao[$loja->loja]['cimento'])){
+                $preco_chao[$loja->loja]['cimento'] = 0;
+            }
+            if(!isset($preco_chao[$loja->loja]['total'])){
+                $preco_chao[$loja->loja]['total'] = 0;
+            }
+            if(!isset($preco_total[$loja->loja]['total'])){
+                $preco_total[$loja->loja]['total'] = 0;
+            }
+            $cimento_parede = (ceil(($parametros['reboco']['saco_cimento']*$parede)+($parametros['reboco']['saco_cimento']*$parede*$parametros['parede']['area_reboco'])));
+            $cimento_chao = ceil(($parametros['concreto']['saco_cimento']*(($chao/0.10)*0.1-$parametros['contrapiso']['espessura']) + ($parametros['contrapiso']['saco_cimento']*(($chao/10)*$parametros['contrapiso']['espessura']))));
+            $preco_cimento[$loja->loja]['preco'] = ($cimento_chao+$cimento_parede)*$loja->preco;
+            $preco_cimento[$loja->loja]['quantidade'] = $cimento_chao+$cimento_parede;
+            $preco_cimento[$loja->loja]['unidade'] = 'Unidades';
+            $preco_cimento[$loja->loja]['id_material'] = $loja->material;
+            $preco_parede[$loja->loja]['cimento'] += $cimento_parede*$loja->preco;
+            $preco_parede[$loja->loja]['total'] += $cimento_parede*$loja->preco;
+            $preco_chao[$loja->loja]['cimento'] += $cimento_chao*$loja->preco;
+            $preco_chao[$loja->loja]['total'] += $cimento_chao*$loja->preco;
+            $preco_total[$loja->loja]['cimento'] = $preco_cimento[$loja->loja];
+            $preco_total[$loja->loja]['total'] += $preco_cimento[$loja->loja]['preco'];
+        }
+        foreach ($areia as $loja){
+            if(!isset($preco_parede[$loja->loja]['areia'])){
+                $preco_parede[$loja->loja]['areia'] = 0;
+            }
+            if(!isset($preco_parede[$loja->loja]['total'])){
+                $preco_parede[$loja->loja]['total'] = 0;
+            }
+            if(!isset($preco_chao[$loja->loja]['areia'])){
+                $preco_chao[$loja->loja]['areia'] = 0;
+            }
+            if(!isset($preco_chao[$loja->loja]['total'])){
+                $preco_chao[$loja->loja]['total'] = 0;
+            }
+            if(!isset($preco_total[$loja->loja]['total'])){
+                $preco_total[$loja->loja]['total'] = 0;
+            }
+            $areia_parede = ceil(($parametros['reboco']['areia']*$parede)+($parametros['reboco']['areia']*$parede*$parametros['parede']['area_reboco']));
+            $areia_chao = ceil(($parametros['concreto']['areia']*(($chao/0.10)*0.1-$parametros['contrapiso']['espessura']))+($parametros['contrapiso']['areia']*(($chao/0.10)*$parametros['contrapiso']['espessura'])));
+            $preco_areia[$loja->loja]['preco'] = ($areia_parede+$areia_chao)*$loja->preco;
+            $preco_areia[$loja->loja]['quantidade'] = $areia_parede+$areia_chao;
+            $preco_areia[$loja->loja]['unidade'] = 'm³';
+            $preco_areia[$loja->loja]['id_material'] = $loja->material;
+            $preco_parede[$loja->loja]['areia'] += $areia_parede*$loja->preco;
+            $preco_parede[$loja->loja]['total'] += $areia_parede*$loja->preco;
+            $preco_chao[$loja->loja]['areia'] += $areia_chao*$loja->preco;
+            $preco_chao[$loja->loja]['total'] += $areia_chao*$loja->preco;
+            $preco_total[$loja->loja]['areia'] = $preco_areia[$loja->loja];
+            $preco_total[$loja->loja]['total'] += $preco_areia[$loja->loja]['preco'];
+        }
+        foreach ($pedra as $loja){
+            if(!isset($preco_chao[$loja->loja]['pedra'])){
+                $preco_chao[$loja->loja]['pedra'] = 0;
+            }
+            if(!isset($preco_chao[$loja->loja]['total'])){
+                $preco_chao[$loja->loja]['total'] = 0;
+            }
+            if(!isset($preco_total[$loja->loja]['total'])){
+                $preco_total[$loja->loja]['total'] = 0;
+            }
+            $pedra_chao = ceil($parametros['concreto']['pedra']*$chao);
+            $preco_pedra[$loja->loja]['preco'] = ($pedra_chao)*$loja->preco;
+            $preco_pedra[$loja->loja]['quantidade'] = $pedra_chao;
+            $preco_pedra[$loja->loja]['unidade'] = 'm³';
+            $preco_pedra[$loja->loja]['id_material'] = $loja->material;
+            $preco_chao[$loja->loja]['pedra'] += $pedra_chao*$loja->preco;
+            $preco_chao[$loja->loja]['total'] += $pedra_chao*$loja->preco;
+            $preco_total[$loja->loja]['pedra'] = $preco_pedra[$loja->loja];
+            $preco_total[$loja->loja]['total'] += $preco_pedra[$loja->loja]['preco'];
+        }
+        foreach ($cal as $loja){
+            if(!isset($preco_parede[$loja->loja]['cal'])){
+                $preco_parede[$loja->loja]['cal'] = 0;
+            }
+            if(!isset($preco_parede[$loja->loja]['total'])){
+                $preco_parede[$loja->loja]['total'] = 0;
+            }
+            if(!isset($preco_total[$loja->loja]['total'])){
+                $preco_total[$loja->loja]['total'] = 0;
+            }
+            $preco_cal[$loja->loja]['preco'] = ceil(($parametros['reboco']['cal']*$parede)+($parametros['reboco']['cal']*$parede*$parametros['parede']['area_reboco']))*$loja->preco;
+            $preco_cal[$loja->loja]['quantidade'] = ceil(($parametros['reboco']['cal']*$parede)+($parametros['reboco']['cal']*$parede*$parametros['parede']['area_reboco']));
+            $preco_cal[$loja->loja]['unidade'] = 'Unidades';
+            $preco_cal[$loja->loja]['id_material'] = $loja->material;
+            $preco_parede[$loja->loja]['cal'] += $preco_cal[$loja->loja]['preco'];
+            $preco_parede[$loja->loja]['total'] += $preco_cal[$loja->loja]['preco'];
+            $preco_total[$loja->loja]['cal'] = $preco_cal[$loja->loja];
+            $preco_total[$loja->loja]['total'] += $preco_cal[$loja->loja]['preco'];
+        }
+        return compact('preco_total',
+        'preco_parede',
+        'preco_chao',
+        'preco_pedra',
+        'preco_tijolo',
+        'preco_cal',
+        'preco_areia',
+        'preco_cimento',
+        'parede',
+        'chao',
+        'viga');
+    }
+
+
     public function store(Request $request)
     {
         DB::beginTransaction();
@@ -82,7 +251,6 @@ class ObraController extends Controller
             $obra->cidade = $request->cidade;
             $obra->uf = $request->uf;
             $obra->cliente = $request->cliente;
-            $obra->status_db = 1;
             $obra->save();
             foreach ($request->funcionario as $id) {
                 $funcionarios_obra = new Funcionarios_Obra();
@@ -348,6 +516,9 @@ class ObraController extends Controller
 
                 $acoes .= '<a class="gerenciar-materiais" href="' . route('obras.materiais', ['obra' => $row['id']]) . '">
                         <i class="fas fa-toolbox" style="color: #fff"></i></a>';
+
+                $acoes .= '<a class="orcamento-previo" href="' . route('obras.orcamento', ['obra' => $row['id']]) . '">
+                        <i class="fas fa-cash-register" style="color: #fff"></i></a>';
 
                 $acoes .= "</div>";
 
@@ -805,5 +976,11 @@ class ObraController extends Controller
             Session::flash('error_message', 'Falha ao deletar material!');
         }
         return redirect()->route('obras.materiais', ['obra' => $obra->id]);
+    }
+
+    public function orcamento(Obra $obra)
+    {
+        $valores = $this->carregaProjeto();
+        return view('obras.orcamento', compact('obra', 'valores'));
     }
 }

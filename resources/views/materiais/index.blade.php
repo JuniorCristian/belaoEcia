@@ -37,7 +37,6 @@
                                     <thead>
                                     <tr>
                                         <th>Nome</th>
-                                        <th>Descrição</th>
                                         <th>Marca</th>
                                         <th>Unidade</th>
                                         <th>Ações</th>
@@ -85,7 +84,6 @@
             },
             columns: [
                 {data: 'nome', name: 'nome'},
-                {data: 'descricao', name: 'descricao'},
                 {data: 'marca', name: 'marca'},
                 {data: 'unidade', name: 'unidade'},
                 {data: 'acoes', name: 'acoes'}

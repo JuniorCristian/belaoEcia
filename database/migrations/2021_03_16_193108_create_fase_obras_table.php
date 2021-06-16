@@ -23,6 +23,7 @@ class CreateFaseObrasTable extends Migration
             $table->date('final_previsto')->nullable();
             $table->boolean('status_db');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('obra')->references('id')->on('obras');
             $table->foreign('fase')->references('id')->on('fases');

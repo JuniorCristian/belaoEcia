@@ -10,6 +10,9 @@ use Autodesk\Forge\Client\Model\PostBucketsPayload;
 use Autodesk\Forge\Client\Api\ObjectsApi;
 use Autodesk\Forge\Client\Api\DerivativesApi;
 use Autodesk\Forge\Client\Model\JobPayload;
+use PhpParser\Builder\Class_;
+use PhpParser\Node\Expr\Cast\Object_;
+use function Psy\bin;
 
 
 class AutodeskAPI
@@ -22,7 +25,7 @@ class AutodeskAPI
             ->setClientSecret(env('FORGE_CLIENT_SECRET'));
 
         $twoLeggedAuth = new TwoLeggedAuth();
-        $twoLeggedAuth->setScopes(['data:write', 'data:read', 'bucket:create', 'bucket:delete']);
+        $twoLeggedAuth->setScopes(['data:write', 'data:read', 'bucket:create', 'bucket:delete', 'bucket:read']);
 
         $twoLeggedAuth->fetchToken();
 
@@ -33,77 +36,177 @@ class AutodeskAPI
         return $twoLeggedAuth;
     }
 
-    public function createBucket()
+    public function createBucket($data)
     {
 
-        $token_info = $this->geraToken();
-        $data['bucket_key'] = 'belao_e_cia_teste';
-        $data['policy_key'] = 'transient';
+        $token_info = $data->token;
+        $dataBucket['bucket_key'] = $data->bucket_name;
+        $dataBucket['policy_key'] = 'transient';
         $apiInstance = new BucketsApi($token_info);
-        $post_buckets = new PostBucketsPayload($data);
+        $post_buckets = new PostBucketsPayload($dataBucket);
         $x_ads_region = "US";
 
         try {
             $result = $apiInstance->createBucket($post_buckets, $x_ads_region);
-            dd($result);
+            return true;
         } catch (Exception $e) {
             echo 'Exception when calling BucketsApi->createBucket: ', $e->getMessage(), PHP_EOL;
         }
     }
 
-    public function verificaBucket()
+    public function verificaBucket($data)
     {
-        $token_info = $this->geraToken();
+        $token_info = $data->token;
         $apiInstance = new BucketsApi($token_info);
-        $bucket_key = "belao_e_cia_teste"; // string | URL-encoded bucket key
+        $bucket_key = $data->bucket_name;
 
         try {
             $result = $apiInstance->getBucketDetails($bucket_key);
-            print_r($result);
+            return $result;
         } catch (Exception $e) {
             echo 'Exception when calling BucketsApi->getBucketDetails: ', $e->getMessage(), PHP_EOL;
         }
     }
 
-    public function uploadObject()
+    public function uploadObject($data)
     {
-        $token_info = $this->geraToken();
-        $apiInstance = new ObjectsApi($token_info);
-        $bucket_key = "belao_e_cia_bucket"; // string | URL-encoded bucket key
-        $object_name = "teste_de_upload"; // string | URL-encoded object name
-        $content_length = 80; // int | Indicates the size of the request body.
-        $body = "file contents";
-        $fileHandle = fopen(url('storage/rac_basic_sample_project.rvt'), 'r+'); // File resource handle
-        $content_disposition = "content_disposition_example"; // string | The suggested default filename when downloading this object to a file after it has been uploaded.
-        $if_match = "if_match_example"; // string | If-Match header containing a SHA-1 hash of the bytes in the request body can be sent by the calling service or client application with the request. If present, OSS will use the value of If-Match header to verify that a SHA-1 calculated for the uploaded bytes server side matches what was sent in the header. If not, the request is failed with a status 412 Precondition Failed and the data is not written.
-
-        try {
-            //Upload file contents
-            $resultUploadContent = $apiInstance->uploadObject($bucket_key, $object_name, $content_length, $body, $content_disposition, $if_match);
-            print_r($resultUploadContent);
-            //Upload file as stream
-            $resultUploadFile = $apiInstance->uploadObject($bucket_key, $object_name, $content_length, $fileHandle, $content_disposition, $if_match);
-            print_r($resultUploadFile);
-        } catch (Exception $e) {
-            echo 'Exception when calling ObjectsApi->uploadObject: ', $e->getMessage(), PHP_EOL;
+        $token_info = $data->token;
+        $verificaBucket = $this->verificaBucket($data);
+        if(!isset($verificaBucket['bucket_key']) || $verificaBucket['bucket_key'] != $data->bucket_name){
+            $this->createBucket($data);
         }
+        $bucket_key = "belao_e_cia_bucket_teste_aaaaaaaaaaa"; // string | URL-encoded bucket key
+        $object_name = "teste_basic_sample_project.rvt"; // string | URL-encoded object name
+        $bucket_key = $data->bucket_name; // string | URL-encoded bucket key
+        $object_name = $data->file_name; // string | URL-encoded object name
+
+        $path = public_path($data->file);
+        try {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, 'https://developer.api.autodesk.com/oss/v2/buckets/' . $bucket_key . '/objects/'.$object_name);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, array('@/home/cristian/Downloads/rstbasicsampleproject.rvt'));
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/octet-stream',
+                'Cookie: PF=CNbNVuFQQunmOJh7jOBU5T',
+                'Authorization: Bearer ' . $token_info->getAccessToken(),
+                'Accept-Encoding: gzip, deflate',
+//                "'" . fread(fopen(public_path('storage/rac_basic_sample_project.rvt'), 'r+'), filesize(public_path('storage/rac_basic_sample_project.rvt'))) . "'"
+            ]);
+            dd($curl);
+
+            $result = curl_exec($curl);
+            $retorno = json_decode($result, true);
+        } catch (Exception $e) {
+            return $e;
+        } finally {
+            curl_close($curl);
+        }
+        return $retorno;
     }
 
-    public function translate()
+    public function translate($data)
     {
-        $token_info = $this->geraToken();
+        $token_info = $data->token;
         $apiInstance = new DerivativesApi($token_info);
         $job = new JobPayload(); // \Autodesk\Forge\Client\Model\JobPayload |
+        $input = ["urn" => base64_encode($this->uploadObject($data)["objectId"])];
+//        $input = ["urn" => base64_encode("urn:adsk.objects:os.object:belao_e_cia_bucket_teste_aaaaaaaaaaa/rst_basic_sample_project.rvt")];
+        $ouput = ["destination" => ["region" => "us"], "formats" => [["type" => "svf", "views" => ["3d"]]]];
+        $job->setInput($input);
+        $job->setOutput($ouput);
         $x_ads_force = false; // bool | `true`: the endpoint replaces previously translated output file types with the newly generated derivatives  `false` (default): previously created derivatives are not replaced
 
         try {
             $result = $apiInstance->translate($job, $x_ads_force);
-            print_r($result);
+            return $result;
         } catch (Exception $e) {
             echo 'Exception when calling DerivativesApi->translate: ', $e->getMessage(), PHP_EOL;
         }
     }
 
+    public function getManifest($data)
+    {
+        $token_info = $data->token;
+        //$translate = $this->translate($data);
+        $urn = "dXJuOmFkc2sub2JqZWN0czpvcy5vYmplY3Q6YmVsYW9fZV9jaWFfYnVja2V0X3Rlc3RlX2FhYWFhYWFhYWFhL3JzdF9iYXNpY19zYW1wbGVfcHJvamVjdC5ydnQ";
+//        if (isset($translate['result']) && $translate['result'] === "created") {
+//            $urn = $translate['urn']; // string | The Base64 (URL Safe) encoded design URN
+//        } else {
+//            return false;
+//        }
+        try {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, 'https://developer.api.autodesk.com/modelderivative/v2/designdata/' . $urn . '/manifest');
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . $token_info->getAccessToken(),
+            ]);
+            do {
+                sleep(4);
+                $result = curl_exec($curl);
+                $retorno = json_decode($result, true);
+            } while ($retorno['progress'] != "complete");
+            return $retorno;
+        } catch (Exception $e) {
+            return $e;
+        } finally {
+            curl_close($curl);
+        }
+    }
 
+    public function getMetadata($data)
+    {
+        $token_info = $data->token;
+        $urn = $data->manifest['urn'];
+        try {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, 'https://developer.api.autodesk.com/modelderivative/v2/designdata/' . $urn . '/metadata');
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . $token_info->getAccessToken(),
+            ]);
+            $result = curl_exec($curl);
+            $retorno = json_decode($result, true);
+            return $retorno;
+        } catch (Exception $e) {
+            return $e;
+        } finally {
+            curl_close($curl);
+        }
+    }
+
+    public function getModelDerivativeProperties($data)
+    {
+        $token_info = $this->geraToken();
+        $data->token = $token_info;
+        $manifest = $this->getManifest($data);
+        $data->manifest = $manifest;
+        $metadata = $this->getMetadata($data);
+        $urn = $manifest['urn'];
+        foreach ($metadata['data']['metadata'] as $meta){
+            if($meta['role'] = '3d'){
+                $guid = $meta['guid'];
+                break;
+            }
+        }
+
+        try {
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, 'https://developer.api.autodesk.com/modelderivative/v2/designdata/' . $urn . '/metadata/'.$guid.'/properties');
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, [
+                'Authorization: Bearer ' . $token_info->getAccessToken(),
+            ]);
+            $result = curl_exec($curl);
+            curl_close($curl);
+            $retorno = json_decode($result, true);
+            return $retorno;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
 
 }

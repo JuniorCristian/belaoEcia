@@ -113,7 +113,7 @@ $func = 'listar';
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group list_images p-2">
-                                                            @foreach(\App\Models\FaseObraImagem::where('fase_obra', $fase->id)->where('status_db', 1)->get() as $images)
+                                                            @foreach(\App\Models\FaseObraImagem::where('fase_obra', $fase->id)->get() as $images)
                                                                 <div class="images-list">
                                                                     <img
                                                                         src="{{env('APP_URL')}}/storage/{{$images->thumb_path}}"

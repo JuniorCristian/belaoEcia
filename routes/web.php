@@ -54,6 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::put('/fase/edit/', [ObraController::class, 'faseEdit'])->name('obras.fase.edit');
         Route::delete('/fase/delete/', [ObraController::class, 'faseDelete'])->name('obras.fase.delete');
         Route::get('/materiais/{obra}', [ObraController::class, 'materiais'])->name('obras.materiais');
+        Route::get('/orcamento/{obra}', [ObraController::class, 'orcamento'])->name('obras.orcamento');
         Route::post('/materiais/loja/{material}', [ObraController::class, 'buscaLoja'])->name('obras.materiais.lojas');
         Route::post('/materiais/loja/preco/{material}', [ObraController::class, 'buscaPreco'])->name('obras.materiais.lojas.preco');
         Route::post('/materiais/create/{obra}', [ObraController::class, 'materiaisCreate'])->name('obras.materiais.create');
@@ -96,6 +97,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('materiais', MaterialController::class)->parameters(['materiais' => 'material']);
     Route::post('materiais/datatble', [MaterialController::class, 'datatable'])->name('materiais.datatable');
 
-    Route::get('teste_api', [AutodeskAPI::class, 'verificaBucket']);
+    Route::get('teste_api', [ObraController::class, 'carregaProjeto']);
 });
 
