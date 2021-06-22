@@ -917,7 +917,7 @@ class ObraController extends Controller
     public function materiais(Obra $obra)
     {
         $materiais = Material::all()->pluck('nome', 'id')->prepend('Selecione um material', '');
-        $materiais_obra = $obra->fases()->join('materiais_obra_fases as mos', 'fases.id', '=', 'mos.fase_obra')->join('materiais as m', 'mos.material', '=', 'm.id')->join('lojas as l', 'mos.loja', '=', 'l.id')->orderBy('mos.data_compra', 'DESC')->select('mos.*', 'm.nome as material_nome', 'fases.nome as fase_nome', 'l.nome as loja_nome')->get();
+        $materiais_obra = $obra->fases()->join('materiais_obra_fases as mos', 'fases.id', '=', 'mos.fase_obra')->join('materiais as m', 'mos.material', '=', 'm.id')->join('lojas as l', 'mos.loja', '=', 'l.id')->orderBy('mos.data_compra', 'DESC')->select('mos.*', 'm.nome as material_nome', 'fases.nome as fase_nome', 'l.nome as loja_nome')->where('mos.deleted_at', null)->get();
         $fase_obra = FaseObra::where('obra', $obra->id)->orderBy('inicio_previsto', 'ASC')->join('fases as f', 'fase_obras.fase', '=', 'f.id')->pluck('f.nome', 'fase_obras.id')->prepend('Selecione uma fase', '');
         return view('obras.materias', compact('obra', 'materiais', 'materiais_obra', 'fase_obra'));
     }
@@ -949,9 +949,9 @@ class ObraController extends Controller
             $material_obra = new MateriaisObraFase();
             $material_obra->material = $request->material;
             $material_obra->data_compra = $request->data_compra;
-            $material_obra->qtd = floatval($request->quantidade);
+            $material_obra->qtd = floatval(str_replace(",", ".", str_replace(".", "", $request->quantidade)));
             $material_obra->loja = $request->loja;
-            $material_obra->preco_unitario = floatval($request->preco);
+            $material_obra->preco_unitario = floatval(str_replace(",", ".", str_replace(".", "", $request->preco)));
             $material_obra->fase_obra = $request->fase;
             $material_obra->save();
             DB::commit();

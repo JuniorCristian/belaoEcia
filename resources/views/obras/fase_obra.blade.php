@@ -329,8 +329,11 @@ $func = 'listar';
                 });
                 $('.show_img').click(function () {
                     var imagem = $(this).parents('.images-list').find('.imagem_fase').data('imagem');
+                    var descricao = $(this).parents('.images-list').find('.imagem_fase').data('descricao');
                     Swal.fire({
                         imageUrl: imagem,
+                        width: '70%',
+                        text: descricao,
                         showCloseButton: true,
                         showConfirmButton: false
                     });
